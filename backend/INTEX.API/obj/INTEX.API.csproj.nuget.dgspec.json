@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/Users/valu.montoya/Documents/INTEX 1-12/backend/INTEX.API/INTEX.API.csproj": {}
+    "/Users/rileywells/Documents/INTEX_Winter_2025/Intex-1-12/backend/INTEX.API/INTEX.API.csproj": {}
   },
   "projects": {
-    "/Users/valu.montoya/Documents/INTEX 1-12/backend/INTEX.API/INTEX.API.csproj": {
+    "/Users/rileywells/Documents/INTEX_Winter_2025/Intex-1-12/backend/INTEX.API/INTEX.API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/valu.montoya/Documents/INTEX 1-12/backend/INTEX.API/INTEX.API.csproj",
+        "projectUniqueName": "/Users/rileywells/Documents/INTEX_Winter_2025/Intex-1-12/backend/INTEX.API/INTEX.API.csproj",
         "projectName": "INTEX.API",
-        "projectPath": "/Users/valu.montoya/Documents/INTEX 1-12/backend/INTEX.API/INTEX.API.csproj",
-        "packagesPath": "/Users/valu.montoya/.nuget/packages/",
-        "outputPath": "/Users/valu.montoya/Documents/INTEX 1-12/backend/INTEX.API/obj/",
+        "projectPath": "/Users/rileywells/Documents/INTEX_Winter_2025/Intex-1-12/backend/INTEX.API/INTEX.API.csproj",
+        "packagesPath": "/Users/rileywells/.nuget/packages/",
+        "outputPath": "/Users/rileywells/Documents/INTEX_Winter_2025/Intex-1-12/backend/INTEX.API/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/valu.montoya/.nuget/NuGet/NuGet.Config"
+          "/Users/rileywells/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -32,11 +32,6 @@
           "warnAsError": [
             "NU1605"
           ]
-        },
-        "restoreAuditProperties": {
-          "enableAudit": "true",
-          "auditLevel": "low",
-          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -81,7 +76,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.406/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/opt/homebrew/Cellar/dotnet@8/8.0.12/libexec/sdk/8.0.112/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
