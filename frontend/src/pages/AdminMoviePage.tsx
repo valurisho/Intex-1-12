@@ -2,11 +2,11 @@ import { useEffect, useState } from 'react';
 // import NewBookForm from '../components/NewBookForm';
 // import EditBookForm from '../components/EditBookForm';
 import { Movie } from '../types/Movie';
-import Pagination from '../components/Pagination';
+import Pagination from '../components/pagination';
 import { fetchMovies } from '../api/MovieAPI';
 import { deleteMovie } from '../api/MovieAPI';
 
-const AdminBooksPage = () => {
+const AdminMoviePage = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -139,4 +139,4 @@ const AdminBooksPage = () => {
     </div>
   );
 };
-export default AdminBooksPage;
+export default AdminMoviePage;
