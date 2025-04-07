@@ -10,7 +10,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<DbContext>(options => 
-    options.UseSqlite(builder.Configuration.GetConnectionString("BookConnection")));
+    options.UseSqlite(builder.Configuration.GetConnectionString("MovieConnection")));
 
 builder.Services.AddCors(options=> options.AddPolicy(
     "AllowReactAppBlah", 
