@@ -20,6 +20,11 @@ export const fetchMovies = async (
     const response = await fetch(
       `${API_URL}/GetAllMovies?pageHowMany=${pageSize}&pageNum=${pageNum}&${selectedCategories.length ? `&${categoryParams}` : ''}`
     );
+    // show the API in the console
+    const json = await response.json();
+    console.log('Response JSON:', json);
+    return json;
+
     if (!response.ok) {
       throw new Error('Failed to fetch Movies');
     }
