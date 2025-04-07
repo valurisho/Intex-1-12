@@ -1,7 +1,12 @@
 using System.ComponentModel.DataAnnotations;
-namespace INTEX.API.Data;
-public class Movie
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace INTEX.API.Data
 {
+    [Table("movies_titles")]
+    public class Movie
+    {
+
     [Required]
     [Key]
     public string show_id { get; set; }
@@ -14,6 +19,7 @@ public class Movie
     public string? rating { get; set; }
     public string? duration { get; set; }
     public string? description { get; set; }
+    
     public bool Action { get; set; }
     public bool Adventure { get; set; }
     public bool AnimeSeriesInternationalTVShows { get; set; }
@@ -46,4 +52,5 @@ public class Movie
     public bool TVDramas { get; set; }
     public bool TalkShowsTVComedies { get; set; }
     public bool Thrillers { get; set; }
+}
 }
