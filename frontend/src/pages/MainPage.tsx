@@ -9,10 +9,9 @@ const MainPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
+  const [genres, setGenres] = useState<string[]>([]);
 
   const sidebarRef = useRef<HTMLDivElement>(null);
-
-  const genres = ['Drama', 'Comedy', 'Action', 'Horror', 'Documentary'];
 
   const toggleGenre = (genre: string) => {
     setSelectedGenres((prev) =>
@@ -23,19 +22,25 @@ const MainPage = () => {
   const API_URL = 'https://localhost:5000/Movie';
 
   useEffect(() => {
-    const fetchMovies = async () => {
+    const fetchMoviesAndGenres = async () => {
       try {
-        const response = await fetch(`${API_URL}/GetAllMovies`);
-        if (!response.ok)
-          throw new Error(`HTTP error! status: ${response.status}`);
-        const data = await response.json();
-        setMovies(data);
+        // Fetch movies
+        const movieRes = await fetch(`${API_URL}/GetAllMovies`);
+        if (!movieRes.ok) throw new Error('Error fetching movies');
+        const movieData = await movieRes.json();
+        setMovies(movieData);
+
+        // Fetch genres
+        const genreRes = await fetch(`${API_URL}/GetCategories`);
+        if (!genreRes.ok) throw new Error('Error fetching genres');
+        const genreData = await genreRes.json();
+        setGenres(genreData);
       } catch (error) {
-        console.error('Error fetching movies:', error);
+        console.error('Error loading data:', error);
       }
     };
 
-    fetchMovies();
+    fetchMoviesAndGenres();
   }, []);
 
   // ✅ Handle outside click to close sidebar
@@ -60,7 +65,7 @@ const MainPage = () => {
 
   // ✅ Filtered movie list
   const filteredMovies = movies.filter(
-    (m) =>
+    (m: any) =>
       m.title.toLowerCase().includes(searchQuery.toLowerCase()) &&
       (selectedGenres.length === 0 ||
         selectedGenres.some((genre) =>
@@ -85,18 +90,30 @@ const MainPage = () => {
           ref={sidebarRef}
         >
           <h3>Filter by Genre</h3>
-          <div className="genre-list">
-            {genres.map((genre) => (
-              <label key={genre} className="genre-item">
-                <input
-                  type="checkbox"
-                  checked={selectedGenres.includes(genre)}
-                  onChange={() => toggleGenre(genre)}
-                />
-                {genre}
-              </label>
-            ))}
+
+          <div className="genre-scroll-area">
+            {genres.length === 0 ? (
+              <p>Loading genres...</p>
+            ) : (
+              genres.map((genre) => (
+                <label key={genre} className="genre-item">
+                  <input
+                    type="checkbox"
+                    checked={selectedGenres.includes(genre)}
+                    onChange={() => toggleGenre(genre)}
+                  />
+                  {genre}
+                </label>
+              ))
+            )}
           </div>
+
+          <button
+            className="clear-filters-btn"
+            onClick={() => setSelectedGenres([])}
+          >
+            Clear Filters
+          </button>
         </div>
 
         {/* Page content */}

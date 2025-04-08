@@ -65,6 +65,13 @@ const MovieDetailPage = () => {
             src={`https://inteximages.blob.core.windows.net/movie-posters/${encodeURIComponent(movie.title)}.jpg`}
             alt={movie.title}
             className="movie-poster"
+            style={{
+              width: '250px',
+              height: '375px',
+              objectFit: 'cover',
+              borderRadius: '8px',
+              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
+            }}
           />
           <div className="movie-details">
             <h2>{movie.title}</h2>
@@ -99,6 +106,11 @@ const MovieDetailPage = () => {
                 <strong>Rating:</strong> {movie.rating}
               </p>
             )}
+            {movie.categories && (
+              <p>
+                <strong>Genres:</strong> {movie.categories}
+              </p>
+            )}
           </div>
         </div>
         {movie.description && (
@@ -109,7 +121,7 @@ const MovieDetailPage = () => {
           </div>
         )}
         <div className="rating-section">
-          <strong>Your Rating:</strong>
+          <strong>Rate this movie:</strong>
           <div className="star-rating">
             {[1, 2, 3, 4, 5].map((star) => (
               <label key={star}>
@@ -119,6 +131,35 @@ const MovieDetailPage = () => {
             ))}
           </div>
         </div>
+        {/* === SIMILAR MOVIES SECTION === */}
+        <div className="recommendation-section">
+          <h3>Similar Movies</h3>
+          <div className="recommendation-row">
+            {[1, 2, 3, 4, 5].map((n) => (
+              <div className="recommendation-card" key={`similar-${n}`}>
+                <div className="poster-placeholder">🎬</div>
+                <p>Movie Title {n}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* === WHAT OTHER USERS ARE WATCHING SECTION === */}
+        <div className="recommendation-section">
+          <h3>What Other Users Are Watching</h3>
+          <div className="recommendation-row">
+            {[6, 7, 8, 9, 10].map((n) => (
+              <div className="recommendation-card" key={`user-${n}`}>
+                <div className="poster-placeholder">🎥</div>
+                <p>Movie Title {n}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <h3>What other users are watching:</h3>
       </div>
     </motion.div>
   );
