@@ -4,6 +4,7 @@ import AdminMoviePage from './pages/AdminMoviePage';
 import MainPage from './pages/mainPage';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import MovieDetailPage from './pages/MovieDetailPage';
+import AddMoviePage from './pages/AddMoviePage';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Route path="/AdminPage" element={<AdminMoviePage />} />
           <Route path="/mainPage" element={<MainPage />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/addMovie" element={<AddMoviePage />} />
           <Route path="/movie/:id" element={<MovieDetailPage />} />
           {/* <Route path="/about" element={} />
           <Route path="/contact" element={} /> */}
