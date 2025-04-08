@@ -94,6 +94,7 @@ namespace INTEX.API.Controllers
 
             return Ok(movies);
         }*/
+        
         //Get Categories
         [HttpGet("GetCategories")]
         public IActionResult GetCategories()
@@ -164,8 +165,17 @@ namespace INTEX.API.Controllers
                       
             return Ok(new {message = "Movie deleted"});
         }
+        
+        [HttpGet("GetMovieById/{id}")]
+        public async Task<IActionResult> GetMovieById(string id)
+        {
+            var movie = await _movieContext.Movies.FindAsync(id);
+            if (movie == null) return NotFound(new {message = "Movie not found"});
+            return Ok(movie);
+        }
                   
     } 
+    
     /// //UPDATE MOVIE 
     // [HttpPut("updateMovie/{show_id}")]
     // public IActionResult UpdateMovie(int show_id, [FromBody] Movie updatedMovie)
@@ -173,19 +183,7 @@ namespace INTEX.API.Controllers
     //     var movie = _movieContext.Movies.Find(show_id);
     //     
     // }
-        
-        
-
-    // PULL MOVIE DATA WHEN SOMEONE CLICKS ON A MOVIE
-    /*
-    [HttpGet("GetMovieById/{id}")]
-    public async Task<IActionResult> GetMovieById(string id)
-    {
-        var movie = await _movieContext.Movies.FindAsync(id);
-        if (movie == null) return NotFound(new {message = "Movie not found"});
-        return Ok(movie);
-    }
-    */
+    
     }
       
         
@@ -232,7 +230,20 @@ namespace INTEX.API.Controllers
 
             return Ok(genres);
         }*/
-
-
+        
+       
+        /// //UPDATE MOVIE 
+        // [HttpPut("updateMovie/{show_id}")]
+        // public IActionResult UpdateMovie(int show_id, [FromBody] Movie updatedMovie)
+        // {
+        //     var movie = _movieContext.Movies.Find(show_id);
+        //     
+        // }
+        //
+        //
+        //
+        // PULL MOVIE DATA WHEN SOMEONE CLICKS ON A MOVIE
+    
+        //
 
 
