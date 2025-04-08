@@ -1,3 +1,5 @@
+import './Pagination.css';
+
 interface PaginationProps {
   currentPage: number;
   totalPages: number;
@@ -13,60 +15,65 @@ const Pagination = ({
   onPageChange,
   onPageSizeChange,
 }: PaginationProps) => {
-  return (
-    <div>
-      <nav>
-        <ul className="pagination justify-content-center mt-3">
-          <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-            <button
-              className="page-link"
-              onClick={() => onPageChange(currentPage - 1)}
-            >
-              Previous
-            </button>
-          </li>
-          {[...Array(totalPages)].map((_, index) => (
-            <li
-              className={`page-item ${currentPage === index + 1 ? 'active' : ''}`}
-              key={index + 1}
-            >
-              <button
-                className="page-link"
-                onClick={() => onPageChange(index + 1)}
-              >
-                {index + 1}
-              </button>
-            </li>
-          ))}
-          <li
-            className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}
-          >
-            <button
-              className="page-link"
-              onClick={() => onPageChange(currentPage + 1)}
-            >
-              Next
-            </button>
-          </li>
-        </ul>
-      </nav>
+  const maxButtons = 5;
+  const startPage = Math.max(1, currentPage - Math.floor(maxButtons / 2));
+  const endPage = Math.min(totalPages, startPage + maxButtons - 1);
 
-      <div className="mt-3">
-        <label className="me-2">Results per page:</label>
+  const getPageNumbers = () => {
+    const pages = [];
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(i);
+    }
+    return pages;
+  };
+
+  return (
+    <div className="pagination-wrapper">
+      <div className="pagination-controls">
+        <button
+          className="pagination-btn"
+          onClick={() => onPageChange(currentPage - 1)}
+          disabled={currentPage === 1}
+        >
+          ← Previous
+        </button>
+
+        {getPageNumbers().map((page) => (
+          <button
+            key={page}
+            className={`pagination-btn ${page === currentPage ? 'active' : ''}`}
+            onClick={() => onPageChange(page)}
+          >
+            {page}
+          </button>
+        ))}
+
+        <button
+          className="pagination-btn"
+          onClick={() => onPageChange(currentPage + 1)}
+          disabled={currentPage === totalPages}
+        >
+          Next →
+        </button>
+      </div>
+
+      <div className="pagination-dropdown">
+        <label>Results per page:</label>
         <select
-          className="form-select d-inline w-auto"
           value={pageSize}
-          onChange={(p) => {
-            onPageSizeChange(Number(p.target.value));
-            onPageChange(1);
+          onChange={(e) => {
+            onPageSizeChange(Number(e.target.value));
+            onPageChange(1); // reset to page 1
           }}
         >
           <option value="5">5</option>
           <option value="10">10</option>
           <option value="20">20</option>
+          <option value="50">50</option>
         </select>
       </div>
     </div>
   );
 };
+
 export default Pagination;
