@@ -92,6 +92,13 @@ namespace INTEX.API.Controllers
                       
             return Ok(new {message = "Movie deleted"});
         }
+        [HttpGet("GetMovieById/{id}")]
+        public async Task<IActionResult> GetMovieById(string id)
+        {
+            var movie = await _movieContext.Movies.FindAsync(id);
+            if (movie == null) return NotFound(new {message = "Movie not found"});
+            return Ok(movie);
+        }
                   
     } 
         /// //UPDATE MOVIE 
@@ -101,21 +108,15 @@ namespace INTEX.API.Controllers
         //     var movie = _movieContext.Movies.Find(show_id);
         //     
         // }
-        
-        
-
+        //
+        //
+        //
         // PULL MOVIE DATA WHEN SOMEONE CLICKS ON A MOVIE
-        [HttpGet("GetMovieById/{id}")]
-        public async Task<IActionResult> GetMovieById(string id)
-        {
-            var movie = await _movieContext.Movies.FindAsync(id);
-            if (movie == null) return NotFound(new {message = "Movie not found"});
-            return Ok(movie);
-        }
-        
+    
+        //
     }
 
-}
+
 
 
 
