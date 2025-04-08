@@ -68,17 +68,22 @@ const AddMoviePage = () => {
     e.preventDefault();
     setSubmitError(null);
 
-    const releaseYear = parseInt(formData.release_year);
+    const releaseYear = Number(formData.release_year);
     if (releaseYear < 1700) {
       setSubmitError('Release year must be 1700 or later.');
       return;
     }
+    const cleanedCategories = formData.categories.map((c) =>
+      c.trim().toLowerCase()
+    );
 
     const payload = {
       ...formData,
       release_year: releaseYear,
-      categories: formData.categories,
+      categories: cleanedCategories,
     };
+    console.log('Submitting movie:', payload);
+    console.log('Payload categories:', payload.categories);
 
     try {
       const response = await fetch('https://localhost:5000/Movie/AddMovie', {
@@ -90,11 +95,13 @@ const AddMoviePage = () => {
       if (!response.ok) {
         const errorText = await response.text();
         console.error('Server error:', errorText);
-        throw new Error('Failed to add movie.');
+        throw new Error(errorText || 'Failed to add movie.');
       }
+      const result = await response.json();
+      console.log(result.message); // For debug
 
       alert('Movie added successfully!');
-      navigate('/admin');
+      navigate('/AdminPage');
     } catch (error) {
       setSubmitError('Error submitting form. Please try again.');
       console.error(error);

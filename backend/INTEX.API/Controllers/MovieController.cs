@@ -53,47 +53,7 @@ namespace INTEX.API.Controllers
         }
 
 
-        /*[HttpGet("GetAllMovies")]
-        public IActionResult GetAllMovies()
-        {
-            var movies = _movieContext.Movies.ToList();
-            return Ok(movies);
-        }*/
-        /*[HttpGet("AllMovies")]
-        public IActionResult GetMovies(
-            [FromQuery] int pageHowMany = 5,
-            [FromQuery] int pageNum = 1,
-            [FromQuery] string categories = ""
-        )
-        {
-            var categoryList = categories.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList();
-
-            var query = _movieContext.Movies
-                .Include(m => m.movieCategories)
-                .ThenInclude(mc => mc.Category)
-                .AsQueryable();
-
-            if (categoryList.Any())
-            {
-                query = query.Where(m =>
-                    m.movieCategories.Any(mc => categoryList.Contains(mc.Category.Name)));
-            }
-
-            // Pagination
-            var movies = query
-                .Skip((pageNum - 1) * pageHowMany)
-                .Take(pageHowMany)
-                .Select(m => new
-                {
-                    id = m.show_id,
-                    title = m.title,
-                    description = m.description,
-                    categories = m.movieCategories.Select(mc => mc.Category.Name)
-                })
-                .ToList();
-
-            return Ok(movies);
-        }*/
+        
         
         //Get Categories
         [HttpGet("GetCategories")]
@@ -128,122 +88,163 @@ namespace INTEX.API.Controllers
                 movieCategories = new List<MovieCategories>()
             };
 
-            // Fetch matching category entities from the DB
-            var matchingCategories = _movieContext.Categories
-                .Where(c => newMovieDto.categories.Contains(c.Name))
+            // Normalize category names (trim + lowercase)
+            var normalizedCategoryNames = newMovieDto.categories
+                .Select(c => c.Trim().ToLower())
                 .ToList();
 
+            // Match from DB (case-insensitive)
+            var matchingCategories = _movieContext.Categories
+                .Where(c => normalizedCategoryNames.Contains(c.Name.ToLower()))
+                .ToList();
+
+            // Optional: Warn if any category was not found
+            if (matchingCategories.Count != normalizedCategoryNames.Count)
+            {
+                return BadRequest("One or more selected categories do not exist.");
+            }
+
+            // Link movie to categories
             foreach (var category in matchingCategories)
             {
                 newMovie.movieCategories.Add(new MovieCategories
                 {
-                    Movie = newMovie,
-                    Category = category
+                    MovieId = newMovie.show_id,
+                    CategoryId = category.CategoryId
                 });
             }
 
             _movieContext.Movies.Add(newMovie);
             _movieContext.SaveChanges();
 
-            return Ok(newMovie);
+            return Ok(new { message = "Movie added successfully." });
         }
+
 
         
         //// DELETE
         [HttpDelete("deleteMovie/{show_id}")]
-        public IActionResult DeleteMovie(int show_id)
+        public IActionResult DeleteMovie(string show_id)
         {
-            var movie = _movieContext.Movies.Find(show_id);
-          
+            var movie = _movieContext.Movies
+                .Include(m => m.movieCategories)
+                .FirstOrDefault(m => m.show_id == show_id);
+
             if (movie == null)
             {
-                return NotFound(new {message = "Movie not found"});
+                return NotFound(new { message = "Movie not found" });
             }
-                      
+            _movieContext.MovieCategories.RemoveRange(movie.movieCategories);
+
+
+
             _movieContext.Movies.Remove(movie);
             _movieContext.SaveChanges();
-                      
-            return Ok(new {message = "Movie deleted"});
+
+            return Ok(new { message = "Movie deleted" });
         }
         
-        [HttpGet("GetMovieById/{id}")]
+        /*[HttpGet("GetMovieById/{id}")]
         public async Task<IActionResult> GetMovieById(string id)
         {
             var movie = await _movieContext.Movies.FindAsync(id);
             if (movie == null) return NotFound(new {message = "Movie not found"});
             return Ok(movie);
-        }
-                  
-    } 
-    
-    /// //UPDATE MOVIE 
-    // [HttpPut("updateMovie/{show_id}")]
-    // public IActionResult UpdateMovie(int show_id, [FromBody] Movie updatedMovie)
-    // {
-    //     var movie = _movieContext.Movies.Find(show_id);
-    //     
-    // }
-    
-    }
-      
-        
-
-        /*//MOVIE TYPES
-        [HttpGet("GetMovieTypes")]
-        public IActionResult GetMovieTypes()
+        }*/
+        [HttpGet("GetMovieById/{show_id}")]
+        public IActionResult GetMovieById(string show_id)
         {
-            var genres = new List<string>
+            var movie = _movieContext.Movies
+                .Include(m => m.movieCategories)
+                .ThenInclude(mc => mc.Category)
+                .FirstOrDefault(m => m.show_id == show_id);
+
+            if (movie == null) return NotFound();
+
+            var result = new
             {
-                "Action",
-                "Adventure",
-                "AnimeSeriesInternationalTVShows",
-                "BritishTVShowsDocuseriesInternationalTVShows",
-                "Children",
-                "Comedies",
-                "ComediesDramasInternationalMovies",
-                "ComediesInternationalMovies",
-                "ComediesRomanticMovies",
-                "CrimeTVShowsDocuseries",
-                "Documentaries",
-                "DocumentariesInternationalMovies",
-                "Docuseries",
-                "Dramas",
-                "DramasInternationalMovies",
-                "DramasRomanticMovies",
-                "FamilyMovies",
-                "Fantasy",
-                "HorrorMovies",
-                "InternationalMoviesThrillers",
-                "InternationalTVShowsRomanticTVShowsTVDramas",
-                "KidsTV",
-                "LanguageTVShows",
-                "Musicals",
-                "NatureTV",
-                "RealityTV",
-                "Spirituality",
-                "TVAction",
-                "TVComedies",
-                "TVDramas",
-                "TalkShowsTVComedies",
-                "Thrillers"
+                movie.show_id,
+                movie.title,
+                movie.type,
+                movie.director,
+                movie.cast,
+                movie.country,
+                movie.release_year,
+                movie.rating,
+                movie.duration,
+                movie.description,
+                categories = movie.movieCategories.Select(mc => mc.Category.Name).ToList() // ✅ categories assigned to this movie
             };
 
-            return Ok(genres);
-        }*/
+            return Ok(result);
+        }
+
         
-       
-        /// //UPDATE MOVIE 
-        // [HttpPut("updateMovie/{show_id}")]
-        // public IActionResult UpdateMovie(int show_id, [FromBody] Movie updatedMovie)
-        // {
-        //     var movie = _movieContext.Movies.Find(show_id);
-        //     
-        // }
-        //
-        //
-        //
-        // PULL MOVIE DATA WHEN SOMEONE CLICKS ON A MOVIE
+        [HttpPut("updateMovie/{show_id}")]
+        public IActionResult UpdateMovie(string show_id, [FromBody] MovieDto updatedMovieDto)
+        {
+            var movie = _movieContext.Movies
+                .Include(m => m.movieCategories)
+                .FirstOrDefault(m => m.show_id == show_id);
+
+            if (movie == null)
+            {
+                return NotFound("Movie not found.");
+            }
+
+            if (updatedMovieDto.release_year < 1700)
+            {
+                return BadRequest("Release year must be 1700 or later.");
+            }
+
+            // Update basic movie info
+            movie.title = updatedMovieDto.title;
+            movie.type = updatedMovieDto.type;
+            movie.director = updatedMovieDto.director;
+            movie.cast = updatedMovieDto.cast;
+            movie.country = updatedMovieDto.country;
+            movie.release_year = updatedMovieDto.release_year;
+            movie.rating = updatedMovieDto.rating;
+            movie.duration = updatedMovieDto.duration;
+            movie.description = updatedMovieDto.description;
+
+            // Normalize category names
+            var normalizedCategoryNames = updatedMovieDto.categories
+                .Select(c => c.Trim().ToLower())
+                .ToList();
+
+            var matchingCategories = _movieContext.Categories
+                .Where(c => normalizedCategoryNames.Contains(c.Name.ToLower()))
+                .ToList();
+
+            if (matchingCategories.Count != normalizedCategoryNames.Count)
+            {
+                return BadRequest("One or more selected categories do not exist.");
+            }
+
+            // Remove old category links
+            _movieContext.MovieCategories.RemoveRange(movie.movieCategories);
+
+            // Add new category links
+            foreach (var category in matchingCategories)
+            {
+                _movieContext.MovieCategories.Add(new MovieCategories
+                {
+                    MovieId = movie.show_id,
+                    CategoryId = category.CategoryId
+                });
+            }
+
+            _movieContext.SaveChanges();
+            return Ok(new { message = "Movie updated successfully." });
+        }
+
+        
+        
+                  
+    }
     
-        //
+    }
+
 
 
