@@ -40,3 +40,193 @@
 .read-the-docs {
   color: #888;
 }
+
+/* CSS FOR THE USER RATING ON THE MOVIEDETAILPAGE */
+/* src/App.css */
+
+.star-rating {
+  display: flex;
+  gap: 0.3rem;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.star-rating input {
+  display: none;
+}
+
+.star-rating span {
+  color: lightgray;
+  transition: color 0.2s;
+}
+
+.star-rating input:checked ~ span,
+.star-rating input:checked + span {
+  color: gold;
+}
+
+/* FOOTER CSS */
+/* App.css or global styles */
+.page-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Full viewport height */
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 0; /* Ensure it's anchored left */
+  right: 0; /* Ensure it's anchored right */
+  height: 40px; /* Reduce height from 60px */
+  background-color: #2c3e50;
+  color: #ecf0f1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+}
+
+/* CSS for MainPage */
+.page-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.content-wrap {
+  flex: 1;
+  padding: 1rem;
+  padding-bottom: 60px; /* Matches your footer height so content isn’t covered */
+}
+
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+  padding: 0;
+  background: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+}
+
+/* All Movies CSS */
+.section-header {
+  text-align: left;
+  padding: 1rem 2rem 0.5rem;
+}
+
+.section-header h2 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin: 0;
+  color: #2c3e50; /* Professional deep gray/blue */
+  border-left: 4px solid #e74c3c;
+  padding-left: 1rem;
+}
+
+/* Search Bar CSS */
+.search-bar {
+  margin-top: 0.5rem;
+  padding: 0.6rem 1rem;
+  width: 100%;
+  max-width: 400px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s ease-in-out;
+}
+
+.search-bar:focus {
+  border-color: #e74c3c;
+}
+
+/* CSS FOR RECOMMENDED MOVIES */
+.recommended-row {
+  display: flex;
+  overflow-x: auto;
+  padding: 1rem 2rem;
+  gap: 1rem;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: thin;
+}
+
+.recommended-card {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.2s;
+}
+
+.recommended-card:hover {
+  transform: scale(1.05);
+}
+
+.recommended-row::-webkit-scrollbar {
+  height: 6px;
+}
+
+.recommended-row::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 3px;
+}
+
+/* Hamburger + Sidebar CSS */
+.hamburger-btn {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  font-size: 2rem;
+  background: none;
+  border: none;
+  color: #2c3e50;
+  z-index: 2000;
+  cursor: pointer;
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: -260px;
+  width: 240px;
+  height: 100%;
+  background-color: #2c3e50;
+  color: #ecf0f1;
+  padding: 2rem 1rem;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.2);
+  transition: left 0.3s ease-in-out;
+  z-index: 1500;
+}
+
+.sidebar.open {
+  left: 0;
+}
+
+.sidebar h3 {
+  margin-top: 0;
+}
+
+.genre-select {
+  width: 100%;
+  margin-top: 1rem;
+  padding: 0.5rem;
+  border-radius: 6px;
+  font-size: 1rem;
+}
