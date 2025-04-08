@@ -4,8 +4,10 @@ import AdminMoviePage from './pages/AdminMoviePage';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import MovieDetailPage from './pages/MovieDetailPage';
 import AddMoviePage from './pages/AddMoviePage';
+import LoginPage from './pages/LoginPage';
 import MainPage from './pages/MainPage';
 import EditMoviePage from './pages/EditMoviePage';
+
 
 function App() {
   return (
@@ -19,6 +21,7 @@ function App() {
           <Route path="/addMovie" element={<AddMoviePage />} />
           <Route path="/editMovie/:show_id" element={<EditMoviePage />} />
           <Route path="/movie/:id" element={<MovieDetailPage />} />
+          <Route path="/login" element={<LoginPage />} />
           {/* <Route path="/about" element={} />
           <Route path="/contact" element={} /> */}
         </Routes>
