@@ -1,108 +1,84 @@
 import { useEffect, useState } from 'react';
-// import NewBookForm from '../components/NewBookForm';
-// import EditBookForm from '../components/EditBookForm';
 import { Movie } from '../types/Movie';
-import Pagination from '../components/pagination';
-import { fetchMovies } from '../api/MovieAPI';
+import Pagination from '../components/Pagination';
 import { deleteMovie } from '../api/MovieAPI';
+// import PrivacyPageFooter from '../components/PrivacyPageFooter'; // optional
 
 const AdminMoviePage = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const [pageSize, setPageSize] = useState<number>(5); //default value 1
+  const [pageSize, setPageSize] = useState<number>(5);
   const [pageNum, setPageNum] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(0);
-  const [showForm, setShowForm] = useState(false); //infer the type
 
-  //check to see if there is something to change
+  const API_URL = 'https://localhost:5000/Movie';
+
   useEffect(() => {
-    const loadMovies = async () => {
+    const fetchMovies = async () => {
       try {
-        const data = await fetchMovies(pageSize, pageNum, []);
-        setMovies(data.movies);
-        setTotalPages(Math.ceil(data.totalNumberOfMovies / pageSize));
+        const response = await fetch(`${API_URL}/GetAllMovies`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const allMovies: Movie[] = await response.json();
+        setTotalPages(Math.ceil(allMovies.length / pageSize));
+
+        const startIndex = (pageNum - 1) * pageSize;
+        const pagedMovies = allMovies.slice(startIndex, startIndex + pageSize);
+        setMovies(pagedMovies);
       } catch (err) {
+        console.error('Error fetching movies:', err);
         setError((err as Error).message);
       } finally {
         setLoading(false);
       }
     };
-    loadMovies();
-  }, [pageSize, pageNum]); //recalls it when this things change
 
-  const handleDelete = async (showId: string) => {
+    fetchMovies();
+  }, [pageSize, pageNum]);
+
+  const handleDelete = async (show_id: string) => {
     const confirmDelete = window.confirm(
       'Are you sure you want to delete this movie?'
     );
     if (!confirmDelete) return;
     try {
-      await deleteMovie(showId);
-      setMovies(movies.filter((b) => b.show_id !== showId));
-    } catch (error) {
-      alert('Failed to delete book, please try again.');
+      await deleteMovie(show_id);
+      setMovies(movies.filter((m) => m.show_id !== show_id));
+    } catch (err) {
+      alert('Failed to delete movie, please try again.');
     }
   };
 
-  if (loading) return <p>Loading books...</p>;
-  if (error) return <p className="text-red-500">Error{error}</p>;
+  if (loading) return <p>Loading Movies...</p>;
+  if (error) return <p className="text-red-500">Error: {error}</p>;
 
   return (
     <div>
-      <h1>Admin - Books</h1>
-      {!showForm && (
-        <button
-          className="btn btn-success mb-3"
-          onClick={() => setShowForm(true)}
-        >
-          Add Book
-        </button>
-      )}
-
-      {/* {showForm && (
-        <NewBookForm
-          onSuccess={() => {
-            setShowForm(false);
-            fetchMovies(pageSize, pageNum, []).then((data) =>
-              setMovies(data.movies)
-            );
-          }}
-          onCancel={() => setShowForm(false)}
-        />
-      )}
-      {editingBook && (
-        <EditBookForm
-          book={editingBook}
-          onSuccess={() => {
-            setEditingBook(null);
-            fetchBooks(pageSize, pageNum, 'asc', []).then((data) =>
-              setMovies(data.books)
-            );
-          }}
-          onCancel={() => setEditingBook(null)}
-        />
-      )} */}
+      <h1>Admin - Movies</h1>
 
       <table className="table table-bordered table-striped">
         <thead className="table-dark">
           <tr>
-            <th>Movie ID:</th>
-            <th>Title:</th>
-            <th>Type:</th>
-            <th>Director:</th>
-            <th>Cast:</th>
-            <th>Country:</th>
-            <th>Release year: </th>
-            <th>Rating:</th>
-            <th>Duration:</th>
-            <th>Description:</th>
-            <th>Genre:</th>
-            <th></th>
+            <th>Movie ID</th>
+            <th>Title</th>
+            <th>Type</th>
+            <th>Director</th>
+            <th>Cast</th>
+            <th>Country</th>
+            <th>Release Year</th>
+            <th>Rating</th>
+            <th>Duration</th>
+            <th>Description</th>
+            <th>Genre</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
           {movies.map((b) => (
             <tr key={b.show_id}>
+              <td>{b.show_id}</td>
               <td>{b.title}</td>
               <td>{b.type}</td>
               <td>{b.director}</td>
@@ -113,13 +89,15 @@ const AdminMoviePage = () => {
               <td>{b.duration}</td>
               <td>{b.description}</td>
               <td>
-                <button
-                  className="btn btn-primary btn-sm w-100 mb-1"
-                  //pasing the whole book info
-                >
+                <button className="btn btn-primary btn-sm w-100 mb-1">
                   Edit
                 </button>
-                <button className="btn btn-danger btn-sm w=100">Delete</button>
+                <button
+                  className="btn btn-danger btn-sm w-100"
+                  onClick={() => handleDelete(b.show_id)}
+                >
+                  Delete
+                </button>
               </td>
             </tr>
           ))}
@@ -133,10 +111,11 @@ const AdminMoviePage = () => {
         onPageChange={setPageNum}
         onPageSizeChange={(newSize) => {
           setPageSize(newSize);
-          setPageNum(1);
+          setPageNum(1); // reset to first page on page size change
         }}
       />
     </div>
   );
 };
+
 export default AdminMoviePage;
