@@ -7,35 +7,6 @@ interface FetchMoviesResponse {
 
 const API_URL = 'https://localhost:5000/Movie';
 
-export const fetchMovies = async (
-  pageSize: number,
-  pageNum: number,
-  selectedCategories: string[]
-): Promise<FetchMoviesResponse> => {
-  try {
-    const categoryParams = selectedCategories
-      .map((cat) => `categories=${encodeURIComponent(cat)}`) //encode the URI
-      .join('&');
-
-    const response = await fetch(
-      `${API_URL}/GetAllMovies?pageHowMany=${pageSize}&pageNum=${pageNum}&${selectedCategories.length ? `&${categoryParams}` : ''}`
-    );
-    // show the API in the console
-    const json = await response.json();
-    console.log('Response JSON:', json);
-    return json;
-
-    if (!response.ok) {
-      throw new Error('Failed to fetch Movies');
-    }
-
-    return await response.json();
-  } catch (error) {
-    console.error('Error fetching Movies:', error);
-    throw error;
-  }
-};
-
 export const addMovie = async (newMovie: Movie): Promise<Movie> => {
   try {
     const response = await fetch(`${API_URL}/AddMovie?`, {
@@ -78,7 +49,7 @@ export const updateMovie = async (
 
 export const deleteMovie = async (show_id: string): Promise<void> => {
   try {
-    const response = await fetch(`${API_URL}/DeleteMovie/${show_id}?`, {
+    const response = await fetch(`${API_URL}/deleteMovie/${show_id}?`, {
       method: 'DELETE',
     });
 

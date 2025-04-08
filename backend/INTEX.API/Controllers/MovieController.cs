@@ -76,7 +76,25 @@ namespace INTEX.API.Controllers
             return Ok(newMovie);
         }
         
-        // //UPDATE MOVIE 
+        //// DELETE
+        [HttpDelete("deleteMovie/{show_id}")]
+        public IActionResult DeleteMovie(int show_id)
+        {
+            var movie = _movieContext.Movies.Find(show_id);
+          
+            if (movie == null)
+            {
+                return NotFound(new {message = "Movie not found"});
+            }
+                      
+            _movieContext.Movies.Remove(movie);
+            _movieContext.SaveChanges();
+                      
+            return Ok(new {message = "Movie deleted"});
+        }
+                  
+    } 
+        /// //UPDATE MOVIE 
         // [HttpPut("updateMovie/{show_id}")]
         // public IActionResult UpdateMovie(int show_id, [FromBody] Movie updatedMovie)
         // {
@@ -84,24 +102,7 @@ namespace INTEX.API.Controllers
         //     
         // }
         
-        // DELETE
-        [HttpDelete("deleteMovie/{show_id}")]
-        public IActionResult DeleteMovie(int show_id)
-        {
-            var movie = _movieContext.Movies.Find(show_id);
-
-            if (movie != null)
-            {
-                return NotFound(new {message = "Movie not found"});
-            }
-            
-            _movieContext.Movies.Remove(movie);
-            _movieContext.SaveChanges();
-            
-            return Ok(new {message = "Movie deleted"});
-        }
         
-    }
 }
 
 
