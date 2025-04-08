@@ -1,3 +1,4 @@
+using INTEX.API.Models;
 using Microsoft.EntityFrameworkCore;
 namespace INTEX.API.Data;
 public class MovieDbContext : DbContext
@@ -10,6 +11,7 @@ public class MovieDbContext : DbContext
     /*public DbSet<User> Users { get; set; }*/
     public DbSet<MovieCategories> MovieCategories { get; set; }
     
+    public DbSet<MovieRating> MovieRatings { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<MovieCategories>()
@@ -24,5 +26,10 @@ public class MovieDbContext : DbContext
             .HasOne(mc => mc.Category)
             .WithMany(c => c.movieCategories)
             .HasForeignKey(mc => mc.CategoryId);
+        
+        // ✅ ADD this config to register the composite key
+        modelBuilder.Entity<MovieRating>()
+            .HasKey(mr => new { mr.UserId, mr.ShowId });
+        
     }
 }

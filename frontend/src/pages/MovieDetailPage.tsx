@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { Movie } from '../types/Movie';
 import { motion } from 'framer-motion';
+import StarRating from '../components/StarRating';
 
 const MovieDetailPage = () => {
   const { id } = useParams();
@@ -62,7 +63,7 @@ const MovieDetailPage = () => {
       <div className="movie-card">
         <div className="movie-header">
           <img
-            src={`https://inteximages.blob.core.windows.net/movie-posters/${encodeURIComponent(movie.title)}.jpg`}
+            src={`https://inteximages.blob.core.windows.net/movie-posters-2/${encodeURIComponent(movie.title)}.jpg`}
             alt={movie.title}
             className="movie-poster"
             style={{
@@ -108,7 +109,7 @@ const MovieDetailPage = () => {
             )}
             {movie.categories && (
               <p>
-                <strong>Genres:</strong> {movie.categories}
+                <strong>Genres:</strong> {movie.categories.join(', ')}
               </p>
             )}
           </div>
@@ -120,17 +121,8 @@ const MovieDetailPage = () => {
             </p>
           </div>
         )}
-        <div className="rating-section">
-          <strong>Rate this movie:</strong>
-          <div className="star-rating">
-            {[1, 2, 3, 4, 5].map((star) => (
-              <label key={star}>
-                <input type="radio" name="userRating" value={star} />
-                <span>★</span>
-              </label>
-            ))}
-          </div>
-        </div>
+        {movie && <StarRating showId={movie.show_id} userId={1} />}
+
         {/* === SIMILAR MOVIES SECTION === */}
         <div className="recommendation-section">
           <h3>Similar Movies</h3>

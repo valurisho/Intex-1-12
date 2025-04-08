@@ -65,11 +65,13 @@ const MainPage = () => {
 
   // ✅ Filtered movie list
   const filteredMovies = movies.filter(
-    (m: any) =>
+    (m: Movie) =>
       m.title.toLowerCase().includes(searchQuery.toLowerCase()) &&
       (selectedGenres.length === 0 ||
         selectedGenres.some((genre) =>
-          m.listed_in?.toLowerCase().includes(genre.toLowerCase())
+          m.categories?.some(
+            (movieGenre) => movieGenre.toLowerCase() === genre.toLowerCase()
+          )
         ))
   );
 
@@ -130,7 +132,7 @@ const MainPage = () => {
                 className="recommended-card"
               >
                 <img
-                  src={`https://inteximages.blob.core.windows.net/movie-posters/${encodeURIComponent(m.title)}.jpg`}
+                  src={`https://inteximages.blob.core.windows.net/movie-posters-2/${encodeURIComponent(m.title)}.jpg`}
                   alt={m.title}
                   loading="lazy"
                   width="160"
@@ -157,7 +159,7 @@ const MainPage = () => {
             {filteredMovies.map((m) => (
               <Link to={`/movie/${m.show_id}`} key={m.show_id} className="card">
                 <img
-                  src={`https://inteximages.blob.core.windows.net/movie-posters/${encodeURIComponent(m.title)}.jpg`}
+                  src={`https://inteximages.blob.core.windows.net/movie-posters-2/${encodeURIComponent(m.title)}.jpg`}
                   alt={m.title}
                   loading="lazy"
                   width="200"

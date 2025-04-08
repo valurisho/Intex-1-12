@@ -1,4 +1,6 @@
 using INTEX.API.Data;
+using INTEX.API.DTOs;
+using INTEX.API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,11 +13,13 @@ namespace INTEX.API.Controllers
     public class MovieController : ControllerBase
     {
         private MovieDbContext _movieContext;
-
+        
         public MovieController(MovieDbContext temp)
         {
             _movieContext = temp;
         }
+        
+        // GetAllMoviesAPI
         [HttpGet("GetAllMovies")]
         public IActionResult GetAllMovies([FromQuery] string categories = "")
         {
@@ -52,8 +56,6 @@ namespace INTEX.API.Controllers
             return Ok(movies);
         }
 
-
-        
         
         //Get Categories
         [HttpGet("GetCategories")]
@@ -65,6 +67,8 @@ namespace INTEX.API.Controllers
 
             return Ok(categories);
         }
+        
+        // ADD A MOVIE
         [HttpPost("AddMovie")]
         public IActionResult AddMovie([FromBody] MovieDto newMovieDto)
         {
@@ -120,9 +124,8 @@ namespace INTEX.API.Controllers
             return Ok(new { message = "Movie added successfully." });
         }
 
-
         
-        //// DELETE
+        // DELETE
         [HttpDelete("deleteMovie/{show_id}")]
         public IActionResult DeleteMovie(string show_id)
         {
@@ -144,13 +147,8 @@ namespace INTEX.API.Controllers
             return Ok(new { message = "Movie deleted" });
         }
         
-        /*[HttpGet("GetMovieById/{id}")]
-        public async Task<IActionResult> GetMovieById(string id)
-        {
-            var movie = await _movieContext.Movies.FindAsync(id);
-            if (movie == null) return NotFound(new {message = "Movie not found"});
-            return Ok(movie);
-        }*/
+        
+        //GET MOVIE BY ID FOR THE MOVIEDETAILSPAGE
         [HttpGet("GetMovieById/{show_id}")]
         public IActionResult GetMovieById(string show_id)
         {
@@ -179,7 +177,7 @@ namespace INTEX.API.Controllers
             return Ok(result);
         }
 
-        
+        // EDIT MOVIE
         [HttpPut("updateMovie/{show_id}")]
         public IActionResult UpdateMovie(string show_id, [FromBody] MovieDto updatedMovieDto)
         {
@@ -238,13 +236,57 @@ namespace INTEX.API.Controllers
             _movieContext.SaveChanges();
             return Ok(new { message = "Movie updated successfully." });
         }
+        
+        //ROUTE TO SAVE MOVIE/USER RATINGS TO THE DATABASE
+        [HttpPost("AddRating")]
+        public async Task<IActionResult> AddRating([FromBody] MovieRatingDto movieRatingDto)
+        {
+            if (movieRatingDto.Rating < 1 || movieRatingDto.Rating > 5)
+            {
+                return BadRequest("Rating must be between 1 and 5.");
+            }
+            // Check if the user already rated this movie
+            var existingRating = await _movieContext.MovieRatings.FindAsync(movieRatingDto.UserId, movieRatingDto.ShowId);
 
+            if (existingRating != null)
+            {
+                existingRating.Rating = movieRatingDto.Rating;
+            }
+            else
+            {
+                var movieRating = new MovieRating
+                {
+                    UserId = movieRatingDto.UserId,
+                    ShowId = movieRatingDto.ShowId,
+                    Rating = movieRatingDto.Rating
+                };
+
+                await _movieContext.MovieRatings.AddAsync(movieRating);
+            }
+
+            await _movieContext.SaveChangesAsync();
+
+            return Ok(new { message = "Rating saved successfully!" });
+        }
+            
+            
+        }
+        
+        
         
         
                   
     }
     
-    }
+
+
+/*[HttpGet("GetMovieById/{id}")]
+     public async Task<IActionResult> GetMovieById(string id)
+     {
+         var movie = await _movieContext.Movies.FindAsync(id);
+         if (movie == null) return NotFound(new {message = "Movie not found"});
+         return Ok(movie);
+     }*/
 
 
 
