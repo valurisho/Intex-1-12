@@ -25,3 +25,6 @@ dist-ssr
 **/bin/
 **/obj/
 backend/INTEX.API/obj/
+
+#Project-specific ignores
+wwwroot/posters/
