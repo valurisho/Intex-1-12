@@ -25,13 +25,11 @@ const MainPage = () => {
   useEffect(() => {
     const fetchMoviesAndGenres = async () => {
       try {
-        // Fetch movies
         const movieRes = await fetch(`${API_URL}/GetAllMovies`);
         if (!movieRes.ok) throw new Error('Error fetching movies');
         const movieData = await movieRes.json();
         setMovies(movieData);
 
-        // Fetch genres
         const genreRes = await fetch(`${API_URL}/GetCategories`);
         if (!genreRes.ok) throw new Error('Error fetching genres');
         const genreData = await genreRes.json();
@@ -44,7 +42,6 @@ const MainPage = () => {
     fetchMoviesAndGenres();
   }, []);
 
-  // ✅ Handle outside click to close sidebar
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -64,7 +61,6 @@ const MainPage = () => {
     };
   }, [isSidebarOpen]);
 
-  // ✅ Filtered movie list
   const filteredMovies = movies.filter(
     (m: Movie) =>
       m.title.toLowerCase().includes(searchQuery.toLowerCase()) &&
@@ -75,6 +71,11 @@ const MainPage = () => {
           )
         ))
   );
+
+  const formatBlobUrl = (title: string): string =>
+    `https://inteximages.blob.core.windows.net/movie-posters-2/${title
+      .replace(/[^\w\s]/gi, '') // remove punctuation
+      .trim()}.jpg`;
 
   return (
     <>
@@ -88,12 +89,8 @@ const MainPage = () => {
         </button>
 
         {/* Sidebar */}
-        <div
-          className={`sidebar ${isSidebarOpen ? 'open' : ''}`}
-          ref={sidebarRef}
-        >
+        <div className={`sidebar ${isSidebarOpen ? 'open' : ''}`} ref={sidebarRef}>
           <h3>Filter by Genre</h3>
-
           <div className="genre-scroll-area">
             {genres.length === 0 ? (
               <p>Loading genres...</p>
@@ -110,18 +107,45 @@ const MainPage = () => {
               ))
             )}
           </div>
-
-          <button
-            className="clear-filters-btn"
-            onClick={() => setSelectedGenres([])}
-          >
+          <button className="clear-filters-btn" onClick={() => setSelectedGenres([])}>
             Clear Filters
           </button>
         </div>
 
         <div className="content-wrap">
-          {/*Recommended Movies */}
+          {/* Option A: Component-Based Recommendations */}
           <Recommender movies={movies} />
+
+          {/* OR Option B: Inline Recommendations */}
+          {/* Uncomment this block if you want to keep both or test side-by-side */}
+          {/*
+          <div className="section-header">
+            <h2>Recommended for You</h2>
+          </div>
+          <div className="recommended-row">
+            {movies.slice(0, 10).map((m) => (
+              <Link
+                to={`/movie/${m.show_id}`}
+                key={m.show_id}
+                className="recommended-card"
+              >
+                <img
+                  src={formatBlobUrl(m.title)}
+                  alt={m.title}
+                  loading="lazy"
+                  width="160"
+                  height="240"
+                  style={{ borderRadius: '8px', objectFit: 'cover' }}
+                  onError={(e) =>
+                    (e.currentTarget.src =
+                      'https://www.itsablackthang.com/cdn/shop/products/mo-better-blues-movie-poster-1990_0c124c88-07e0-48b5-986f-14295f30c8df.jpg?v=1570185702')
+                  }
+                />
+              </Link>
+            ))}
+          </div>
+          */}
+
           {/* All Movies */}
           <div className="section-header">
             <h2>All Movies</h2>
@@ -138,12 +162,16 @@ const MainPage = () => {
             {filteredMovies.map((m) => (
               <Link to={`/movie/${m.show_id}`} key={m.show_id} className="card">
                 <img
-                  src={`https://inteximages.blob.core.windows.net/movie-posters-2/${encodeURIComponent(m.title)}.jpg`}
+                  src={formatBlobUrl(m.title)}
                   alt={m.title}
                   loading="lazy"
                   width="200"
                   height="300"
                   style={{ borderRadius: '8px', objectFit: 'cover' }}
+                  onError={(e) =>
+                    (e.currentTarget.src =
+                      'https://www.itsablackthang.com/cdn/shop/products/mo-better-blues-movie-poster-1990_0c124c88-07e0-48b5-986f-14295f30c8df.jpg?v=1570185702')
+                  }
                 />
               </Link>
             ))}

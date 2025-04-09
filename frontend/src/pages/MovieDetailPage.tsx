@@ -109,6 +109,11 @@ const MovieDetailPage = () => {
 
   if (!movie) return <p>Loading...</p>;
 
+  const formatBlobUrl = (title: string): string =>
+    `https://inteximages.blob.core.windows.net/movie-posters-2/${title
+      .replace(/[^\w\s]/gi, '')
+      .trim()}.jpg`;
+
   return (
     <motion.div
       className="movie-container"
@@ -143,7 +148,7 @@ const MovieDetailPage = () => {
       <div className="movie-card">
         <div className="movie-header">
           <img
-            src={`https://inteximages.blob.core.windows.net/movie-posters-2/${encodeURIComponent(movie.title)}.jpg`}
+            src={formatBlobUrl(movie.title)}
             alt={movie.title}
             className="movie-poster"
             style={{
@@ -153,6 +158,10 @@ const MovieDetailPage = () => {
               borderRadius: '8px',
               boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
             }}
+            onError={(e) =>
+              (e.currentTarget.src =
+                'https://www.itsablackthang.com/cdn/shop/products/mo-better-blues-movie-poster-1990_0c124c88-07e0-48b5-986f-14295f30c8df.jpg?v=1570185702')
+            }
           />
           <div className="movie-details">
             <h2>{movie.title}</h2>
@@ -194,6 +203,7 @@ const MovieDetailPage = () => {
             )}
           </div>
         </div>
+
         {movie.description && (
           <div className="movie-description">
             <p>
@@ -201,6 +211,7 @@ const MovieDetailPage = () => {
             </p>
           </div>
         )}
+
         {movie && <StarRating showId={movie.show_id} userId={1} />}
 
         {/* === SIMILAR MOVIES SECTION === */}
