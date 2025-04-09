@@ -4,6 +4,8 @@ import { Movie } from '../types/Movie';
 import PrivacyPageFooter from '../components/PrivacyPageFooter';
 import { Link } from 'react-router-dom';
 import Recommender from '../components/Recommender';
+import { useGenreRecommendations } from '../components/useGenreRecommendations'; // adjust path if needed
+import { useUserRecommendations } from '../components/useUserRecommendations';
 
 const MainPage = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
@@ -11,6 +13,33 @@ const MainPage = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
   const [genres, setGenres] = useState<string[]>([]);
+
+  const userId = '1'; // Replace this with your actual user context or auth later
+
+  // THESE ARE FOR THE GENRE RECOMMENDATIONS BASED ON THE USER
+  const { recommendedMovies: comedyMovies } = useGenreRecommendations(
+    'comedy',
+    userId
+  );
+  const { recommendedMovies: dramaMovies } = useGenreRecommendations(
+    'dramas',
+    userId
+  );
+  const { recommendedMovies: horrorMovies } = useGenreRecommendations(
+    'horrorthrillers',
+    userId
+  );
+  const { recommendedMovies: familyMovies } = useGenreRecommendations(
+    'family',
+    userId
+  );
+  const { recommendedMovies: adventureMovies } = useGenreRecommendations(
+    'adventure',
+    userId
+  );
+
+  // THIS IS FOR THE USER RECOMMENDATIONS
+  const { recommendedMovies: userMovies } = useUserRecommendations(userId);
 
   const sidebarRef = useRef<HTMLDivElement>(null);
 
@@ -89,7 +118,10 @@ const MainPage = () => {
         </button>
 
         {/* Sidebar */}
-        <div className={`sidebar ${isSidebarOpen ? 'open' : ''}`} ref={sidebarRef}>
+        <div
+          className={`sidebar ${isSidebarOpen ? 'open' : ''}`}
+          ref={sidebarRef}
+        >
           <h3>Filter by Genre</h3>
           <div className="genre-scroll-area">
             {genres.length === 0 ? (
@@ -107,14 +139,23 @@ const MainPage = () => {
               ))
             )}
           </div>
-          <button className="clear-filters-btn" onClick={() => setSelectedGenres([])}>
+          <button
+            className="clear-filters-btn"
+            onClick={() => setSelectedGenres([])}
+          >
             Clear Filters
           </button>
         </div>
 
         <div className="content-wrap">
-          {/* Option A: Component-Based Recommendations */}
-          <Recommender movies={movies} />
+          {/* {THIS IS THE FOR USER RECOMMENDED MOVIES} */}
+          <Recommender movies={userMovies} title="Your Personalized Picks" />
+          {/*Recommendation for logged in user organized by Genre */}
+          <Recommender movies={comedyMovies} title="Comedy Picks for You" />
+          <Recommender movies={dramaMovies} title="Dramas You'll Love" />
+          <Recommender movies={horrorMovies} title="Thrillers & Horror" />
+          <Recommender movies={familyMovies} title="Family Friendly" />
+          <Recommender movies={adventureMovies} title="Adventure Awaits" />
 
           {/* OR Option B: Inline Recommendations */}
           {/* Uncomment this block if you want to keep both or test side-by-side */}

@@ -22,9 +22,13 @@ builder.Services.AddDbContext<RecommendationContext>(options =>
 builder.Services.AddDbContext<CollaborativeRecommendationContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("CollaborativeRecommenderConnection")));
 
-//RecommendedMoviesDataBase
-builder.Services.AddDbContext<GenreRecommenderDbContext>(options => 
+//UserRecommendedMoviesDataBase
+builder.Services.AddDbContext<UserRecommendationDbContext>(options => 
     options.UseSqlServer(builder.Configuration.GetConnectionString("AzureSqlConnection")));
+
+//GenreRecommendationDatabase
+builder.Services.AddDbContext<GenreRecommendationsContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("GenreRecommenderConnection")));
 
 builder.Services.AddCors(options=> options.AddPolicy(
     "AllowReactAppBlah", 
