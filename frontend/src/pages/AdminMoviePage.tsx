@@ -83,7 +83,7 @@ const AdminMoviePage = () => {
             Privacy Policy
           </Link>
           <Link to="/logout" className="admin-link">
-            Logout
+            Logout:
           </Link>
         </div>
       </div>
