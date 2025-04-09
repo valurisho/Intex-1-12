@@ -2,7 +2,9 @@ import './MainPage.css';
 import { useEffect, useState, useRef } from 'react';
 import { Movie } from '../types/Movie';
 import PrivacyPageFooter from '../components/PrivacyPageFooter';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import AuthorizeView, { AuthorizedUser } from '../components/AuthorizeView';
+import Logout from '../components/Logout';
 import Recommender from '../components/Recommender';
 import { useGenreRecommendations } from '../components/useGenreRecommendations'; // adjust path if needed
 import { useUserRecommendations } from '../components/useUserRecommendations';
@@ -18,6 +20,7 @@ const MainPage = () => {
   const [showSearch, setShowSearch] = useState(false);
 
   const userId = '2'; // Replace this with your actual user context or auth later
+  const allMoviesRef = useRef<HTMLDivElement>(null);
 
   // THESE ARE FOR THE GENRE RECOMMENDATIONS BASED ON THE USER
   const { recommendedMovies: comedyMovies } = useGenreRecommendations(
@@ -45,6 +48,7 @@ const MainPage = () => {
   const { recommendedMovies: userMovies } = useUserRecommendations(userId);
 
   const sidebarRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
 
   const toggleGenre = (genre: string) => {
     setSelectedGenres((prev) =>
@@ -57,22 +61,27 @@ const MainPage = () => {
   useEffect(() => {
     const fetchMoviesAndGenres = async () => {
       try {
-        const movieRes = await fetch(`${API_URL}/GetAllMovies`);
+        const movieRes = await fetch(`${API_URL}/GetAllMovies`, {
+          credentials: 'include',
+        });
         if (!movieRes.ok) throw new Error('Error fetching movies');
         const movieData = await movieRes.json();
         setMovies(movieData);
 
-        const genreRes = await fetch(`${API_URL}/GetCategories`);
+        const genreRes = await fetch(`${API_URL}/GetCategories`, {
+          credentials: 'include',
+        });
         if (!genreRes.ok) throw new Error('Error fetching genres');
         const genreData = await genreRes.json();
         setGenres(genreData);
       } catch (error) {
         console.error('Error loading data:', error);
+        navigate('/login');
       }
     };
 
     fetchMoviesAndGenres();
-  }, []);
+  }, [navigate]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -86,6 +95,11 @@ const MainPage = () => {
 
     if (isSidebarOpen) {
       document.addEventListener('mousedown', handleClickOutside);
+
+      // SCROLL TO ALL MOVIES
+      setTimeout(() => {
+        allMoviesRef.current?.scrollIntoView({ behavior: 'smooth' });
+      }, 0);
     }
 
     return () => {
@@ -111,147 +125,138 @@ const MainPage = () => {
 
   return (
     <>
-      <div className={`page-container ${isSidebarOpen ? 'sidebar-open' : ''}`}>
-        {/* Fixed Top Header */}
-        <div className="main-header">
-          <div className="main-logo">
-            <img src="/logo.png" alt="CineNiche Logo" />
+      <AuthorizeView>
+        <div
+          className={`page-container ${isSidebarOpen ? 'sidebar-open' : ''}`}
+        >
+          {/* Fixed Top Header */}
+          <div className="main-header">
+            <div className="main-logo">
+              <img src="/logo.png" alt="CineNiche Logo" />
+            </div>
+
+            <div className="main-nav">
+              <Link to="/privacy-policy" className="main-link">
+                Privacy
+              </Link>
+              <Logout>
+                Logout <AuthorizedUser value="email" />
+              </Logout>
+
+              <div className="main-search">
+                <button
+                  className="search-icon-btn"
+                  onClick={() => {
+                    setShowSearch((prev) => {
+                      const newState = !prev;
+
+                      // If opening the search bar, scroll to the "All Movies" section
+                      if (!prev && allMoviesRef.current) {
+                        setTimeout(() => {
+                          allMoviesRef.current?.scrollIntoView({
+                            behavior: 'smooth',
+                          });
+                        }, 0);
+                      }
+
+                      return newState;
+                    });
+                  }}
+                  aria-label="Toggle Search"
+                >
+                  <FaSearch />
+                </button>
+                {showSearch && (
+                  <input
+                    type="text"
+                    className="main-search-input"
+                    placeholder="Search for titles..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
+                )}
+              </div>
+            </div>
           </div>
 
-          <div className="main-nav">
-            <Link to="/privacy-policy" className="main-link">
-              Privacy
-            </Link>
-            <Link to="/logout" className="main-link">
-              Logout
-            </Link>
+          {/* Hamburger */}
+          <button
+            className="hamburger-btn"
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          >
+            ☰
+          </button>
 
+          <div
+            className={`sidebar ${isSidebarOpen ? 'open' : ''}`}
+            ref={sidebarRef}
+          >
+            <h3>Filter by Genre</h3>
+            <div className="genre-scroll-area">
+              {genres.length === 0 ? (
+                <p>Loading genres...</p>
+              ) : (
+                genres.map((genre) => (
+                  <label key={genre} className="genre-item">
+                    <input
+                      type="checkbox"
+                      checked={selectedGenres.includes(genre)}
+                      onChange={() => toggleGenre(genre)}
+                    />
+                    {genre}
+                  </label>
+                ))
+              )}
+            </div>
             <button
-              className="search-icon-btn"
-              onClick={() => setShowSearch((prev) => !prev)}
-              aria-label="Toggle Search"
+              className="clear-filters-btn"
+              onClick={() => setSelectedGenres([])}
             >
-              <FaSearch />
+              Clear Filters
             </button>
           </div>
-        </div>
 
-        {/* Floating Search Input */}
-        {showSearch && (
-          <div className="floating-search-bar">
-            <input
-              type="text"
-              placeholder="Search by title..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
-        )}
+          {/* Page Content */}
+          <div className="content-wrap">
+            <Recommender movies={userMovies} title="Your Personalized Picks" />
+            <Recommender movies={comedyMovies} title="Comedy Picks for You" />
+            <Recommender movies={dramaMovies} title="Dramas You'll Love" />
+            <Recommender movies={horrorMovies} title="Thrillers & Horror" />
+            <Recommender movies={familyMovies} title="Family Friendly" />
+            <Recommender movies={adventureMovies} title="Adventure Awaits" />
 
-        {/* Hamburger */}
-        <button
-          className="hamburger-btn"
-          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-        >
-          ☰
-        </button>
+            <div ref={allMoviesRef} style={{ position: 'relative' }}>
+              <div style={{ height: '60px', marginTop: '-60px' }}></div>
+              <div className="section-header">
+                <h2>All Movies</h2>
+              </div>
+            </div>
 
-        {/* Sidebar */}
-        <div
-          className={`sidebar ${isSidebarOpen ? 'open' : ''}`}
-          ref={sidebarRef}
-        >
-          <h3>Filter by Genre</h3>
-          <div className="genre-scroll-area">
-            {genres.length === 0 ? (
-              <p>Loading genres...</p>
-            ) : (
-              genres.map((genre) => (
-                <label key={genre} className="genre-item">
-                  <input
-                    type="checkbox"
-                    checked={selectedGenres.includes(genre)}
-                    onChange={() => toggleGenre(genre)}
+            <div className="card-container">
+              {filteredMovies.map((m) => (
+                <Link
+                  to={`/movie/${m.show_id}`}
+                  key={m.show_id}
+                  className="card"
+                >
+                  <img
+                    src={formatBlobUrl(m.title)}
+                    alt={m.title}
+                    loading="lazy"
+                    width="200"
+                    height="300"
+                    style={{ borderRadius: '8px', objectFit: 'cover' }}
+                    onError={(e) => {
+                      e.currentTarget.onerror = null;
+                      e.currentTarget.src = defaultPoster;
+                    }}
                   />
-                  {genre}
-                </label>
-              ))
-            )}
-          </div>
-          <button
-            className="clear-filters-btn"
-            onClick={() => setSelectedGenres([])}
-          >
-            Clear Filters
-          </button>
-        </div>
-
-        {/* Page Content */}
-        <div className="content-wrap">
-          {/* {THIS IS THE FOR USER RECOMMENDED MOVIES} */}
-          <Recommender movies={userMovies} title="Your Personalized Picks" />
-          {/*Recommendation for logged in user organized by Genre */}
-          <Recommender movies={comedyMovies} title="Comedy Picks for You" />
-          <Recommender movies={dramaMovies} title="Dramas You'll Love" />
-          <Recommender movies={horrorMovies} title="Thrillers & Horror" />
-          <Recommender movies={familyMovies} title="Family Friendly" />
-          <Recommender movies={adventureMovies} title="Adventure Awaits" />
-
-          {/* OR Option B: Inline Recommendations */}
-          {/* Uncomment this block if you want to keep both or test side-by-side */}
-          {/*
-
-          {/* Recommended */}
-
-          {/*<!--           <div className="section-header">
-            <h2>Recommended for You</h2>
-          </div>
-          <div className="recommended-row">
-            {movies.slice(0, 10).map((m) => (
-              <Link
-                to={`/movie/${m.show_id}`}
-                key={m.show_id}
-                className="recommended-card"
-              >
-                <img
-                  src={formatBlobUrl(m.title)}                  
-                  alt={m.title}
-                  loading="lazy"
-                  width="160"
-                  height="240"
-                  style={{ borderRadius: '8px', objectFit: 'cover' }}
-                />
-              </Link>
-            ))}
-          </div> -->*/}
-
-          {/* All Movies */}
-          <div className="section-header">
-            <h2>All Movies</h2>
-          </div>
-
-          <div className="card-container">
-            {filteredMovies.map((m) => (
-              <Link to={`/movie/${m.show_id}`} key={m.show_id} className="card">
-                <img
-                  src={formatBlobUrl(m.title)}
-                  alt={m.title}
-                  loading="lazy"
-                  width="200"
-                  height="300"
-                  style={{ borderRadius: '8px', objectFit: 'cover' }}
-                  onError={(e) => {
-                    e.currentTarget.onerror = null; // prevent infinite loop
-                    e.currentTarget.src = defaultPoster;
-                  }}
-                />
-              </Link>
-            ))}
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
-
-        <PrivacyPageFooter />
-      </div>
+      </AuthorizeView>
     </>
   );
 };

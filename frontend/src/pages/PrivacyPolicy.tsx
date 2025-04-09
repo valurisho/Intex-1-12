@@ -11,9 +11,6 @@ const PrivacyPolicy = () => {
           </Link>
         </div>
         <div className="privacy-header-nav">
-          <Link to="/privacy-policy" className="privacy-header-link">
-            Privacy Policy
-          </Link>
           <Link to="/logout" className="privacy-header-link">
             Logout
           </Link>

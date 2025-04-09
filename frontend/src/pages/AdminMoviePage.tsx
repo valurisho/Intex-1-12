@@ -1,12 +1,12 @@
-import './AdminMoviePage.css';
-
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Movie } from '../types/Movie';
 import { deleteMovie } from '../api/MovieAPI';
 import Pagination from '../components/pagination';
 import './AdminMoviePage.css';
-import defaultPoster from '../assets/Intexfun.png';
+import AuthorizeView from '../components/AuthorizeView';
+import Logout from '../components/Logout';
+
 
 const AdminMoviePage = () => {
   const [allMovies, setAllMovies] = useState<Movie[]>([]);
@@ -21,7 +21,11 @@ const AdminMoviePage = () => {
   useEffect(() => {
     const fetchMovies = async () => {
       try {
-        const response = await fetch(`${API_URL}/GetAllMovies`);
+        const response = await fetch(`${API_URL}/GetAllMovies`, {
+          credentials: 'include'
+        }
+
+        );
         if (!response.ok)
           throw new Error(`HTTP error! status: ${response.status}`);
         const data = await response.json();
@@ -33,11 +37,6 @@ const AdminMoviePage = () => {
 
     fetchMovies();
   }, []);
-
-  const formatBlobUrl = (title: string): string =>
-    `https://inteximages.blob.core.windows.net/movie-posters-2/${title
-      .replace(/[^\w\s]/gi, '')
-      .trim()}.jpg`;
 
   useEffect(() => {
     const filtered = allMovies.filter((m) =>
@@ -65,23 +64,14 @@ const AdminMoviePage = () => {
   };
 
   return (
+<AuthorizeView requiredRole='Administrator'>
     <div className="admin-page">
-      {/* Top bar */}
-      <div className="admin-top-bar">
-        <div className="admin-left">
-          <button className="hamburger">☰</button>
-          <input
-            type="text"
-            placeholder="Search for a Title"
-            value={searchQuery}
-            onChange={(e) => {
-              setSearchQuery(e.target.value);
-              setPageNum(1); // reset page on new search
-            }}
-            className="admin-search-bar"
-          />
+      {/* Top Header */}
+      <div className="admin-header">
+        <div className="admin-logo">
+          <img src="/logo.png" alt="CineNiche Logo" />
         </div>
-        <div className="admin-right">
+        <div className="admin-nav">
           <Link to="/privacy-policy" className="admin-link">
             Privacy Policy
           </Link>
@@ -91,7 +81,21 @@ const AdminMoviePage = () => {
         </div>
       </div>
 
-      {/* Header + Add Button */}
+      {/* Search Bar */}
+      <div className="admin-search-bar-wrap">
+        <input
+          type="text"
+          placeholder="Search for a Title"
+          value={searchQuery}
+          onChange={(e) => {
+            setSearchQuery(e.target.value);
+            setPageNum(1); // reset page on new search
+          }}
+          className="admin-search-bar"
+        />
+      </div>
+
+      {/* Header + Add Button
       <div className="admin-header-row">
         <h2>All Movies</h2>
         <Link to="/addMovie" className="add-movie-btn">
@@ -100,52 +104,72 @@ const AdminMoviePage = () => {
       </div>
 
       {/* Movie Cards */}
-      <div className="admin-movie-grid">
+      {/* <div className="admin-movie-grid">
         {movies.map((m) => (
           <div key={m.show_id} className="admin-movie-card">
             <img
-              /*<!--               src={`https://inteximages.blob.core.windows.net/movie-posters/${encodeURIComponent(m.title)}.jpg`}
+              src={`https://inteximages.blob.core.windows.net/movie-posters-2/${encodeURIComponent(m.title)}.jpg`}
               alt={m.title}
               className="movie-poster"
-            /> -->*/
-              src={formatBlobUrl(m.title)}
-              alt={m.title}
-              className="movie-poster"
-              onError={(e) => {
-                e.currentTarget.onerror = null; // prevent infinite loop
-                e.currentTarget.src = defaultPoster;
-              }}
             />
-
-            <p className="movie-title">{m.title}</p>
-            <div className="movie-actions">
-              <Link to={`/editMovie/${m.show_id}`} className="action-icon">
-                ✏️
-              </Link>
-              <button
-                onClick={() => handleDelete(m.show_id)}
-                className="action-icon"
-              >
-                🗑️
-              </button>
-            </div>
           </div>
-        ))}
-      </div>
+          <div className="admin-right">
+            <Link to="/privacy-policy" className="admin-link">
+              Privacy Policy
+            </Link>
+            <Logout>
+              <span className="admin-link">Logout</span>
+            </Logout>
+          </div>
+        </div> */}
 
-      {/* Pagination */}
-      <Pagination
-        currentPage={pageNum}
-        totalPages={totalPages}
-        pageSize={pageSize}
-        onPageChange={setPageNum}
-        onPageSizeChange={(newSize) => {
-          setPageSize(newSize);
-          setPageNum(1);
-        }}
-      />
-    </div>
-  );
+        {/* Header + Add Button */}
+        <div className="admin-header-row">
+          <h2>All Movies</h2>
+          <Link to="/addMovie" className="add-movie-btn">
+            Add New Movie
+          </Link>
+        </div>
+
+        {/* Movie Cards */}
+        <div className="admin-movie-grid">
+          {movies.map((m) => (
+            <div key={m.show_id} className="admin-movie-card">
+              <img
+                src={`https://inteximages.blob.core.windows.net/movie-posters/${encodeURIComponent(m.title)}.jpg`}
+                alt={m.title}
+                className="movie-poster"
+              />
+              <p className="movie-title">{m.title}</p>
+              <div className="movie-actions">
+                <Link to={`/editMovie/${m.show_id}`} className="action-icon">
+                  ✏️
+                </Link>
+                <button
+                  onClick={() => handleDelete(m.show_id)}
+                  className="action-icon"
+                >
+                  🗑️
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Pagination */}
+        <Pagination
+          currentPage={pageNum}
+          totalPages={totalPages}
+          pageSize={pageSize}
+          onPageChange={setPageNum}
+          onPageSizeChange={(newSize) => {
+            setPageSize(newSize);
+            setPageNum(1);
+          }}
+        />
+      </div>
+      </AuthorizeView>
+    );  
 };
 
 export default AdminMoviePage;

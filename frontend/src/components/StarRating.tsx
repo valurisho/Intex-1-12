@@ -21,6 +21,7 @@ const StarRating: React.FC<StarRatingProps> = ({
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify({
           userId,
           showId,
@@ -42,7 +43,7 @@ const StarRating: React.FC<StarRatingProps> = ({
   };
 
   return (
-    <div className="rating-section">
+    <div className="rating-section" style={{ color: 'white' }}>
       <strong>Rate this movie:</strong>
       <div className="star-rating">
         {[1, 2, 3, 4, 5].map((star) => (

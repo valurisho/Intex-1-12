@@ -10,7 +10,10 @@ export const useUserRecommendations = (userId: string) => {
     const fetchUserRecs = async () => {
       try {
         const response = await fetch(
-          `https://localhost:5000/api/UserRecommendation/${userId}`
+          `https://localhost:5000/api/UserRecommendation/${userId}`,
+          {
+            credentials: 'include',
+          }
         );
 
         if (!response.ok) {
@@ -33,7 +36,10 @@ export const useUserRecommendations = (userId: string) => {
         ];
 
         const allMoviesRes = await fetch(
-          `https://localhost:5000/Movie/GetAllMovies`
+          `https://localhost:5000/Movie/GetAllMovies`,
+          {
+            credentials: 'include',
+          }
         );
         const allMovies: Movie[] = await allMoviesRes.json();
 
