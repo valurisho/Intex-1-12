@@ -236,7 +236,7 @@ const MovieDetailPage = () => {
                 }}
               >
                 <img
-                  src={`https://inteximages.blob.core.windows.net/movie-posters-2/${encodeURIComponent(sim.title)}.jpg`}
+                  src={formatBlobUrl(sim.title)}
                   alt={sim.title}
                   style={{
                     width: '100%',
@@ -277,7 +277,7 @@ const MovieDetailPage = () => {
                   }}
                 >
                   <img
-                    src={`https://inteximages.blob.core.windows.net/movie-posters-2/${encodeURIComponent(m.title)}.jpg`}
+                    src={formatBlobUrl(m.title)}
                     alt={m.title}
                     style={{
                       width: '100%',
