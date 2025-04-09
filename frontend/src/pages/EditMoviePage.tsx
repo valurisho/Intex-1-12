@@ -31,13 +31,13 @@ const EditMoviePage = () => {
       try {
         const [movieRes, categoriesRes] = await Promise.all([
           fetch(`https://localhost:5000/Movie/GetMovieById/${show_id}`, {
-            credentials: 'include'
+            credentials: 'include',
           }),
           fetch('https://localhost:5000/Movie/GetCategories', {
-            credentials: 'include'
-          })
+            credentials: 'include',
+          }),
         ]);
-      
+
         if (!movieRes.ok || !categoriesRes.ok) throw new Error('Fetch failed.');
 
         const movieData = await movieRes.json();
@@ -67,14 +67,14 @@ const EditMoviePage = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const toggleGenre = (genre: string) => {
-    setFormData((prev) => {
-      const updatedGenres = prev.categories.includes(genre)
-        ? prev.categories.filter((g) => g !== genre)
-        : [...prev.categories, genre];
-      return { ...prev, categories: updatedGenres };
-    });
-  };
+  // const toggleGenre = (genre: string) => {
+  //   setFormData((prev) => {
+  //     const updatedGenres = prev.categories.includes(genre)
+  //       ? prev.categories.filter((g) => g !== genre)
+  //       : [...prev.categories, genre];
+  //     return { ...prev, categories: updatedGenres };
+  //   });
+  // };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -118,10 +118,9 @@ const EditMoviePage = () => {
 
   if (loading) return <p>Loading movie info...</p>;
 
-  return 
-    (<AuthorizeView requiredRole='Administrator'>
-            
-        <div className="edit-movie-page">
+  return (
+    <AuthorizeView requiredRole="Administrator">
+      <div className="edit-movie-page">
         <h2>Edit Movie</h2>
         <form className="movie-form" onSubmit={handleSubmit}>
           <input
@@ -184,26 +183,26 @@ const EditMoviePage = () => {
             rows={3}
           />
 
-        <div className="select-group">
-          <label>Genres:</label>
-          <Select
-            isMulti
-            options={availableCategories.map((genre) => ({
-              value: genre,
-              label: genre,
-            }))}
-            value={formData.categories.map((genre) => ({
-              value: genre,
-              label: genre,
-            }))}
-            onChange={(selectedOptions) => {
-              const genres = selectedOptions.map((option) => option.value);
-              setFormData((prev) => ({ ...prev, categories: genres }));
-            }}
-            className="react-select-container"
-            classNamePrefix="react-select"
-          />
-        </div>
+          <div className="select-group">
+            <label>Genres:</label>
+            <Select
+              isMulti
+              options={availableCategories.map((genre) => ({
+                value: genre,
+                label: genre,
+              }))}
+              value={formData.categories.map((genre) => ({
+                value: genre,
+                label: genre,
+              }))}
+              onChange={(selectedOptions) => {
+                const genres = selectedOptions.map((option) => option.value);
+                setFormData((prev) => ({ ...prev, categories: genres }));
+              }}
+              className="react-select-container"
+              classNamePrefix="react-select"
+            />
+          </div>
 
           {submitError && <p className="error-message">{submitError}</p>}
 
@@ -221,10 +220,8 @@ const EditMoviePage = () => {
           </div>
         </form>
       </div>
-      </AuthorizeView>
-    );
-
-
+    </AuthorizeView>
+  );
 };
 
 export default EditMoviePage;

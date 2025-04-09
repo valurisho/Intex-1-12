@@ -51,6 +51,7 @@ export const deleteMovie = async (show_id: string): Promise<void> => {
   try {
     const response = await fetch(`${API_URL}/deleteMovie/${show_id}?`, {
       method: 'DELETE',
+      credentials: 'include',
     });
 
     if (!response.ok) {
