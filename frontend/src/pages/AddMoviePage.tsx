@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './AddMoviePage.css';
 import Select from 'react-select';
+import AuthorizeView from '../components/AuthorizeView';
 
 const AddMoviePage = () => {
   const navigate = useNavigate();
@@ -110,6 +111,7 @@ const AddMoviePage = () => {
   };
 
   return (
+    <AuthorizeView requiredRole='Administrator'>
     <div className="add-movie-page">
       <h2>Add New Movie</h2>
       <form className="movie-form" onSubmit={handleSubmit}>
@@ -193,6 +195,7 @@ const AddMoviePage = () => {
         </div>
       </form>
     </div>
+    </AuthorizeView>
   );
 };
 

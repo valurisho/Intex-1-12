@@ -2,7 +2,9 @@ import './MainPage.css';
 import { useEffect, useState, useRef } from 'react';
 import { Movie } from '../types/Movie';
 import PrivacyPageFooter from '../components/PrivacyPageFooter';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import AuthorizeView, { AuthorizedUser } from '../components/AuthorizeView';
+import Logout from '../components/Logout';
 import Recommender from '../components/Recommender';
 import { useGenreRecommendations } from '../components/useGenreRecommendations'; // adjust path if needed
 import { useUserRecommendations } from '../components/useUserRecommendations';
@@ -46,6 +48,7 @@ const MainPage = () => {
   const { recommendedMovies: userMovies } = useUserRecommendations(userId);
 
   const sidebarRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
 
   const toggleGenre = (genre: string) => {
     setSelectedGenres((prev) =>
@@ -58,22 +61,27 @@ const MainPage = () => {
   useEffect(() => {
     const fetchMoviesAndGenres = async () => {
       try {
-        const movieRes = await fetch(`${API_URL}/GetAllMovies`);
+        const movieRes = await fetch(`${API_URL}/GetAllMovies`, {
+          credentials: 'include'
+        });
         if (!movieRes.ok) throw new Error('Error fetching movies');
         const movieData = await movieRes.json();
         setMovies(movieData);
 
-        const genreRes = await fetch(`${API_URL}/GetCategories`);
+        const genreRes = await fetch(`${API_URL}/GetCategories`, {
+          credentials: 'include'
+        });
         if (!genreRes.ok) throw new Error('Error fetching genres');
         const genreData = await genreRes.json();
         setGenres(genreData);
       } catch (error) {
         console.error('Error loading data:', error);
+        navigate('/login');
       }
     };
 
     fetchMoviesAndGenres();
-  }, []);
+  }, [navigate]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -117,6 +125,7 @@ const MainPage = () => {
 
   return (
     <>
+    <AuthorizeView>
       <div className={`page-container ${isSidebarOpen ? 'sidebar-open' : ''}`}>
         {/* Fixed Top Header */}
         <div className="main-header">
@@ -128,9 +137,9 @@ const MainPage = () => {
             <Link to="/privacy-policy" className="main-link">
               Privacy
             </Link>
-            <Link to="/logout" className="main-link">
-              Logout
-            </Link>
+            <Logout>
+            Logout <AuthorizedUser value="email" />
+            </Logout>
 
             <div className="main-search">
               <button
@@ -176,7 +185,6 @@ const MainPage = () => {
           ☰
         </button>
 
-        {/* Sidebar */}
         <div
           className={`sidebar ${isSidebarOpen ? 'open' : ''}`}
           ref={sidebarRef}
@@ -242,6 +250,7 @@ const MainPage = () => {
           </div>
         </div>
       </div>
+    </AuthorizeView>
     </>
   );
 };
