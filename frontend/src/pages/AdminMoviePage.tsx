@@ -85,6 +85,7 @@ const AdminMoviePage = () => {
           </Link>
 
         </div>
+        </div>
 
         {/* Search Bar */}
         <div className="admin-search-bar-wrap">
