@@ -1,4 +1,4 @@
-import '../App.css';
+import './MainPage.css';
 import { useEffect, useState, useRef } from 'react';
 import { Movie } from '../types/Movie';
 import PrivacyPageFooter from '../components/PrivacyPageFooter';
@@ -79,7 +79,7 @@ const MainPage = () => {
 
   return (
     <>
-      <div className="page-container">
+      <div className={`page-container ${isSidebarOpen ? 'sidebar-open' : ''}`}>
         {/* Hamburger */}
         <button
           className="hamburger-btn"
