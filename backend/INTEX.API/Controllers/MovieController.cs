@@ -1,6 +1,7 @@
 using INTEX.API.Data;
 using INTEX.API.DTOs;
 using INTEX.API.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,6 +22,7 @@ namespace INTEX.API.Controllers
         
         // GetAllMoviesAPI
         [HttpGet("GetAllMovies")]
+        [Authorize]
         public IActionResult GetAllMovies([FromQuery] string categories = "")
         {
             var categoryList = categories.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList();
@@ -59,6 +61,7 @@ namespace INTEX.API.Controllers
         
         //Get Categories
         [HttpGet("GetCategories")]
+        [Authorize]
         public IActionResult GetCategories()
         {
             var categories = _movieContext.Categories
@@ -70,6 +73,7 @@ namespace INTEX.API.Controllers
         
         // ADD A MOVIE
         [HttpPost("AddMovie")]
+        [Authorize(Roles = "Adminstrator")]
         public IActionResult AddMovie([FromBody] MovieDto newMovieDto)
         {
             if (newMovieDto.release_year < 1700)
@@ -127,6 +131,7 @@ namespace INTEX.API.Controllers
         
         // DELETE
         [HttpDelete("deleteMovie/{show_id}")]
+        [Authorize(Roles = "Adminstrator")]
         public IActionResult DeleteMovie(string show_id)
         {
             var movie = _movieContext.Movies
@@ -150,6 +155,7 @@ namespace INTEX.API.Controllers
         
         //GET MOVIE BY ID FOR THE MOVIEDETAILSPAGE
         [HttpGet("GetMovieById/{show_id}")]
+        [Authorize]
         public IActionResult GetMovieById(string show_id)
         {
             var movie = _movieContext.Movies
@@ -179,6 +185,7 @@ namespace INTEX.API.Controllers
 
         // EDIT MOVIE
         [HttpPut("updateMovie/{show_id}")]
+        [Authorize(Roles = "Adminstrator")]
         public IActionResult UpdateMovie(string show_id, [FromBody] MovieDto updatedMovieDto)
         {
             var movie = _movieContext.Movies
@@ -239,6 +246,7 @@ namespace INTEX.API.Controllers
         
         //ROUTE TO SAVE MOVIE/USER RATINGS TO THE DATABASE
         [HttpPost("AddRating")]
+        [Authorize]
         public async Task<IActionResult> AddRating([FromBody] MovieRatingDto movieRatingDto)
         {
             if (movieRatingDto.Rating < 1 || movieRatingDto.Rating > 5)

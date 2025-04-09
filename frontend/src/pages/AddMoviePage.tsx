@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './AddMoviePage.css';
+import AuthorizeView from '../components/AuthorizeView';
 
 const AddMoviePage = () => {
   const navigate = useNavigate();
@@ -27,7 +28,9 @@ const AddMoviePage = () => {
     const fetchCategories = async () => {
       try {
         const response = await fetch(
-          'https://localhost:5000/Movie/GetCategories'
+          'https://localhost:5000/Movie/GetCategories', {
+            credentials: 'include'
+          }
         );
         if (!response.ok) throw new Error('Failed to fetch categories');
         const data: string[] = await response.json();
@@ -87,6 +90,7 @@ const AddMoviePage = () => {
 
     try {
       const response = await fetch('https://localhost:5000/Movie/AddMovie', {
+        credentials: 'include',
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
@@ -109,85 +113,87 @@ const AddMoviePage = () => {
   };
 
   return (
-    <div className="add-movie-page">
-      <h2>Add New Movie</h2>
-      <form className="movie-form" onSubmit={handleSubmit}>
-        <input
-          name="title"
-          placeholder="Title"
-          onChange={handleChange}
-          required
-        />
-        <input
-          name="type"
-          placeholder="Type (e.g. Movie, TV Show)"
-          onChange={handleChange}
-          required
-        />
-        <input name="director" placeholder="Director" onChange={handleChange} />
-        <input name="cast" placeholder="Cast" onChange={handleChange} />
-        <input name="country" placeholder="Country" onChange={handleChange} />
-        <input
-          name="release_year"
-          type="number"
-          placeholder="Release Year"
-          onChange={handleChange}
-          required
-        />
-        <input
-          name="rating"
-          placeholder="Rating (e.g. PG-13)"
-          onChange={handleChange}
-        />
-        <input
-          name="duration"
-          placeholder="Duration (e.g. 90 min)"
-          onChange={handleChange}
-        />
-        <textarea
-          name="description"
-          placeholder="Description"
-          rows={3}
-          onChange={handleChange}
-        />
-
-        {loadingCategories ? (
-          <p>Loading categories...</p>
-        ) : (
-          <div className="genre-checkbox-group">
-            <label>Genres:</label>
-            <div className="checkbox-grid">
-              {availableCategories.map((genre) => (
-                <label key={genre} className="checkbox-item">
-                  <input
-                    type="checkbox"
-                    checked={formData.categories.includes(genre)}
-                    onChange={() => toggleGenre(genre)}
-                  />
-                  {genre}
-                </label>
-              ))}
+    <AuthorizeView requiredRole='Administrator'>
+      <div className="add-movie-page">
+        <h2>Add New Movie</h2>
+        <form className="movie-form" onSubmit={handleSubmit}>
+          <input
+            name="title"
+            placeholder="Title"
+            onChange={handleChange}
+            required
+          />
+          <input
+            name="type"
+            placeholder="Type (e.g. Movie, TV Show)"
+            onChange={handleChange}
+            required
+          />
+          <input name="director" placeholder="Director" onChange={handleChange} />
+          <input name="cast" placeholder="Cast" onChange={handleChange} />
+          <input name="country" placeholder="Country" onChange={handleChange} />
+          <input
+            name="release_year"
+            type="number"
+            placeholder="Release Year"
+            onChange={handleChange}
+            required
+          />
+          <input
+            name="rating"
+            placeholder="Rating (e.g. PG-13)"
+            onChange={handleChange}
+          />
+          <input
+            name="duration"
+            placeholder="Duration (e.g. 90 min)"
+            onChange={handleChange}
+          />
+          <textarea
+            name="description"
+            placeholder="Description"
+            rows={3}
+            onChange={handleChange}
+          />
+  
+          {loadingCategories ? (
+            <p>Loading categories...</p>
+          ) : (
+            <div className="genre-checkbox-group">
+              <label>Genres:</label>
+              <div className="checkbox-grid">
+                {availableCategories.map((genre) => (
+                  <label key={genre} className="checkbox-item">
+                    <input
+                      type="checkbox"
+                      checked={formData.categories.includes(genre)}
+                      onChange={() => toggleGenre(genre)}
+                    />
+                    {genre}
+                  </label>
+                ))}
+              </div>
             </div>
+          )}
+  
+          {submitError && <p className="error-message">{submitError}</p>}
+  
+          <div className="form-actions">
+            <button type="submit" className="submit-btn">
+              Add Movie
+            </button>
+            <button
+              type="button"
+              className="cancel-btn"
+              onClick={() => navigate('/adminPage')}
+            >
+              Cancel
+            </button>
           </div>
-        )}
-
-        {submitError && <p className="error-message">{submitError}</p>}
-
-        <div className="form-actions">
-          <button type="submit" className="submit-btn">
-            Add Movie
-          </button>
-          <button
-            type="button"
-            className="cancel-btn"
-            onClick={() => navigate('/adminPage')}
-          >
-            Cancel
-          </button>
-        </div>
-      </form>
-    </div>
-  );
+        </form>
+      </div>
+    </AuthorizeView>
+  );  
 };
 
 export default AddMoviePage;

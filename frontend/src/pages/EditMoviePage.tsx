@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import AuthorizeView from '../components/AuthorizeView';
 // import './EditMoviePage.css';
 
 const EditMoviePage = () => {
@@ -28,10 +29,14 @@ const EditMoviePage = () => {
     const fetchData = async () => {
       try {
         const [movieRes, categoriesRes] = await Promise.all([
-          fetch(`https://localhost:5000/Movie/GetMovieById/${show_id}`),
-          fetch('https://localhost:5000/Movie/GetCategories'),
+          fetch(`https://localhost:5000/Movie/GetMovieById/${show_id}`, {
+            credentials: 'include'
+          }),
+          fetch('https://localhost:5000/Movie/GetCategories', {
+            credentials: 'include'
+          })
         ]);
-
+      
         if (!movieRes.ok || !categoriesRes.ok) throw new Error('Fetch failed.');
 
         const movieData = await movieRes.json();
@@ -90,6 +95,7 @@ const EditMoviePage = () => {
       const response = await fetch(
         `https://localhost:5000/Movie/updateMovie/${show_id}`,
         {
+          credentials: 'include',
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
@@ -111,103 +117,108 @@ const EditMoviePage = () => {
 
   if (loading) return <p>Loading movie info...</p>;
 
-  return (
-    <div className="edit-movie-page">
-      <h2>Edit Movie</h2>
-      <form className="movie-form" onSubmit={handleSubmit}>
-        <input
-          name="title"
-          placeholder="Title"
-          value={formData.title}
-          onChange={handleChange}
-          required
-        />
-        <input
-          name="type"
-          placeholder="Type"
-          value={formData.type}
-          onChange={handleChange}
-          required
-        />
-        <input
-          name="director"
-          placeholder="Director"
-          value={formData.director}
-          onChange={handleChange}
-        />
-        <input
-          name="cast"
-          placeholder="Cast"
-          value={formData.cast}
-          onChange={handleChange}
-        />
-        <input
-          name="country"
-          placeholder="Country"
-          value={formData.country}
-          onChange={handleChange}
-        />
-        <input
-          name="release_year"
-          type="number"
-          placeholder="Release Year"
-          value={formData.release_year}
-          onChange={handleChange}
-          required
-        />
-        <input
-          name="rating"
-          placeholder="Rating"
-          value={formData.rating}
-          onChange={handleChange}
-        />
-        <input
-          name="duration"
-          placeholder="Duration"
-          value={formData.duration}
-          onChange={handleChange}
-        />
-        <textarea
-          name="description"
-          placeholder="Description"
-          value={formData.description}
-          onChange={handleChange}
-          rows={3}
-        />
+  return 
+    (<AuthorizeView requiredRole='Administrator'>
+            
+        <div className="edit-movie-page">
+        <h2>Edit Movie</h2>
+        <form className="movie-form" onSubmit={handleSubmit}>
+          <input
+            name="title"
+            placeholder="Title"
+            value={formData.title}
+            onChange={handleChange}
+            required
+          />
+          <input
+            name="type"
+            placeholder="Type"
+            value={formData.type}
+            onChange={handleChange}
+            required
+          />
+          <input
+            name="director"
+            placeholder="Director"
+            value={formData.director}
+            onChange={handleChange}
+          />
+          <input
+            name="cast"
+            placeholder="Cast"
+            value={formData.cast}
+            onChange={handleChange}
+          />
+          <input
+            name="country"
+            placeholder="Country"
+            value={formData.country}
+            onChange={handleChange}
+          />
+          <input
+            name="release_year"
+            type="number"
+            placeholder="Release Year"
+            value={formData.release_year}
+            onChange={handleChange}
+            required
+          />
+          <input
+            name="rating"
+            placeholder="Rating"
+            value={formData.rating}
+            onChange={handleChange}
+          />
+          <input
+            name="duration"
+            placeholder="Duration"
+            value={formData.duration}
+            onChange={handleChange}
+          />
+          <textarea
+            name="description"
+            placeholder="Description"
+            value={formData.description}
+            onChange={handleChange}
+            rows={3}
+          />
 
-        <div className="genre-checkbox-group">
-          <label>Genres:</label>
-          <div className="checkbox-grid">
-            {availableCategories.map((genre) => (
-              <label key={genre} className="checkbox-item">
-                <input
-                  type="checkbox"
-                  checked={formData.categories.includes(genre)}
-                  onChange={() => toggleGenre(genre)}
-                />
-                {genre}
-              </label>
-            ))}
+          <div className="genre-checkbox-group">
+            <label>Genres:</label>
+            <div className="checkbox-grid">
+              {availableCategories.map((genre) => (
+                <label key={genre} className="checkbox-item">
+                  <input
+                    type="checkbox"
+                    checked={formData.categories.includes(genre)}
+                    onChange={() => toggleGenre(genre)}
+                  />
+                  {genre}
+                </label>
+              ))}
+            </div>
           </div>
-        </div>
 
-        {submitError && <p className="error-message">{submitError}</p>}
+          {submitError && <p className="error-message">{submitError}</p>}
 
-        <div className="form-actions">
-          <button type="submit" className="submit-btn">
-            Update
-          </button>
-          <button
-            type="button"
-            className="cancel-btn"
-            onClick={() => navigate('/AdminPage')}
-          >
-            Cancel
-          </button>
-        </div>
-      </form>
-    </div>
-  );
+          <div className="form-actions">
+            <button type="submit" className="submit-btn">
+              Update
+            </button>
+            <button
+              type="button"
+              className="cancel-btn"
+              onClick={() => navigate('/AdminPage')}
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+      </AuthorizeView>
+    );
+
+
 };
 
 export default EditMoviePage;
