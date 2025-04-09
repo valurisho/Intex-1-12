@@ -68,21 +68,22 @@ const AdminMoviePage = () => {
       .trim()}.jpg`;
 
   return (
-    <AuthorizeView requiredRole="Administrator">
-      <div className="admin-page">
-        {/* Top Header */}
-        <div className="admin-header">
-          <div className="admin-logo">
-            <img src="/logo.png" alt="CineNiche Logo" />
-          </div>
-          <div className="admin-nav">
-            <Link to="/privacy-policy" className="admin-link">
-              Privacy Policy
-            </Link>
-            <Link to="/logout" className="admin-link">
-              Logout
-            </Link>
-          </div>
+
+<AuthorizeView requiredRole='Administrator'>
+    <div className="admin-page">
+      {/* Top Header */}
+      <div className="admin-header">
+        <div className="admin-logo">
+          <img src="/logo.png" alt="CineNiche Logo" />
+        </div>
+        <div className="admin-nav">
+          <Link to="/privacy-policy" className="admin-link">
+            Privacy Policy
+          </Link>
+          <Link to="/logout" className="admin-link">
+            Logout:
+          </Link>
+
         </div>
 
         {/* Search Bar */}

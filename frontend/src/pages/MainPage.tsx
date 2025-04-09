@@ -139,7 +139,7 @@ const MainPage = () => {
                 Privacy
               </Link>
               <Logout>
-                Logout <AuthorizedUser value="email" />
+                Logout: <AuthorizedUser value="email" />
               </Logout>
 
               <div className="main-search">

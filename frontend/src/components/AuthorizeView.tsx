@@ -75,7 +75,11 @@ export function AuthorizedUser(props: { value: string }) {
 
   if (!user) return null;
 
-  return props.value === 'email' ? <>{user.email}</> : null;
+  // Extract and capitalize the first part of the email
+  const rawUsername = user.email.split('@')[0];
+  const username = rawUsername.charAt(0).toUpperCase() + rawUsername.slice(1);
+
+  return props.value === 'email' ? <>{username}</> : null;
 }
 
 export default AuthorizeView;
