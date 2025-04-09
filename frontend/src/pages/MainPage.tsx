@@ -24,13 +24,11 @@ const MainPage = () => {
   useEffect(() => {
     const fetchMoviesAndGenres = async () => {
       try {
-        // Fetch movies
         const movieRes = await fetch(`${API_URL}/GetAllMovies`);
         if (!movieRes.ok) throw new Error('Error fetching movies');
         const movieData = await movieRes.json();
         setMovies(movieData);
 
-        // Fetch genres
         const genreRes = await fetch(`${API_URL}/GetCategories`);
         if (!genreRes.ok) throw new Error('Error fetching genres');
         const genreData = await genreRes.json();
@@ -43,7 +41,6 @@ const MainPage = () => {
     fetchMoviesAndGenres();
   }, []);
 
-  // ✅ Handle outside click to close sidebar
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -63,7 +60,6 @@ const MainPage = () => {
     };
   }, [isSidebarOpen]);
 
-  // ✅ Filtered movie list
   const filteredMovies = movies.filter(
     (m: Movie) =>
       m.title.toLowerCase().includes(searchQuery.toLowerCase()) &&
@@ -74,6 +70,12 @@ const MainPage = () => {
           )
         ))
   );
+
+  // Format movie title to match Azure blob filename structure
+  const formatBlobUrl = (title: string): string =>
+    `https://inteximages.blob.core.windows.net/movie-posters-2/${title
+      .replace(/[^\w\s]/gi, '') // remove all punctuation (&, :, -, etc.)
+      .trim()}.jpg`;
 
   return (
     <>
@@ -132,12 +134,16 @@ const MainPage = () => {
                 className="recommended-card"
               >
                 <img
-                  src={`https://inteximages.blob.core.windows.net/movie-posters-2/${encodeURIComponent(m.title)}.jpg`}
+                  src={formatBlobUrl(m.title)}
                   alt={m.title}
                   loading="lazy"
                   width="160"
                   height="240"
                   style={{ borderRadius: '8px', objectFit: 'cover' }}
+                  onError={(e) =>
+                    (e.currentTarget.src =
+                      'https://www.itsablackthang.com/cdn/shop/products/mo-better-blues-movie-poster-1990_0c124c88-07e0-48b5-986f-14295f30c8df.jpg?v=1570185702')
+                  }
                 />
               </Link>
             ))}
@@ -159,12 +165,16 @@ const MainPage = () => {
             {filteredMovies.map((m) => (
               <Link to={`/movie/${m.show_id}`} key={m.show_id} className="card">
                 <img
-                  src={`https://inteximages.blob.core.windows.net/movie-posters-2/${encodeURIComponent(m.title)}.jpg`}
+                  src={formatBlobUrl(m.title)}
                   alt={m.title}
                   loading="lazy"
                   width="200"
                   height="300"
                   style={{ borderRadius: '8px', objectFit: 'cover' }}
+                  onError={(e) =>
+                    (e.currentTarget.src =
+                      'https://www.itsablackthang.com/cdn/shop/products/mo-better-blues-movie-poster-1990_0c124c88-07e0-48b5-986f-14295f30c8df.jpg?v=1570185702')
+                  }
                 />
               </Link>
             ))}
