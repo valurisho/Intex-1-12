@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './AddMoviePage.css';
+import Select from 'react-select';
 import AuthorizeView from '../components/AuthorizeView';
 
 const AddMoviePage = () => {
@@ -28,9 +29,7 @@ const AddMoviePage = () => {
     const fetchCategories = async () => {
       try {
         const response = await fetch(
-          'https://localhost:5000/Movie/GetCategories', {
-            credentials: 'include'
-          }
+          'https://localhost:5000/Movie/GetCategories'
         );
         if (!response.ok) throw new Error('Failed to fetch categories');
         const data: string[] = await response.json();
@@ -56,15 +55,15 @@ const AddMoviePage = () => {
     }));
   };
 
-  // Genre selection toggle
-  const toggleGenre = (genre: string) => {
-    setFormData((prev) => {
-      const updatedGenres = prev.categories.includes(genre)
-        ? prev.categories.filter((g) => g !== genre)
-        : [...prev.categories, genre];
-      return { ...prev, categories: updatedGenres };
-    });
-  };
+  // // Genre selection toggle
+  // const toggleGenre = (genre: string) => {
+  //   setFormData((prev) => {
+  //     const updatedGenres = prev.categories.includes(genre)
+  //       ? prev.categories.filter((g) => g !== genre)
+  //       : [...prev.categories, genre];
+  //     return { ...prev, categories: updatedGenres };
+  //   });
+  // };
 
   // Submit handler
   const handleSubmit = async (e: React.FormEvent) => {
@@ -90,7 +89,6 @@ const AddMoviePage = () => {
 
     try {
       const response = await fetch('https://localhost:5000/Movie/AddMovie', {
-        credentials: 'include',
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
@@ -114,86 +112,91 @@ const AddMoviePage = () => {
 
   return (
     <AuthorizeView requiredRole='Administrator'>
-      <div className="add-movie-page">
-        <h2>Add New Movie</h2>
-        <form className="movie-form" onSubmit={handleSubmit}>
-          <input
-            name="title"
-            placeholder="Title"
-            onChange={handleChange}
-            required
-          />
-          <input
-            name="type"
-            placeholder="Type (e.g. Movie, TV Show)"
-            onChange={handleChange}
-            required
-          />
-          <input name="director" placeholder="Director" onChange={handleChange} />
-          <input name="cast" placeholder="Cast" onChange={handleChange} />
-          <input name="country" placeholder="Country" onChange={handleChange} />
-          <input
-            name="release_year"
-            type="number"
-            placeholder="Release Year"
-            onChange={handleChange}
-            required
-          />
-          <input
-            name="rating"
-            placeholder="Rating (e.g. PG-13)"
-            onChange={handleChange}
-          />
-          <input
-            name="duration"
-            placeholder="Duration (e.g. 90 min)"
-            onChange={handleChange}
-          />
-          <textarea
-            name="description"
-            placeholder="Description"
-            rows={3}
-            onChange={handleChange}
-          />
-  
-          {loadingCategories ? (
-            <p>Loading categories...</p>
-          ) : (
-            <div className="genre-checkbox-group">
-              <label>Genres:</label>
-              <div className="checkbox-grid">
-                {availableCategories.map((genre) => (
-                  <label key={genre} className="checkbox-item">
-                    <input
-                      type="checkbox"
-                      checked={formData.categories.includes(genre)}
-                      onChange={() => toggleGenre(genre)}
-                    />
-                    {genre}
-                  </label>
-                ))}
-              </div>
-            </div>
-          )}
-  
-          {submitError && <p className="error-message">{submitError}</p>}
-  
-          <div className="form-actions">
-            <button type="submit" className="submit-btn">
-              Add Movie
-            </button>
-            <button
-              type="button"
-              className="cancel-btn"
-              onClick={() => navigate('/adminPage')}
-            >
-              Cancel
-            </button>
+    <div className="add-movie-page">
+      <h2>Add New Movie</h2>
+      <form className="movie-form" onSubmit={handleSubmit}>
+        <input
+          name="title"
+          placeholder="Title"
+          onChange={handleChange}
+          required
+        />
+        <input
+          name="type"
+          placeholder="Type (e.g. Movie, TV Show)"
+          onChange={handleChange}
+          required
+        />
+        <input name="director" placeholder="Director" onChange={handleChange} />
+        <input name="cast" placeholder="Cast" onChange={handleChange} />
+        <input name="country" placeholder="Country" onChange={handleChange} />
+        <input
+          name="release_year"
+          type="number"
+          placeholder="Release Year"
+          onChange={handleChange}
+          required
+        />
+        <input
+          name="rating"
+          placeholder="Rating (e.g. PG-13)"
+          onChange={handleChange}
+        />
+        <input
+          name="duration"
+          placeholder="Duration (e.g. 90 min)"
+          onChange={handleChange}
+        />
+        <textarea
+          name="description"
+          placeholder="Description"
+          rows={3}
+          onChange={handleChange}
+        />
+
+        {loadingCategories ? (
+          <p>Loading categories...</p>
+        ) : (
+          <div className="select-group">
+            <label>Genres:</label>
+            <Select
+              isMulti
+              options={availableCategories.map((genre) => ({
+                value: genre,
+                label: genre,
+              }))}
+              value={formData.categories.map((genre) => ({
+                value: genre,
+                label: genre,
+              }))}
+              onChange={(selectedOptions) => {
+                const genres = selectedOptions.map((option) => option.value);
+                setFormData((prev) => ({ ...prev, categories: genres }));
+              }}
+              className="react-select-container"
+              classNamePrefix="react-select"
+            />
           </div>
-        </form>
-      </div>
+        )}
+
+        {submitError && <p className="error-message">{submitError}</p>}
+
+        <div className="form-actions">
+          <button type="submit" className="submit-btn">
+            Add Movie
+          </button>
+          <button
+            type="button"
+            className="cancel-btn"
+            onClick={() => navigate('/adminPage')}
+          >
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
     </AuthorizeView>
-  );  
+  );
 };
 
 export default AddMoviePage;

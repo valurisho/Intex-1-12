@@ -1,10 +1,15 @@
-import '../App.css';
+import './MainPage.css';
 import { useEffect, useState, useRef } from 'react';
 import { Movie } from '../types/Movie';
 import PrivacyPageFooter from '../components/PrivacyPageFooter';
 import { Link, useNavigate } from 'react-router-dom';
 import AuthorizeView, { AuthorizedUser } from '../components/AuthorizeView';
 import Logout from '../components/Logout';
+import Recommender from '../components/Recommender';
+import { useGenreRecommendations } from '../components/useGenreRecommendations'; // adjust path if needed
+import { useUserRecommendations } from '../components/useUserRecommendations';
+import { FaSearch } from 'react-icons/fa';
+import defaultPoster from '../assets/Intexfun.png';
 
 const MainPage = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
@@ -12,6 +17,35 @@ const MainPage = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
   const [genres, setGenres] = useState<string[]>([]);
+  const [showSearch, setShowSearch] = useState(false);
+
+  const userId = '2'; // Replace this with your actual user context or auth later
+  const allMoviesRef = useRef<HTMLDivElement>(null);
+
+  // THESE ARE FOR THE GENRE RECOMMENDATIONS BASED ON THE USER
+  const { recommendedMovies: comedyMovies } = useGenreRecommendations(
+    'comedy',
+    userId
+  );
+  const { recommendedMovies: dramaMovies } = useGenreRecommendations(
+    'dramas',
+    userId
+  );
+  const { recommendedMovies: horrorMovies } = useGenreRecommendations(
+    'horrorthrillers',
+    userId
+  );
+  const { recommendedMovies: familyMovies } = useGenreRecommendations(
+    'family',
+    userId
+  );
+  const { recommendedMovies: adventureMovies } = useGenreRecommendations(
+    'adventure',
+    userId
+  );
+
+  // THIS IS FOR THE USER RECOMMENDATIONS
+  const { recommendedMovies: userMovies } = useUserRecommendations(userId);
 
   const sidebarRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
@@ -61,6 +95,11 @@ const MainPage = () => {
 
     if (isSidebarOpen) {
       document.addEventListener('mousedown', handleClickOutside);
+
+      // SCROLL TO ALL MOVIES
+      setTimeout(() => {
+        allMoviesRef.current?.scrollIntoView({ behavior: 'smooth' });
+      }, 0);
     }
 
     return () => {
@@ -79,15 +118,66 @@ const MainPage = () => {
         ))
   );
 
+  const formatBlobUrl = (title: string): string =>
+    `https://inteximages.blob.core.windows.net/movie-posters-2/${title
+      .replace(/[^\w\s]/gi, '')
+      .trim()}.jpg`;
+
   return (
+    <>
     <AuthorizeView>
-      <div className="page-container">
-        <div className="top-bar">
-          <Logout>
+      <div className={`page-container ${isSidebarOpen ? 'sidebar-open' : ''}`}>
+        {/* Fixed Top Header */}
+        <div className="main-header">
+          <div className="main-logo">
+            <img src="/logo.png" alt="CineNiche Logo" />
+          </div>
+
+          <div className="main-nav">
+            <Link to="/privacy-policy" className="main-link">
+              Privacy
+            </Link>
+            <Logout>
             Logout <AuthorizedUser value="email" />
-          </Logout>
+            </Logout>
+
+            <div className="main-search">
+              <button
+                className="search-icon-btn"
+                onClick={() => {
+                  setShowSearch((prev) => {
+                    const newState = !prev;
+
+                    // If opening the search bar, scroll to the "All Movies" section
+                    if (!prev && allMoviesRef.current) {
+                      setTimeout(() => {
+                        allMoviesRef.current?.scrollIntoView({
+                          behavior: 'smooth',
+                        });
+                      }, 0);
+                    }
+
+                    return newState;
+                  });
+                }}
+                aria-label="Toggle Search"
+              >
+                <FaSearch />
+              </button>
+              {showSearch && (
+                <input
+                  type="text"
+                  className="main-search-input"
+                  placeholder="Search for titles..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              )}
+            </div>
+          </div>
         </div>
 
+        {/* Hamburger */}
         <button
           className="hamburger-btn"
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
@@ -100,7 +190,6 @@ const MainPage = () => {
           ref={sidebarRef}
         >
           <h3>Filter by Genre</h3>
-
           <div className="genre-scroll-area">
             {genres.length === 0 ? (
               <p>Loading genres...</p>
@@ -117,7 +206,6 @@ const MainPage = () => {
               ))
             )}
           </div>
-
           <button
             className="clear-filters-btn"
             onClick={() => setSelectedGenres([])}
@@ -126,249 +214,45 @@ const MainPage = () => {
           </button>
         </div>
 
+        {/* Page Content */}
         <div className="content-wrap">
-          <div className="section-header">
-            <h2>Recommended for You</h2>
-          </div>
-          <div className="recommended-row">
-            {movies.slice(0, 10).map((m) => (
-              <Link
-                to={`/movie/${m.show_id}`}
-                key={m.show_id}
-                className="recommended-card"
-              >
-                <img
-                  src={`https://inteximages.blob.core.windows.net/movie-posters-2/${encodeURIComponent(m.title)}.jpg`}
-                  alt={m.title}
-                  loading="lazy"
-                  width="160"
-                  height="240"
-                  style={{ borderRadius: '8px', objectFit: 'cover' }}
-                />
-              </Link>
-            ))}
-          </div>
+          <Recommender movies={userMovies} title="Your Personalized Picks" />
+          <Recommender movies={comedyMovies} title="Comedy Picks for You" />
+          <Recommender movies={dramaMovies} title="Dramas You'll Love" />
+          <Recommender movies={horrorMovies} title="Thrillers & Horror" />
+          <Recommender movies={familyMovies} title="Family Friendly" />
+          <Recommender movies={adventureMovies} title="Adventure Awaits" />
 
-          <div className="section-header">
-            <h2>All Movies</h2>
-            <input
-              type="text"
-              placeholder="Search by title..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="search-bar"
-            />
+          <div ref={allMoviesRef} style={{ position: 'relative' }}>
+            <div style={{ height: '60px', marginTop: '-60px' }}></div>
+            <div className="section-header">
+              <h2>All Movies</h2>
+            </div>
           </div>
 
           <div className="card-container">
             {filteredMovies.map((m) => (
               <Link to={`/movie/${m.show_id}`} key={m.show_id} className="card">
                 <img
-                  src={`https://inteximages.blob.core.windows.net/movie-posters-2/${encodeURIComponent(m.title)}.jpg`}
+                  src={formatBlobUrl(m.title)}
                   alt={m.title}
                   loading="lazy"
                   width="200"
                   height="300"
                   style={{ borderRadius: '8px', objectFit: 'cover' }}
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = defaultPoster;
+                  }}
                 />
               </Link>
             ))}
           </div>
         </div>
-
-        <PrivacyPageFooter />
       </div>
     </AuthorizeView>
+    </>
   );
 };
 
 export default MainPage;
-
-
-
-
-// import '../App.css';
-// import { useEffect, useState, useRef } from 'react';
-// import { Movie } from '../types/Movie';
-// import PrivacyPageFooter from '../components/PrivacyPageFooter';
-// import { Link } from 'react-router-dom';
-// import Logout from '../components/Logout';
-
-// const MainPage = () => {
-//   const [movies, setMovies] = useState<Movie[]>([]);
-//   const [searchQuery, setSearchQuery] = useState('');
-//   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-//   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
-//   const [genres, setGenres] = useState<string[]>([]);
-
-//   const sidebarRef = useRef<HTMLDivElement>(null);
-
-//   const toggleGenre = (genre: string) => {
-//     setSelectedGenres((prev) =>
-//       prev.includes(genre) ? prev.filter((g) => g !== genre) : [...prev, genre]
-//     );
-//   };
-
-//   const API_URL = 'https://localhost:5000/Movie';
-
-//   useEffect(() => {
-//     const fetchMoviesAndGenres = async () => {
-//       try {
-//         // Fetch movies
-//         const movieRes = await fetch(`${API_URL}/GetAllMovies`);
-//         if (!movieRes.ok) throw new Error('Error fetching movies');
-//         const movieData = await movieRes.json();
-//         setMovies(movieData);
-
-//         // Fetch genres
-//         const genreRes = await fetch(`${API_URL}/GetCategories`);
-//         if (!genreRes.ok) throw new Error('Error fetching genres');
-//         const genreData = await genreRes.json();
-//         setGenres(genreData);
-//       } catch (error) {
-//         console.error('Error loading data:', error);
-//       }
-//     };
-
-//     fetchMoviesAndGenres();
-//   }, []);
-
-//   // ✅ Handle outside click to close sidebar
-//   useEffect(() => {
-//     const handleClickOutside = (event: MouseEvent) => {
-//       if (
-//         sidebarRef.current &&
-//         !sidebarRef.current.contains(event.target as Node)
-//       ) {
-//         setIsSidebarOpen(false);
-//       }
-//     };
-
-//     if (isSidebarOpen) {
-//       document.addEventListener('mousedown', handleClickOutside);
-//     }
-
-//     return () => {
-//       document.removeEventListener('mousedown', handleClickOutside);
-//     };
-//   }, [isSidebarOpen]);
-
-//   // ✅ Filtered movie list
-//   const filteredMovies = movies.filter(
-//     (m: Movie) =>
-//       m.title.toLowerCase().includes(searchQuery.toLowerCase()) &&
-//       (selectedGenres.length === 0 ||
-//         selectedGenres.some((genre) =>
-//           m.categories?.some(
-//             (movieGenre) => movieGenre.toLowerCase() === genre.toLowerCase()
-//           )
-//         ))
-//   );
-
-//   return (
-//     <>
-//     <div style={{ position: 'absolute', top: '10px', right: '20px', zIndex: 1000 }}>
-//       <Logout>Logout</Logout>
-//     </div>
-
-//       <div className="page-container">
-//         {/* Hamburger */}
-//         <button
-//           className="hamburger-btn"
-//           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-//         >
-//           ☰
-//         </button>
-
-//         {/* Sidebar */}
-//         <div
-//           className={`sidebar ${isSidebarOpen ? 'open' : ''}`}
-//           ref={sidebarRef}
-//         >
-//           <h3>Filter by Genre</h3>
-
-//           <div className="genre-scroll-area">
-//             {genres.length === 0 ? (
-//               <p>Loading genres...</p>
-//             ) : (
-//               genres.map((genre) => (
-//                 <label key={genre} className="genre-item">
-//                   <input
-//                     type="checkbox"
-//                     checked={selectedGenres.includes(genre)}
-//                     onChange={() => toggleGenre(genre)}
-//                   />
-//                   {genre}
-//                 </label>
-//               ))
-//             )}
-//           </div>
-
-//           <button
-//             className="clear-filters-btn"
-//             onClick={() => setSelectedGenres([])}
-//           >
-//             Clear Filters
-//           </button>
-//         </div>
-
-//         {/* Page content */}
-//         <div className="content-wrap">
-//           {/* Recommended */}
-//           <div className="section-header">
-//             <h2>Recommended for You</h2>
-//           </div>
-//           <div className="recommended-row">
-//             {movies.slice(0, 10).map((m) => (
-//               <Link
-//                 to={`/movie/${m.show_id}`}
-//                 key={m.show_id}
-//                 className="recommended-card"
-//               >
-//                 <img
-//                   src={`https://inteximages.blob.core.windows.net/movie-posters-2/${encodeURIComponent(m.title)}.jpg`}
-//                   alt={m.title}
-//                   loading="lazy"
-//                   width="160"
-//                   height="240"
-//                   style={{ borderRadius: '8px', objectFit: 'cover' }}
-//                 />
-//               </Link>
-//             ))}
-//           </div>
-
-//           {/* All Movies */}
-//           <div className="section-header">
-//             <h2>All Movies</h2>
-//             <input
-//               type="text"
-//               placeholder="Search by title..."
-//               value={searchQuery}
-//               onChange={(e) => setSearchQuery(e.target.value)}
-//               className="search-bar"
-//             />
-//           </div>
-
-//           <div className="card-container">
-//             {filteredMovies.map((m) => (
-//               <Link to={`/movie/${m.show_id}`} key={m.show_id} className="card">
-//                 <img
-//                   src={`https://inteximages.blob.core.windows.net/movie-posters-2/${encodeURIComponent(m.title)}.jpg`}
-//                   alt={m.title}
-//                   loading="lazy"
-//                   width="200"
-//                   height="300"
-//                   style={{ borderRadius: '8px', objectFit: 'cover' }}
-//                 />
-//               </Link>
-//             ))}
-//           </div>
-//         </div>
-
-//         <PrivacyPageFooter />
-//       </div>
-//     </>
-//   );
-// };
-
-// export default MainPage;

@@ -23,13 +23,28 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("IdentityConnection")));
 
-
+//MovieDataDataBase
 builder.Services.AddDbContext<MovieDbContext>(options => 
     options.UseSqlite(builder.Configuration.GetConnectionString("MovieConnection")));
 
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("IdentityConnection")));
+//ContentRecommenderDataBase
+builder.Services.AddDbContext<RecommendationContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("ContentRecommenderConnection")));
+
+//CollaborativeRecommenderDataBase
+builder.Services.AddDbContext<CollaborativeRecommendationContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("CollaborativeRecommenderConnection")));
+
+//UserRecommendedMoviesDataBase
+builder.Services.AddDbContext<UserRecommendationDbContext>(options => 
+    options.UseSqlServer(builder.Configuration.GetConnectionString("AzureSqlConnection")));
+
+//GenreRecommendationDatabase
+builder.Services.AddDbContext<GenreRecommendationsContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("GenreRecommenderConnection")));
 
 builder.Services.AddAuthorization();
 
@@ -52,10 +67,6 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.ClaimsIdentity.UserNameClaimType = ClaimTypes.Email;
 });
 
-// we don't use this because we are using Role Based Authentication. We switch to the code above.
-//builder.Services.AddIdentityApiEndpoints<IdentityUser>() 
-//    .AddEntityFrameworkStores<ApplicationDbContext>();
-
 builder.Services.Configure<IdentityOptions>(options =>
 {
     options.ClaimsIdentity.UserIdClaimType = ClaimTypes.NameIdentifier;
@@ -74,16 +85,6 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.LoginPath = "/login";
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
 });
-
-
-//builder.Services.AddCors(options=> options.AddPolicy(
-//    "AllowReactAppBlah", 
-//    policy => {
-//        policy.WithOrigins("http://localhost:3000")
-//            .AllowAnyMethod()
-//            .AllowAnyHeader();
-//    })
-//);
 
 builder.Services.AddCors(options =>
 {

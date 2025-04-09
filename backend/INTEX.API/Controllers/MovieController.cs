@@ -247,7 +247,7 @@ namespace INTEX.API.Controllers
         //ROUTE TO SAVE MOVIE/USER RATINGS TO THE DATABASE
         [HttpPost("AddRating")]
         [Authorize]
-        public async Task<IActionResult> AddRating([FromBody] MovieRatingDto movieRatingDto)
+        public async Task<IActionResult> AddRating(MovieRatingDto movieRatingDto)
         {
             if (movieRatingDto.Rating < 1 || movieRatingDto.Rating > 5)
             {
@@ -279,22 +279,9 @@ namespace INTEX.API.Controllers
             
             
         }
-        
-        
-        
-        
                   
     }
-    
 
-
-/*[HttpGet("GetMovieById/{id}")]
-     public async Task<IActionResult> GetMovieById(string id)
-     {
-         var movie = await _movieContext.Movies.FindAsync(id);
-         if (movie == null) return NotFound(new {message = "Movie not found"});
-         return Ok(movie);
-     }*/
 
 
 

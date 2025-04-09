@@ -1,7 +1,6 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
   server: {
@@ -17,7 +16,15 @@ export default defineConfig({
         "connect-src 'self' https://localhost:5000; " +
         "object-src 'none'; " +
         "base-uri 'self'; " +
-        "form-action 'self';"
+        "form-action 'self';"},
+    proxy: {
+      '/api': {
+        target: 'https://localhost:5000', // your .NET backend
+        changeOrigin: true,
+        secure: false, // allows self-signed SSL certs
+        // Uncomment this later if you use cookie-based auth:
+        // cookieDomainRewrite: 'localhost',
+      },
     },
   },
 });

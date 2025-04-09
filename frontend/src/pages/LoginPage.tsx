@@ -65,16 +65,10 @@ const LoginPage = () => {
     <div className="login-container">
       {/* Left: Login form */}
       <div className="login-left">
-        <div className="logo">🎬 CineNiche</div>
-        <h2>Login to Your Account</h2>
-        <p className="subtext">Login using social networks</p>
-        <div className="social-buttons">
-          <button className="social-btn facebook">f</button>
-          <button className="social-btn google">G+</button>
-          <button className="social-btn linkedin">in</button>
+        <div className="logo">
+          <img src="/logo-black.png" alt="CineNiche Logo" />
         </div>
-
-        <div className="divider">OR</div>
+        <h2>Login to Your Account</h2>
 
         <form className="login-form" onSubmit={handleSubmit}>
           <input
@@ -113,9 +107,9 @@ const LoginPage = () => {
 
       {/* Right: Sign up */}
       <div className="login-right">
-        <h2>New Here?</h2>
-        <p>Sign up and discover a great amount of new opportunities!</p>
-        <button className="sign-up-btn" onClick={handleRegisterClick}>Sign Up</button>
+        <h2>New to CineNiche?</h2>
+        <p>Explore rare films and hidden gems you won’t find anywhere else.</p>
+        <button className="sign-up-btn">Sign Up</button>
       </div>
     </div>
   );

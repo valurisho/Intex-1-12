@@ -65,22 +65,53 @@ const AdminMoviePage = () => {
   };
 
   return (
-    <AuthorizeView requiredRole='Administrator'>
+<AuthorizeView requiredRole='Administrator'>
+    <div className="admin-page">
+      {/* Top Header */}
+      <div className="admin-header">
+        <div className="admin-logo">
+          <img src="/logo.png" alt="CineNiche Logo" />
+        </div>
+        <div className="admin-nav">
+          <Link to="/privacy-policy" className="admin-link">
+            Privacy Policy
+          </Link>
+          <Link to="/logout" className="admin-link">
+            Logout
+          </Link>
+        </div>
+      </div>
 
-        <div className="admin-page">
-        {/* Top bar */}
-        <div className="admin-top-bar">
-          <div className="admin-left">
-            <button className="hamburger">☰</button>
-            <input
-              type="text"
-              placeholder="Search for a Title"
-              value={searchQuery}
-              onChange={(e) => {
-                setSearchQuery(e.target.value);
-                setPageNum(1); // reset page on new search
-              }}
-              className="admin-search-bar"
+      {/* Search Bar */}
+      <div className="admin-search-bar-wrap">
+        <input
+          type="text"
+          placeholder="Search for a Title"
+          value={searchQuery}
+          onChange={(e) => {
+            setSearchQuery(e.target.value);
+            setPageNum(1); // reset page on new search
+          }}
+          className="admin-search-bar"
+        />
+      </div>
+
+      {/* Header + Add Button
+      <div className="admin-header-row">
+        <h2>All Movies</h2>
+        <Link to="/addMovie" className="add-movie-btn">
+          Add New Movie
+        </Link>
+      </div>
+
+      {/* Movie Cards */}
+      {/* <div className="admin-movie-grid">
+        {movies.map((m) => (
+          <div key={m.show_id} className="admin-movie-card">
+            <img
+              src={`https://inteximages.blob.core.windows.net/movie-posters-2/${encodeURIComponent(m.title)}.jpg`}
+              alt={m.title}
+              className="movie-poster"
             />
           </div>
           <div className="admin-right">
@@ -91,7 +122,7 @@ const AdminMoviePage = () => {
               <span className="admin-link">Logout</span>
             </Logout>
           </div>
-        </div>
+        </div> */}
 
         {/* Header + Add Button */}
         <div className="admin-header-row">
