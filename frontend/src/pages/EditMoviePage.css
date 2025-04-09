@@ -1,9 +1,9 @@
 /* Main container */
-.add-movie-page {
+.edit-movie-page {
   max-width: 600px;
   margin: 3rem auto;
   padding: 2rem;
-  background: #121212; /* Dark background for a sleek feel */
+  background: #121212;
   border-radius: 12px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
   font-family: 'Inter', sans-serif;
@@ -11,7 +11,7 @@
 }
 
 /* Header */
-.add-movie-page h2 {
+.edit-movie-page h2 {
   text-align: center;
   margin-bottom: 2rem;
   font-size: 1.8rem;
@@ -25,7 +25,6 @@
   gap: 1rem;
 }
 
-/* Inputs and textareas */
 .movie-form input,
 .movie-form textarea {
   padding: 0.7rem 1rem;
@@ -43,16 +42,13 @@
   border-color: #f97316;
 }
 
-/* Genre section using react-select */
 .select-group {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
 
-/* React-Select custom styles */
-
-/* Control (the input box itself) */
+/* React-Select styling */
 .react-select__control {
   background-color: #1e1e1e;
   color: white;
@@ -62,13 +58,11 @@
   box-shadow: none;
 }
 
-/* When the control is focused */
 .react-select__control--is-focused {
   border-color: #f97316;
   box-shadow: 0 0 0 1px #f97316;
 }
 
-/* The dropdown menu (white for visibility) */
 .react-select__menu {
   background-color: white;
   color: #111;
@@ -76,39 +70,33 @@
   z-index: 10;
 }
 
-/* Each option in the dropdown */
 .react-select__option {
   background-color: white;
   color: #111;
   padding: 0.5rem 1rem;
 }
 
-/* Hover effect for options */
 .react-select__option--is-focused {
   background-color: #f0f0f0;
 }
 
-/* Selected option */
 .react-select__option--is-selected {
   background-color: #f97316;
   color: white;
 }
 
-/* Multi-value selected tags */
 .react-select__multi-value {
   background-color: #333;
   color: white;
   border-radius: 6px;
 }
 
-/* Text inside the tags */
 .react-select__multi-value__label {
   color: white;
   font-weight: 500;
   padding-left: 6px;
 }
 
-/* Remove (x) button on tags */
 .react-select__multi-value__remove {
   color: white;
   background-color: transparent;
@@ -127,14 +115,13 @@
   font-weight: 500;
 }
 
-/* Buttons container */
+/* Button actions */
 .form-actions {
   display: flex;
   justify-content: space-between;
   margin-top: 1rem;
 }
 
-/* Submit and cancel buttons */
 .submit-btn,
 .cancel-btn {
   padding: 0.6rem 1.4rem;
@@ -146,7 +133,6 @@
   border: none;
 }
 
-/* Submit button styled with red accent */
 .submit-btn {
   background-color: #f97316;
   color: white;
@@ -156,7 +142,6 @@
   background-color: #f97316;
 }
 
-/* Cancel button with subtle gray */
 .cancel-btn {
   background-color: #444;
   color: white;
