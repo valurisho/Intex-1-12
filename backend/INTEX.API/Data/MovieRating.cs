@@ -10,7 +10,7 @@ namespace INTEX.API.Models
         public int UserId { get; set; }
 
         [Column("show_id")]
-        public int ShowId { get; set; }
+        public string ShowId { get; set; }
 
         [Column("rating")]
         public int Rating { get; set; }

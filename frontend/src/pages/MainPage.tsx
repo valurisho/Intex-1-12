@@ -3,6 +3,7 @@ import { useEffect, useState, useRef } from 'react';
 import { Movie } from '../types/Movie';
 import PrivacyPageFooter from '../components/PrivacyPageFooter';
 import { Link } from 'react-router-dom';
+import Recommender from '../components/Recommender';
 
 const MainPage = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
@@ -118,31 +119,9 @@ const MainPage = () => {
           </button>
         </div>
 
-        {/* Page content */}
         <div className="content-wrap">
-          {/* Recommended */}
-          <div className="section-header">
-            <h2>Recommended for You</h2>
-          </div>
-          <div className="recommended-row">
-            {movies.slice(0, 10).map((m) => (
-              <Link
-                to={`/movie/${m.show_id}`}
-                key={m.show_id}
-                className="recommended-card"
-              >
-                <img
-                  src={`https://inteximages.blob.core.windows.net/movie-posters-2/${encodeURIComponent(m.title)}.jpg`}
-                  alt={m.title}
-                  loading="lazy"
-                  width="160"
-                  height="240"
-                  style={{ borderRadius: '8px', objectFit: 'cover' }}
-                />
-              </Link>
-            ))}
-          </div>
-
+          {/*Recommended Movies */}
+          <Recommender movies={movies} />
           {/* All Movies */}
           <div className="section-header">
             <h2>All Movies</h2>
