@@ -4,6 +4,8 @@ import { Movie } from '../types/Movie';
 import PrivacyPageFooter from '../components/PrivacyPageFooter';
 import { Link } from 'react-router-dom';
 import { FaSearch } from 'react-icons/fa';
+import defaultPoster from '../assets/Intexfun.png';
+
 
 const MainPage = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
@@ -72,6 +74,11 @@ const MainPage = () => {
           )
         ))
   );
+
+  const formatBlobUrl = (title: string): string =>
+    `https://inteximages.blob.core.windows.net/movie-posters-2/${title
+      .replace(/[^\w\s]/gi, '')
+      .trim()}.jpg`;
 
   return (
     <>
@@ -164,7 +171,7 @@ const MainPage = () => {
                 className="recommended-card"
               >
                 <img
-                  src={`https://inteximages.blob.core.windows.net/movie-posters-2/${encodeURIComponent(m.title)}.jpg`}
+                  src={formatBlobUrl(m.title)}                  
                   alt={m.title}
                   loading="lazy"
                   width="160"
@@ -181,19 +188,24 @@ const MainPage = () => {
           </div>
 
           <div className="card-container">
-            {filteredMovies.map((m) => (
-              <Link to={`/movie/${m.show_id}`} key={m.show_id} className="card">
-                <img
-                  src={`https://inteximages.blob.core.windows.net/movie-posters-2/${encodeURIComponent(m.title)}.jpg`}
-                  alt={m.title}
-                  loading="lazy"
-                  width="200"
-                  height="300"
-                  style={{ borderRadius: '8px', objectFit: 'cover' }}
-                />
-              </Link>
-            ))}
-          </div>
+          {filteredMovies.map((m) => (
+            <Link to={`/movie/${m.show_id}`} key={m.show_id} className="card">
+              <img
+                src={formatBlobUrl(m.title)}
+                alt={m.title}
+                loading="lazy"
+                width="200"
+                height="300"
+                style={{ borderRadius: '8px', objectFit: 'cover' }}
+                onError={(e) => {
+                  e.currentTarget.onerror = null; // prevent infinite loop
+                  e.currentTarget.src = defaultPoster;
+        }}
+      />
+    </Link>
+  ))}
+</div>
+
         </div>
 
         <PrivacyPageFooter />

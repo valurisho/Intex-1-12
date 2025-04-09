@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import { Movie } from '../types/Movie';
 import { motion } from 'framer-motion';
 import StarRating from '../components/StarRating';
+import defaultPoster from '../assets/Intexfun.png';
+
 
 const MovieDetailPage = () => {
   const { id } = useParams();
@@ -158,10 +160,10 @@ const MovieDetailPage = () => {
               borderRadius: '8px',
               boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
             }}
-            onError={(e) =>
-              (e.currentTarget.src =
-                'https://www.itsablackthang.com/cdn/shop/products/mo-better-blues-movie-poster-1990_0c124c88-07e0-48b5-986f-14295f30c8df.jpg?v=1570185702')
-            }
+            onError={(e) => {
+              e.currentTarget.onerror = null; // prevent infinite loop
+              e.currentTarget.src = defaultPoster;
+            }}
           />
           <div className="movie-details">
             <h2>{movie.title}</h2>
@@ -243,6 +245,10 @@ const MovieDetailPage = () => {
                     display: 'block',
                     borderRadius: '12px',
                   }}
+                  onError={(e) => {
+                    e.currentTarget.onerror = null; // prevent infinite loop
+                    e.currentTarget.src = defaultPoster;
+                  }}
                 />
               </div>
             ))}
@@ -277,6 +283,10 @@ const MovieDetailPage = () => {
                       width: '100%',
                       height: '100%',
                       objectFit: 'cover',
+                    }}
+                    onError={(e) => {
+                      e.currentTarget.onerror = null; // prevent infinite loop
+                      e.currentTarget.src = defaultPoster;
                     }}
                   />
                 </div>
