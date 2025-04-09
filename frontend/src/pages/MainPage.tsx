@@ -3,7 +3,7 @@ import { useEffect, useState, useRef } from 'react';
 import { Movie } from '../types/Movie';
 import PrivacyPageFooter from '../components/PrivacyPageFooter';
 import { Link } from 'react-router-dom';
-import Recommender from '../components/Recommender';
+import { FaSearch } from 'react-icons/fa';
 
 const MainPage = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
@@ -11,6 +11,7 @@ const MainPage = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
   const [genres, setGenres] = useState<string[]>([]);
+  const [showSearch, setShowSearch] = useState(false);
 
   const sidebarRef = useRef<HTMLDivElement>(null);
 
@@ -72,14 +73,45 @@ const MainPage = () => {
         ))
   );
 
-  const formatBlobUrl = (title: string): string =>
-    `https://inteximages.blob.core.windows.net/movie-posters-2/${title
-      .replace(/[^\w\s]/gi, '') // remove punctuation
-      .trim()}.jpg`;
-
   return (
     <>
       <div className={`page-container ${isSidebarOpen ? 'sidebar-open' : ''}`}>
+        {/* Fixed Top Header */}
+        <div className="main-header">
+          <div className="main-logo">
+            <img src="/logo.png" alt="CineNiche Logo" />
+          </div>
+
+          <div className="main-nav">
+            <Link to="/privacy-policy" className="main-link">
+              Privacy
+            </Link>
+            <Link to="/logout" className="main-link">
+              Logout
+            </Link>
+
+            <button
+              className="search-icon-btn"
+              onClick={() => setShowSearch((prev) => !prev)}
+              aria-label="Toggle Search"
+            >
+              <FaSearch />
+            </button>
+          </div>
+        </div>
+
+        {/* Floating Search Input */}
+        {showSearch && (
+          <div className="floating-search-bar">
+            <input
+              type="text"
+              placeholder="Search by title..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+        )}
+
         {/* Hamburger */}
         <button
           className="hamburger-btn"
@@ -89,7 +121,10 @@ const MainPage = () => {
         </button>
 
         {/* Sidebar */}
-        <div className={`sidebar ${isSidebarOpen ? 'open' : ''}`} ref={sidebarRef}>
+        <div
+          className={`sidebar ${isSidebarOpen ? 'open' : ''}`}
+          ref={sidebarRef}
+        >
           <h3>Filter by Genre</h3>
           <div className="genre-scroll-area">
             {genres.length === 0 ? (
@@ -107,18 +142,17 @@ const MainPage = () => {
               ))
             )}
           </div>
-          <button className="clear-filters-btn" onClick={() => setSelectedGenres([])}>
+          <button
+            className="clear-filters-btn"
+            onClick={() => setSelectedGenres([])}
+          >
             Clear Filters
           </button>
         </div>
 
+        {/* Page Content */}
         <div className="content-wrap">
-          {/* Option A: Component-Based Recommendations */}
-          <Recommender movies={movies} />
-
-          {/* OR Option B: Inline Recommendations */}
-          {/* Uncomment this block if you want to keep both or test side-by-side */}
-          {/*
+          {/* Recommended */}
           <div className="section-header">
             <h2>Recommended for You</h2>
           </div>
@@ -130,48 +164,32 @@ const MainPage = () => {
                 className="recommended-card"
               >
                 <img
-                  src={formatBlobUrl(m.title)}
+                  src={`https://inteximages.blob.core.windows.net/movie-posters-2/${encodeURIComponent(m.title)}.jpg`}
                   alt={m.title}
                   loading="lazy"
                   width="160"
                   height="240"
                   style={{ borderRadius: '8px', objectFit: 'cover' }}
-                  onError={(e) =>
-                    (e.currentTarget.src =
-                      'https://www.itsablackthang.com/cdn/shop/products/mo-better-blues-movie-poster-1990_0c124c88-07e0-48b5-986f-14295f30c8df.jpg?v=1570185702')
-                  }
                 />
               </Link>
             ))}
           </div>
-          */}
 
           {/* All Movies */}
           <div className="section-header">
             <h2>All Movies</h2>
-            <input
-              type="text"
-              placeholder="Search by title..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="search-bar"
-            />
           </div>
 
           <div className="card-container">
             {filteredMovies.map((m) => (
               <Link to={`/movie/${m.show_id}`} key={m.show_id} className="card">
                 <img
-                  src={formatBlobUrl(m.title)}
+                  src={`https://inteximages.blob.core.windows.net/movie-posters-2/${encodeURIComponent(m.title)}.jpg`}
                   alt={m.title}
                   loading="lazy"
                   width="200"
                   height="300"
                   style={{ borderRadius: '8px', objectFit: 'cover' }}
-                  onError={(e) =>
-                    (e.currentTarget.src =
-                      'https://www.itsablackthang.com/cdn/shop/products/mo-better-blues-movie-poster-1990_0c124c88-07e0-48b5-986f-14295f30c8df.jpg?v=1570185702')
-                  }
                 />
               </Link>
             ))}
