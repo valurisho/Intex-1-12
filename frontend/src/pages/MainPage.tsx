@@ -17,7 +17,7 @@ const MainPage = () => {
   const [genres, setGenres] = useState<string[]>([]);
   const [showSearch, setShowSearch] = useState(false);
 
-  const userId = '1'; // Replace this with your actual user context or auth later
+  const userId = '2'; // Replace this with your actual user context or auth later
 
   // THESE ARE FOR THE GENRE RECOMMENDATIONS BASED ON THE USER
   const { recommendedMovies: comedyMovies } = useGenreRecommendations(
@@ -203,7 +203,7 @@ const MainPage = () => {
 
           {/* Recommended */}
 
-<!--           <div className="section-header">
+          {/*<!--           <div className="section-header">
             <h2>Recommended for You</h2>
           </div>
           <div className="recommended-row">
@@ -223,7 +223,7 @@ const MainPage = () => {
                 />
               </Link>
             ))}
-          </div> -->
+          </div> -->*/}
 
           {/* All Movies */}
           <div className="section-header">
@@ -231,24 +231,23 @@ const MainPage = () => {
           </div>
 
           <div className="card-container">
-          {filteredMovies.map((m) => (
-            <Link to={`/movie/${m.show_id}`} key={m.show_id} className="card">
-              <img
-                src={formatBlobUrl(m.title)}
-                alt={m.title}
-                loading="lazy"
-                width="200"
-                height="300"
-                style={{ borderRadius: '8px', objectFit: 'cover' }}
-                onError={(e) => {
-                  e.currentTarget.onerror = null; // prevent infinite loop
-                  e.currentTarget.src = defaultPoster;
-        }}
-      />
-    </Link>
-  ))}
-</div>
-
+            {filteredMovies.map((m) => (
+              <Link to={`/movie/${m.show_id}`} key={m.show_id} className="card">
+                <img
+                  src={formatBlobUrl(m.title)}
+                  alt={m.title}
+                  loading="lazy"
+                  width="200"
+                  height="300"
+                  style={{ borderRadius: '8px', objectFit: 'cover' }}
+                  onError={(e) => {
+                    e.currentTarget.onerror = null; // prevent infinite loop
+                    e.currentTarget.src = defaultPoster;
+                  }}
+                />
+              </Link>
+            ))}
+          </div>
         </div>
 
         <PrivacyPageFooter />
