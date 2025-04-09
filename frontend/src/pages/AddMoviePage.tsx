@@ -54,15 +54,15 @@ const AddMoviePage = () => {
     }));
   };
 
-  // Genre selection toggle
-  const toggleGenre = (genre: string) => {
-    setFormData((prev) => {
-      const updatedGenres = prev.categories.includes(genre)
-        ? prev.categories.filter((g) => g !== genre)
-        : [...prev.categories, genre];
-      return { ...prev, categories: updatedGenres };
-    });
-  };
+  // // Genre selection toggle
+  // const toggleGenre = (genre: string) => {
+  //   setFormData((prev) => {
+  //     const updatedGenres = prev.categories.includes(genre)
+  //       ? prev.categories.filter((g) => g !== genre)
+  //       : [...prev.categories, genre];
+  //     return { ...prev, categories: updatedGenres };
+  //   });
+  // };
 
   // Submit handler
   const handleSubmit = async (e: React.FormEvent) => {

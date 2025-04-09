@@ -20,6 +20,7 @@
   font-size: 1.5rem;
   font-weight: bold;
   margin-bottom: 2rem;
+  /* filter: invert(1); */
 }
 
 .subtext {
@@ -42,19 +43,6 @@
   color: white;
   cursor: pointer;
 }
-
-.facebook {
-  background-color: #3b5998;
-}
-
-.google {
-  background-color: #db4437;
-}
-
-.linkedin {
-  background-color: #0077b5;
-}
-
 .divider {
   margin: 1rem 0;
   font-weight: bold;
@@ -90,7 +78,7 @@
 }
 
 .sign-in-btn {
-  background-color: #10b981;
+  background-color: #d6c6a8;
   color: white;
   border: none;
   padding: 0.75rem;
@@ -101,13 +89,13 @@
 }
 
 .sign-in-btn:hover {
-  background-color: #059669;
+  background-color: #c6af85;
 }
 
 /* Right side */
 .login-right {
   flex: 1;
-  background: linear-gradient(to bottom right, #4f46e5, #06b6d4);
+  background: linear-gradient(to bottom right, #121212);
   color: white;
   padding: 3rem;
   display: flex;
@@ -129,8 +117,8 @@
 }
 
 .sign-up-btn {
-  background-color: white;
-  color: #4f46e5;
+  background-color: #d4792f;
+  color: white;
   border: none;
   padding: 0.75rem 2rem;
   border-radius: 999px;
@@ -141,5 +129,5 @@
 }
 
 .sign-up-btn:hover {
-  background-color: #f3f4f6;
+  background-color: #f18b35;
 }
