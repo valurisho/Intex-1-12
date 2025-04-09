@@ -5,7 +5,10 @@ import { deleteMovie } from '../api/MovieAPI';
 import Pagination from '../components/pagination';
 import AuthorizeView from '../components/AuthorizeView';
 import Logout from '../components/Logout';
+import defaultPoster from '../assets/Intexfun.png';
 import './AdminMoviePage.css';
+
+
 const AdminMoviePage = () => {
   const [allMovies, setAllMovies] = useState<Movie[]>([]);
   const [movies, setMovies] = useState<Movie[]>([]);
@@ -58,6 +61,11 @@ const AdminMoviePage = () => {
       alert('Failed to delete movie, please try again.');
     }
   };
+
+  const formatBlobUrl = (title: string): string =>
+    `https://inteximages.blob.core.windows.net/movie-posters-2/${title
+      .replace(/[^\w\s]/gi, '')
+      .trim()}.jpg`;
 
   return (
     <AuthorizeView requiredRole="Administrator">
@@ -132,10 +140,14 @@ const AdminMoviePage = () => {
           {movies.map((m) => (
             <div key={m.show_id} className="admin-movie-card">
               <img
-                src={`https://inteximages.blob.core.windows.net/movie-posters-2/${encodeURIComponent(m.title)}.jpg`}
-                alt={m.title}
-                className="movie-poster"
-              />
+            className="recommended-img"
+            src={formatBlobUrl(m.title)}
+            alt={m.title}
+            onError={(e) => {
+              e.currentTarget.onerror = null; // prevent infinite loop
+              e.currentTarget.src = defaultPoster;
+            }}
+          />
               <p className="movie-title">{m.title}</p>
               <div className="movie-actions">
                 <Link to={`/editMovie/${m.show_id}`} className="action-icon">

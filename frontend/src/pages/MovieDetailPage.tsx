@@ -17,7 +17,10 @@ const MovieDetailPage = () => {
     const fetchMovie = async () => {
       try {
         const response = await fetch(
-          `https://localhost:5000/Movie/GetMovieById/${id}`
+          `https://localhost:5000/Movie/GetMovieById/${id}`,
+          {
+            credentials: 'include',
+          }
         );
         if (!response.ok) throw new Error('Failed to fetch movie.');
         const data = await response.json();
@@ -35,7 +38,10 @@ const MovieDetailPage = () => {
       if (!movie) return;
       try {
         const response = await fetch(
-          `https://localhost:5000/contentrecommendations/${movie.show_id}`
+          `https://localhost:5000/contentrecommendations/${movie.show_id}`,
+          {
+            credentials: 'include',
+          }
         );
         if (!response.ok) throw new Error('Failed to fetch similar IDs.');
         const recData = await response.json();
@@ -52,7 +58,10 @@ const MovieDetailPage = () => {
         const movies: Movie[] = await Promise.all(
           ids.map(async (recId) => {
             const res = await fetch(
-              `https://localhost:5000/Movie/GetMovieById/${recId}`
+              `https://localhost:5000/Movie/GetMovieById/${recId}`,
+              {
+                credentials: 'include',
+              }
             );
             if (!res.ok) return null;
             return await res.json();
@@ -74,7 +83,10 @@ const MovieDetailPage = () => {
       if (!movie) return;
       try {
         const response = await fetch(
-          `https://localhost:5000/collaborativerecommendations/${movie.show_id}`
+          `https://localhost:5000/collaborativerecommendations/${movie.show_id}`,
+          {
+            credentials: 'include',
+          }
         );
         if (!response.ok)
           throw new Error('Failed to fetch collaborative recs.');
@@ -92,7 +104,10 @@ const MovieDetailPage = () => {
         const movies: Movie[] = await Promise.all(
           ids.map(async (recId: string) => {
             const res = await fetch(
-              `https://localhost:5000/Movie/GetMovieById/${recId}`
+              `https://localhost:5000/Movie/GetMovieById/${recId}`,
+              {
+                credentials: 'include',
+              }
             );
             if (!res.ok) return null;
             return await res.json();

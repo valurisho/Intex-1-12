@@ -1,4 +1,4 @@
-// The code in this LoginPage is broken into 3 parts. The first, uncommented code is a combination of the other two. 
+// The code in this LoginPage is broken into 3 parts. The first, uncommented code is a combination of the other two.
 // We made the second one, and the third one is from Dr. Well's videos.
 
 import React, { useState } from 'react';
@@ -44,7 +44,10 @@ const LoginPage = () => {
       });
 
       const contentLength = response.headers.get('content-length');
-      const data = contentLength && parseInt(contentLength) > 0 ? await response.json() : null;
+      const data =
+        contentLength && parseInt(contentLength) > 0
+          ? await response.json()
+          : null;
 
       if (!response.ok) {
         throw new Error(data?.message || 'Invalid email or password.');
@@ -100,7 +103,9 @@ const LoginPage = () => {
             <label htmlFor="rememberme">Remember me</label>
           </div>
 
-          <button type="submit" className="sign-in-btn">Sign In</button>
+          <button type="submit" className="sign-in-btn">
+            Sign In
+          </button>
           {error && <p className="error-msg">{error}</p>}
         </form>
       </div>
@@ -116,9 +121,6 @@ const LoginPage = () => {
 };
 
 export default LoginPage;
-
-
-
 
 // import React from 'react';
 // import './LoginPage.css';
@@ -160,9 +162,6 @@ export default LoginPage;
 //     </div>
 //   );
 // };
-
-
-
 
 // export default LoginPage;
 

@@ -9,7 +9,10 @@ export const useGenreRecommendations = (genre: string, userId: string) => {
     const fetchRecommendations = async () => {
       try {
         const response = await fetch(
-          `https://localhost:5000/api/GenreRecommendation/${genre}/${userId}`
+          `https://localhost:5000/api/GenreRecommendation/${genre}/${userId}`,
+          {
+            credentials: 'include',
+          }
         );
         const raw = await response.text();
 
@@ -21,7 +24,10 @@ export const useGenreRecommendations = (genre: string, userId: string) => {
         const recommendedIds: string[] = JSON.parse(raw);
 
         const allMoviesRes = await fetch(
-          `https://localhost:5000/Movie/GetAllMovies`
+          `https://localhost:5000/Movie/GetAllMovies`,
+          {
+            credentials: 'include',
+          }
         ); // Adjust this if needed
         const allMovies: Movie[] = await allMoviesRes.json();
 
