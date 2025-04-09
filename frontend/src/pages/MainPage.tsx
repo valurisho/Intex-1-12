@@ -1,7 +1,6 @@
 import './MainPage.css';
 import { useEffect, useState, useRef } from 'react';
 import { Movie } from '../types/Movie';
-import PrivacyPageFooter from '../components/PrivacyPageFooter';
 import { Link, useNavigate } from 'react-router-dom';
 import AuthorizeView, { AuthorizedUser } from '../components/AuthorizeView';
 import Logout from '../components/Logout';

@@ -3,11 +3,10 @@ import { Link } from 'react-router-dom';
 import { Movie } from '../types/Movie';
 import { deleteMovie } from '../api/MovieAPI';
 import Pagination from '../components/pagination';
-import './AdminMoviePage.css';
 import AuthorizeView from '../components/AuthorizeView';
 import Logout from '../components/Logout';
 import defaultPoster from '../assets/Intexfun.png';
-
+import './AdminMoviePage.css';
 
 
 const AdminMoviePage = () => {
@@ -24,10 +23,8 @@ const AdminMoviePage = () => {
     const fetchMovies = async () => {
       try {
         const response = await fetch(`${API_URL}/GetAllMovies`, {
-          credentials: 'include'
-        }
-
-        );
+          credentials: 'include',
+        });
         if (!response.ok)
           throw new Error(`HTTP error! status: ${response.status}`);
         const data = await response.json();
@@ -71,38 +68,38 @@ const AdminMoviePage = () => {
       .trim()}.jpg`;
 
   return (
-<AuthorizeView requiredRole='Administrator'>
-    <div className="admin-page">
-      {/* Top Header */}
-      <div className="admin-header">
-        <div className="admin-logo">
-          <img src="/logo.png" alt="CineNiche Logo" />
+    <AuthorizeView requiredRole="Administrator">
+      <div className="admin-page">
+        {/* Top Header */}
+        <div className="admin-header">
+          <div className="admin-logo">
+            <img src="/logo.png" alt="CineNiche Logo" />
+          </div>
+          <div className="admin-nav">
+            <Link to="/privacy-policy" className="admin-link">
+              Privacy Policy
+            </Link>
+            <Link to="/logout" className="admin-link">
+              Logout
+            </Link>
+          </div>
         </div>
-        <div className="admin-nav">
-          <Link to="/privacy-policy" className="admin-link">
-            Privacy Policy
-          </Link>
-          <Link to="/logout" className="admin-link">
-            Logout
-          </Link>
+
+        {/* Search Bar */}
+        <div className="admin-search-bar-wrap">
+          <input
+            type="text"
+            placeholder="Search for a Title"
+            value={searchQuery}
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+              setPageNum(1); // reset page on new search
+            }}
+            className="admin-search-bar"
+          />
         </div>
-      </div>
 
-      {/* Search Bar */}
-      <div className="admin-search-bar-wrap">
-        <input
-          type="text"
-          placeholder="Search for a Title"
-          value={searchQuery}
-          onChange={(e) => {
-            setSearchQuery(e.target.value);
-            setPageNum(1); // reset page on new search
-          }}
-          className="admin-search-bar"
-        />
-      </div>
-
-      {/* Header + Add Button
+        {/* Header + Add Button
       <div className="admin-header-row">
         <h2>All Movies</h2>
         <Link to="/addMovie" className="add-movie-btn">
@@ -111,7 +108,7 @@ const AdminMoviePage = () => {
       </div>
 
       {/* Movie Cards */}
-      {/* <div className="admin-movie-grid">
+        {/* <div className="admin-movie-grid">
         {movies.map((m) => (
           <div key={m.show_id} className="admin-movie-card">
             <img
@@ -179,8 +176,8 @@ const AdminMoviePage = () => {
           }}
         />
       </div>
-      </AuthorizeView>
-    );  
+    </AuthorizeView>
+  );
 };
 
 export default AdminMoviePage;
