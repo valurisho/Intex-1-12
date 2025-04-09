@@ -63,7 +63,6 @@ const AdminMoviePage = () => {
       alert('Failed to delete movie, please try again.');
     }
   };
-  
 
   return (
     <div className="admin-page">
@@ -105,19 +104,18 @@ const AdminMoviePage = () => {
         {movies.map((m) => (
           <div key={m.show_id} className="admin-movie-card">
             <img
-
-<!--               src={`https://inteximages.blob.core.windows.net/movie-posters/${encodeURIComponent(m.title)}.jpg`}
+              /*<!--               src={`https://inteximages.blob.core.windows.net/movie-posters/${encodeURIComponent(m.title)}.jpg`}
               alt={m.title}
               className="movie-poster"
-            /> -->
-            src={formatBlobUrl(m.title)}
-            alt={m.title}
-            className="movie-poster"
-            onError={(e) => {
-              e.currentTarget.onerror = null; // prevent infinite loop
-              e.currentTarget.src = defaultPoster;
-            }}
-          />
+            /> -->*/
+              src={formatBlobUrl(m.title)}
+              alt={m.title}
+              className="movie-poster"
+              onError={(e) => {
+                e.currentTarget.onerror = null; // prevent infinite loop
+                e.currentTarget.src = defaultPoster;
+              }}
+            />
 
             <p className="movie-title">{m.title}</p>
             <div className="movie-actions">
