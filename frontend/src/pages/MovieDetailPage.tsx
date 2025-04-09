@@ -1,11 +1,10 @@
-import '../App.css';
-import { useParams, useNavigate } from 'react-router-dom';
+import './MovieDetailPage.css';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { Movie } from '../types/Movie';
 import { motion } from 'framer-motion';
 import StarRating from '../components/StarRating';
 import defaultPoster from '../assets/Intexfun.png';
-
 
 const MovieDetailPage = () => {
   const { id } = useParams();
@@ -123,31 +122,36 @@ const MovieDetailPage = () => {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.6 }}
     >
+      <div className="main-header">
+        <div className="main-logo">
+          <Link to="/mainPage">
+            <img src="/logo.png" alt="CineNiche Logo" />
+          </Link>
+        </div>
+
+        <div className="main-nav">
+          <Link to="/privacy-policy" className="main-link">
+            Privacy
+          </Link>
+          <Link to="/logout" className="main-link">
+            Logout
+          </Link>
+        </div>
+      </div>
       {/* Back Button */}
-      <button
-        onClick={() => navigate(-1)}
-        style={{
-          position: 'absolute',
-          top: '1rem',
-          left: '1rem',
-          backgroundColor: '#1f2937',
-          color: '#fff',
-          border: 'none',
-          borderRadius: '50%',
-          width: '40px',
-          height: '40px',
-          fontSize: '1.2rem',
-          cursor: 'pointer',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          boxShadow: '0 2px 6px rgba(0,0,0,0.15)',
-        }}
-      >
-        ←
-      </button>
+      {/* <button onClick={() => navigate(-1)} className="back-button">
+        ← Back
+      </button> */}
 
       <div className="movie-card">
+        <button
+          onClick={() => navigate('/mainPage')}
+          className="close-button"
+          aria-label="Close"
+        >
+          ✕
+        </button>
+
         <div className="movie-header">
           <img
             src={formatBlobUrl(movie.title)}
@@ -203,6 +207,12 @@ const MovieDetailPage = () => {
                 <strong>Genres:</strong> {movie.categories.join(', ')}
               </p>
             )}
+            <button
+              className="watch-now-button"
+              onClick={() => alert('🎬 Watch feature coming soon!')}
+            >
+              ▶ Watch Now
+            </button>
           </div>
         </div>
 

@@ -18,6 +18,7 @@ const MainPage = () => {
   const [showSearch, setShowSearch] = useState(false);
 
   const userId = '2'; // Replace this with your actual user context or auth later
+  const allMoviesRef = useRef<HTMLDivElement>(null);
 
   // THESE ARE FOR THE GENRE RECOMMENDATIONS BASED ON THE USER
   const { recommendedMovies: comedyMovies } = useGenreRecommendations(
@@ -86,6 +87,11 @@ const MainPage = () => {
 
     if (isSidebarOpen) {
       document.addEventListener('mousedown', handleClickOutside);
+
+      // SCROLL TO ALL MOVIES
+      setTimeout(() => {
+        allMoviesRef.current?.scrollIntoView({ behavior: 'smooth' });
+      }, 0);
     }
 
     return () => {
@@ -126,27 +132,41 @@ const MainPage = () => {
               Logout
             </Link>
 
-            <button
-              className="search-icon-btn"
-              onClick={() => setShowSearch((prev) => !prev)}
-              aria-label="Toggle Search"
-            >
-              <FaSearch />
-            </button>
+            <div className="main-search">
+              <button
+                className="search-icon-btn"
+                onClick={() => {
+                  setShowSearch((prev) => {
+                    const newState = !prev;
+
+                    // If opening the search bar, scroll to the "All Movies" section
+                    if (!prev && allMoviesRef.current) {
+                      setTimeout(() => {
+                        allMoviesRef.current?.scrollIntoView({
+                          behavior: 'smooth',
+                        });
+                      }, 0);
+                    }
+
+                    return newState;
+                  });
+                }}
+                aria-label="Toggle Search"
+              >
+                <FaSearch />
+              </button>
+              {showSearch && (
+                <input
+                  type="text"
+                  className="main-search-input"
+                  placeholder="Search for titles..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              )}
+            </div>
           </div>
         </div>
-
-        {/* Floating Search Input */}
-        {showSearch && (
-          <div className="floating-search-bar">
-            <input
-              type="text"
-              placeholder="Search by title..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
-        )}
 
         {/* Hamburger */}
         <button
@@ -188,46 +208,18 @@ const MainPage = () => {
 
         {/* Page Content */}
         <div className="content-wrap">
-          {/* {THIS IS THE FOR USER RECOMMENDED MOVIES} */}
           <Recommender movies={userMovies} title="Your Personalized Picks" />
-          {/*Recommendation for logged in user organized by Genre */}
           <Recommender movies={comedyMovies} title="Comedy Picks for You" />
           <Recommender movies={dramaMovies} title="Dramas You'll Love" />
           <Recommender movies={horrorMovies} title="Thrillers & Horror" />
           <Recommender movies={familyMovies} title="Family Friendly" />
           <Recommender movies={adventureMovies} title="Adventure Awaits" />
 
-          {/* OR Option B: Inline Recommendations */}
-          {/* Uncomment this block if you want to keep both or test side-by-side */}
-          {/*
-
-          {/* Recommended */}
-
-          {/*<!--           <div className="section-header">
-            <h2>Recommended for You</h2>
-          </div>
-          <div className="recommended-row">
-            {movies.slice(0, 10).map((m) => (
-              <Link
-                to={`/movie/${m.show_id}`}
-                key={m.show_id}
-                className="recommended-card"
-              >
-                <img
-                  src={formatBlobUrl(m.title)}                  
-                  alt={m.title}
-                  loading="lazy"
-                  width="160"
-                  height="240"
-                  style={{ borderRadius: '8px', objectFit: 'cover' }}
-                />
-              </Link>
-            ))}
-          </div> -->*/}
-
-          {/* All Movies */}
-          <div className="section-header">
-            <h2>All Movies</h2>
+          <div ref={allMoviesRef} style={{ position: 'relative' }}>
+            <div style={{ height: '60px', marginTop: '-60px' }}></div>
+            <div className="section-header">
+              <h2>All Movies</h2>
+            </div>
           </div>
 
           <div className="card-container">
@@ -241,7 +233,7 @@ const MainPage = () => {
                   height="300"
                   style={{ borderRadius: '8px', objectFit: 'cover' }}
                   onError={(e) => {
-                    e.currentTarget.onerror = null; // prevent infinite loop
+                    e.currentTarget.onerror = null;
                     e.currentTarget.src = defaultPoster;
                   }}
                 />
@@ -249,8 +241,6 @@ const MainPage = () => {
             ))}
           </div>
         </div>
-
-        <PrivacyPageFooter />
       </div>
     </>
   );
