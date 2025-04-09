@@ -73,7 +73,7 @@ namespace INTEX.API.Controllers
         
         // ADD A MOVIE
         [HttpPost("AddMovie")]
-        [Authorize(Roles = "Adminstrator")]
+        [Authorize(Roles = "Administrator")]
         public IActionResult AddMovie([FromBody] MovieDto newMovieDto)
         {
             if (newMovieDto.release_year < 1700)
@@ -131,7 +131,7 @@ namespace INTEX.API.Controllers
         
         // DELETE
         [HttpDelete("deleteMovie/{show_id}")]
-        [Authorize(Roles = "Adminstrator")]
+        [Authorize(Roles = "Administrator")]
         public IActionResult DeleteMovie(string show_id)
         {
             var movie = _movieContext.Movies
@@ -185,7 +185,7 @@ namespace INTEX.API.Controllers
 
         // EDIT MOVIE
         [HttpPut("updateMovie/{show_id}")]
-        [Authorize(Roles = "Adminstrator")]
+        [Authorize(Roles = "Administrator")]
         public IActionResult UpdateMovie(string show_id, [FromBody] MovieDto updatedMovieDto)
         {
             var movie = _movieContext.Movies
