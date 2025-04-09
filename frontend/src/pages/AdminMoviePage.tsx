@@ -1,5 +1,3 @@
-import './AdminMoviePage.css';
-
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Movie } from '../types/Movie';
@@ -8,6 +6,7 @@ import Pagination from '../components/pagination';
 import './AdminMoviePage.css';
 import AuthorizeView from '../components/AuthorizeView';
 import Logout from '../components/Logout';
+
 
 const AdminMoviePage = () => {
   const [allMovies, setAllMovies] = useState<Movie[]>([]);
