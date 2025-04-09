@@ -10,8 +10,21 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+//MovieDataDataBase
 builder.Services.AddDbContext<MovieDbContext>(options => 
     options.UseSqlite(builder.Configuration.GetConnectionString("MovieConnection")));
+
+//ContentRecommenderDataBase
+builder.Services.AddDbContext<RecommendationContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("ContentRecommenderConnection")));
+
+//CollaborativeRecommenderDataBase
+builder.Services.AddDbContext<CollaborativeRecommendationContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("CollaborativeRecommenderConnection")));
+
+//RecommendedMoviesDataBase
+builder.Services.AddDbContext<GenreRecommenderDbContext>(options => 
+    options.UseSqlServer(builder.Configuration.GetConnectionString("AzureSqlConnection")));
 
 builder.Services.AddCors(options=> options.AddPolicy(
     "AllowReactAppBlah", 

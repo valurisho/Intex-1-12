@@ -1,0 +1,38 @@
+/* CSS FOR RECOMMENDED MOVIES */
+.recommended-row {
+  display: flex;
+  overflow-x: auto;
+  padding: 1rem 2rem;
+  gap: 1rem;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: thin;
+}
+
+.recommended-card {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.2s;
+}
+
+.recommended-card:hover {
+  transform: scale(1.05);
+}
+
+.recommended-row::-webkit-scrollbar {
+  height: 6px;
+}
+
+.recommended-row::-webkit-scrollbar-thumb {
+  background-color: #e5e7eb;
+  border-radius: 3px;
+}
+
+.recommended-img {
+  border-radius: 8px;
+  object-fit: cover;
+  width: 160px;
+  height: 240px;
+  display: block;
+}

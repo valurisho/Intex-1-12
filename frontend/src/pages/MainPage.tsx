@@ -3,6 +3,7 @@ import { useEffect, useState, useRef } from 'react';
 import { Movie } from '../types/Movie';
 import PrivacyPageFooter from '../components/PrivacyPageFooter';
 import { Link } from 'react-router-dom';
+import Recommender from '../components/Recommender';
 
 const MainPage = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
@@ -71,10 +72,9 @@ const MainPage = () => {
         ))
   );
 
-  // Format movie title to match Azure blob filename structure
   const formatBlobUrl = (title: string): string =>
     `https://inteximages.blob.core.windows.net/movie-posters-2/${title
-      .replace(/[^\w\s]/gi, '') // remove all punctuation (&, :, -, etc.)
+      .replace(/[^\w\s]/gi, '') // remove punctuation
       .trim()}.jpg`;
 
   return (
@@ -89,12 +89,8 @@ const MainPage = () => {
         </button>
 
         {/* Sidebar */}
-        <div
-          className={`sidebar ${isSidebarOpen ? 'open' : ''}`}
-          ref={sidebarRef}
-        >
+        <div className={`sidebar ${isSidebarOpen ? 'open' : ''}`} ref={sidebarRef}>
           <h3>Filter by Genre</h3>
-
           <div className="genre-scroll-area">
             {genres.length === 0 ? (
               <p>Loading genres...</p>
@@ -111,18 +107,18 @@ const MainPage = () => {
               ))
             )}
           </div>
-
-          <button
-            className="clear-filters-btn"
-            onClick={() => setSelectedGenres([])}
-          >
+          <button className="clear-filters-btn" onClick={() => setSelectedGenres([])}>
             Clear Filters
           </button>
         </div>
 
-        {/* Page content */}
         <div className="content-wrap">
-          {/* Recommended */}
+          {/* Option A: Component-Based Recommendations */}
+          <Recommender movies={movies} />
+
+          {/* OR Option B: Inline Recommendations */}
+          {/* Uncomment this block if you want to keep both or test side-by-side */}
+          {/*
           <div className="section-header">
             <h2>Recommended for You</h2>
           </div>
@@ -148,6 +144,7 @@ const MainPage = () => {
               </Link>
             ))}
           </div>
+          */}
 
           {/* All Movies */}
           <div className="section-header">

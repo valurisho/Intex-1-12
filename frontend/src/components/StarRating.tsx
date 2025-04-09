@@ -1,11 +1,6 @@
 // src/components/StarRating.tsx
 import React, { useState } from 'react';
-
-interface StarRatingProps {
-  showId: string;
-  userId: number;
-  initialRating?: number;
-}
+import { StarRatingProps } from '../types/StarRatingProps';
 
 const StarRating: React.FC<StarRatingProps> = ({
   showId,
@@ -14,17 +9,11 @@ const StarRating: React.FC<StarRatingProps> = ({
 }) => {
   const [rating, setRating] = useState(initialRating);
   const [hoverRating, setHoverRating] = useState(0);
+  const [message, setMessage] = useState('');
 
   const handleRating = async (selectedRating: number) => {
     setRating(selectedRating);
-
-    const payload = {
-      userId: userId,
-      showId: showId,
-      rating: selectedRating,
-    };
-
-    console.log('🚀 Submitting rating:', payload); // ✅ Log before sending
+    setMessage('');
 
     try {
       const response = await fetch('https://localhost:5000/Movie/AddRating', {
@@ -33,16 +22,20 @@ const StarRating: React.FC<StarRatingProps> = ({
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          userId: userId,
-          showId: showId,
+          userId,
+          showId,
           rating: selectedRating,
         }),
       });
 
+      const text = await response.text();
+      console.log('📡 Response status:', response.status);
+      console.log('🧾 Raw response text:', text);
+
       if (!response.ok) throw new Error('Failed to submit rating');
 
-      const result = await response.json();
-      console.log(result.message); // Optional: Display to user
+      const result = JSON.parse(text);
+      setMessage(result.message);
     } catch (error) {
       console.error('Error submitting rating:', error);
     }
@@ -59,7 +52,6 @@ const StarRating: React.FC<StarRatingProps> = ({
               name="userRating"
               value={star}
               onChange={() => {
-                console.log(`⭐ Clicked star: ${star}`);
                 handleRating(star);
               }}
               style={{ display: 'none' }}
@@ -74,6 +66,9 @@ const StarRating: React.FC<StarRatingProps> = ({
           </label>
         ))}
       </div>
+      {message && (
+        <p style={{ color: 'green', marginTop: '0.5rem' }}>{message}</p>
+      )}
     </div>
   );
 };
