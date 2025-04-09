@@ -1,0 +1,217 @@
+/* MainPage.css */
+
+body {
+  background-color: #121212;
+  color: #ffffff;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.page-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.content-wrap {
+  flex: 1;
+  padding: 1rem 2rem 60px 2rem; /* Includes right padding + footer space */
+  color: #ffffff;
+}
+
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1rem 0;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+  background: none;
+  border-radius: 8px;
+  transition: transform 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+}
+
+.section-header {
+  text-align: left;
+  padding: 1rem 2rem 0.5rem;
+}
+
+.section-header h2 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin: 0;
+  color: #ffffff; /* Fixed: make it white */
+  border-left: 4px solid #f97316;
+  padding-left: 1rem;
+}
+.page-container.sidebar-open .content-wrap {
+  margin-left: 240px; /* Same width as your sidebar */
+  transition: margin-left 0.3s ease;
+}
+
+.search-bar {
+  margin-top: 0.5rem;
+  padding: 0.6rem 1rem;
+  width: 100%;
+  max-width: 400px;
+  border: 1px solid #888;
+  border-radius: 8px;
+  font-size: 1rem;
+  background-color: #1c1c1c;
+  color: #fff;
+}
+
+.search-bar::placeholder {
+  color: #ccc;
+}
+
+.search-bar:focus {
+  border-color: #f97316;
+  outline: none;
+}
+
+.recommended-row {
+  display: flex;
+  overflow-x: auto;
+  padding: 1rem 2rem;
+  gap: 1rem;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: thin;
+}
+
+.recommended-card {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.2s;
+}
+
+.recommended-card:hover {
+  transform: scale(1.05);
+}
+
+.recommended-row::-webkit-scrollbar {
+  height: 6px;
+}
+
+.recommended-row::-webkit-scrollbar-thumb {
+  background-color: #444;
+  border-radius: 3px;
+}
+
+/* SIDEBAR */
+
+.hamburger-btn {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  font-size: 2rem;
+  background: none;
+  border: none;
+  color: #ffffff;
+  z-index: 2000;
+  cursor: pointer;
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: -260px;
+  width: 240px;
+  height: 100%;
+  background-color: #3a2f2f; /* Feel free to test #1c1c1c or #5a4a3c too */
+  color: #f4e9da;
+  padding: 1.5rem 1rem;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.2);
+  transition: left 0.3s ease-in-out;
+  z-index: 1500;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar.open {
+  left: 0;
+}
+
+.sidebar h3 {
+  margin: 0 0 1rem;
+  font-size: 1.2rem;
+}
+
+/* GENRE SCROLL AREA */
+
+.genre-scroll-area {
+  flex-grow: 1;
+  max-height: 75%;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* GENRE CHECKBOXES */
+
+.genre-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  color: #f4e9da;
+}
+
+.genre-item input {
+  accent-color: #f97316;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+/* CLEAR BUTTON */
+
+.clear-filters-btn {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: #f97316;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.clear-filters-btn:hover {
+  background-color: #ea580c;
+}
+
+/* FOOTER */
+
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 40px;
+  background-color: #1f2937;
+  color: #f9fafb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+}

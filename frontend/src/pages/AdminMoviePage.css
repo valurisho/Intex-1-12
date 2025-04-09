@@ -1,55 +1,69 @@
+/* ===== PAGE BASE ===== */
 .admin-page {
-  padding: 2rem;
+  padding: 2rem 3rem;
   font-family: 'Inter', sans-serif;
-  max-width: 1200px;
-  margin: 0 auto;
-  background-color: #fff;
+  background-color: #121212; /* dark theme */
+  color: #e0e0e0;
+  min-height: 100vh;
+  width: 100vw;
+  box-sizing: border-box;
 }
 
-.admin-top-bar {
+/* ===== TOP HEADER ===== */
+.admin-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin-bottom: 2rem;
+  align-items: flex-start;
+  padding: 0.5rem 0 1rem;
+  margin-bottom: 1rem;
 }
 
-.admin-left {
+/* No top border! */
+
+.admin-logo img {
+  height: 150px;
+  object-fit: contain;
+}
+
+.admin-nav {
   display: flex;
-  align-items: center;
-  gap: 1rem;
-  flex: 1;
+  gap: 1.5rem;
+  margin-top: 1rem;
 }
 
-.hamburger {
-  font-size: 1.5rem;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: #333;
+.admin-link {
+  text-decoration: none;
+  color: #e0e0e0;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.admin-link:hover {
+  color: #ff8a00;
+}
+
+/* ===== SEARCH BAR - aligned left, not centered */
+.admin-search-bar-wrap {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 2rem;
 }
 
 .admin-search-bar {
   padding: 0.5rem 1.2rem;
   border-radius: 9999px;
-  border: 1px solid #ccc;
-  width: 250px;
+  border: none;
+  width: 300px;
   font-size: 0.95rem;
+  background-color: #1e1e1e;
+  color: #fff;
 }
 
-.admin-right {
-  display: flex;
-  gap: 2rem;
-  font-size: 0.95rem;
+.admin-search-bar::placeholder {
+  color: #888;
 }
 
-.admin-link {
-  text-decoration: none;
-  color: #000;
-  font-weight: 500;
-}
-
+/* ===== HEADER + BUTTON ===== */
 .admin-header-row {
   display: flex;
   justify-content: space-between;
@@ -60,60 +74,152 @@
 .admin-header-row h2 {
   font-size: 1.8rem;
   font-weight: 600;
+  color: #ffffff;
 }
 
 .add-movie-btn {
-  background-color: #e2e2e2;
+  background-color: #d4792f;
+  color: white;
   border: none;
-  padding: 0.6rem 1.2rem;
-  border-radius: 8px;
-  font-weight: 500;
+  padding: 0.7rem 1.5rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  font-size: 1rem;
   text-decoration: none;
-  color: black;
-  font-size: 0.95rem;
-  transition: background-color 0.2s;
+  transition: all 0.25s ease-in-out;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  display: inline-block;
 }
 
 .add-movie-btn:hover {
-  background-color: #d4d4d4;
+  background-color: #f18b35;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
 }
 
+/* ===== MOVIE GRID ===== */
 .admin-movie-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
   gap: 1.5rem;
+  justify-content: center;
 }
 
 .admin-movie-card {
+  width: 200px;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
+  padding: 0;
+  background-color: transparent;
+  border-radius: 12px;
+  transition: transform 0.2s ease;
+}
+
+.admin-movie-card:hover {
+  transform: scale(1.03);
 }
 
 .movie-poster {
   width: 100%;
-  height: auto;
-  border-radius: 8px;
+  height: 300px;
+  border-radius: 12px;
   object-fit: cover;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
 }
 
 .movie-title {
-  margin-top: 0.5rem;
+  margin-top: 0.6rem;
   font-size: 1rem;
   font-weight: 500;
+  color: #f1f1f1;
 }
 
 .movie-actions {
   display: flex;
   justify-content: center;
-  gap: 0.75rem;
-  margin-top: 0.4rem;
+  gap: 1rem;
+  margin-top: 0.5rem;
 }
 
 .action-icon {
   background: none;
   border: none;
   cursor: pointer;
+  padding: 0.3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s;
   font-size: 1.2rem;
+  color: #fff;
+}
+
+.action-icon:hover {
+  transform: scale(1.1);
+  color: #ff8a00;
+}
+
+/* ===== PAGINATION (if styled here) ===== */
+.pagination {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: 0;
+  list-style: none;
+  gap: 0.5rem;
+  margin-top: 2rem;
+}
+
+.page-item {
+  display: inline-block;
+}
+
+.page-link {
+  padding: 0.5rem 0.9rem;
+  background-color: #1e1e1e;
+  color: #fff;
+  border: 1px solid #333;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease-in-out;
+}
+
+.page-link:hover {
+  background-color: #ff8a00;
+  color: #000;
+  border-color: #ff8a00;
+}
+
+.page-item.active .page-link {
+  background-color: #ff8a00;
+  color: #000;
+  font-weight: 600;
+  border-color: #ff8a00;
+}
+
+.page-item.disabled .page-link {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.results-per-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1rem;
+  gap: 0.5rem;
+  color: #ccc;
+}
+
+.results-per-page select {
+  background-color: #1e1e1e;
+  color: white;
+  border: 1px solid #333;
+  border-radius: 6px;
+  padding: 0.3rem 0.6rem;
 }

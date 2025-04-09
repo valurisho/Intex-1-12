@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 import { Movie } from '../types/Movie';
 import { deleteMovie } from '../api/MovieAPI';
 import Pagination from '../components/pagination';
-import './AdminMoviePage.css';
 
 const AdminMoviePage = () => {
   const [allMovies, setAllMovies] = useState<Movie[]>([]);
@@ -60,22 +59,12 @@ const AdminMoviePage = () => {
 
   return (
     <div className="admin-page">
-      {/* Top bar */}
-      <div className="admin-top-bar">
-        <div className="admin-left">
-          <button className="hamburger">☰</button>
-          <input
-            type="text"
-            placeholder="Search for a Title"
-            value={searchQuery}
-            onChange={(e) => {
-              setSearchQuery(e.target.value);
-              setPageNum(1); // reset page on new search
-            }}
-            className="admin-search-bar"
-          />
+      {/* Top Header */}
+      <div className="admin-header">
+        <div className="admin-logo">
+          <img src="/logo.png" alt="CineNiche Logo" />
         </div>
-        <div className="admin-right">
+        <div className="admin-nav">
           <Link to="/privacy-policy" className="admin-link">
             Privacy Policy
           </Link>
@@ -83,6 +72,20 @@ const AdminMoviePage = () => {
             Logout
           </Link>
         </div>
+      </div>
+
+      {/* Search Bar */}
+      <div className="admin-search-bar-wrap">
+        <input
+          type="text"
+          placeholder="Search for a Title"
+          value={searchQuery}
+          onChange={(e) => {
+            setSearchQuery(e.target.value);
+            setPageNum(1); // reset page on new search
+          }}
+          className="admin-search-bar"
+        />
       </div>
 
       {/* Header + Add Button */}
@@ -98,7 +101,7 @@ const AdminMoviePage = () => {
         {movies.map((m) => (
           <div key={m.show_id} className="admin-movie-card">
             <img
-              src={`https://inteximages.blob.core.windows.net/movie-posters/${encodeURIComponent(m.title)}.jpg`}
+              src={`https://inteximages.blob.core.windows.net/movie-posters-2/${encodeURIComponent(m.title)}.jpg`}
               alt={m.title}
               className="movie-poster"
             />
