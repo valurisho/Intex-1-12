@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './AddMoviePage.css';
+import Select from 'react-select';
 
 const AddMoviePage = () => {
   const navigate = useNavigate();
@@ -53,15 +54,15 @@ const AddMoviePage = () => {
     }));
   };
 
-  // Genre selection toggle
-  const toggleGenre = (genre: string) => {
-    setFormData((prev) => {
-      const updatedGenres = prev.categories.includes(genre)
-        ? prev.categories.filter((g) => g !== genre)
-        : [...prev.categories, genre];
-      return { ...prev, categories: updatedGenres };
-    });
-  };
+  // // Genre selection toggle
+  // const toggleGenre = (genre: string) => {
+  //   setFormData((prev) => {
+  //     const updatedGenres = prev.categories.includes(genre)
+  //       ? prev.categories.filter((g) => g !== genre)
+  //       : [...prev.categories, genre];
+  //     return { ...prev, categories: updatedGenres };
+  //   });
+  // };
 
   // Submit handler
   const handleSubmit = async (e: React.FormEvent) => {
@@ -154,20 +155,25 @@ const AddMoviePage = () => {
         {loadingCategories ? (
           <p>Loading categories...</p>
         ) : (
-          <div className="genre-checkbox-group">
+          <div className="select-group">
             <label>Genres:</label>
-            <div className="checkbox-grid">
-              {availableCategories.map((genre) => (
-                <label key={genre} className="checkbox-item">
-                  <input
-                    type="checkbox"
-                    checked={formData.categories.includes(genre)}
-                    onChange={() => toggleGenre(genre)}
-                  />
-                  {genre}
-                </label>
-              ))}
-            </div>
+            <Select
+              isMulti
+              options={availableCategories.map((genre) => ({
+                value: genre,
+                label: genre,
+              }))}
+              value={formData.categories.map((genre) => ({
+                value: genre,
+                label: genre,
+              }))}
+              onChange={(selectedOptions) => {
+                const genres = selectedOptions.map((option) => option.value);
+                setFormData((prev) => ({ ...prev, categories: genres }));
+              }}
+              className="react-select-container"
+              classNamePrefix="react-select"
+            />
           </div>
         )}
 

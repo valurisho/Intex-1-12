@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-// import './EditMoviePage.css';
+import Select from 'react-select';
+import './EditMoviePage.css';
 
 const EditMoviePage = () => {
   const navigate = useNavigate();
@@ -175,20 +176,25 @@ const EditMoviePage = () => {
           rows={3}
         />
 
-        <div className="genre-checkbox-group">
+        <div className="select-group">
           <label>Genres:</label>
-          <div className="checkbox-grid">
-            {availableCategories.map((genre) => (
-              <label key={genre} className="checkbox-item">
-                <input
-                  type="checkbox"
-                  checked={formData.categories.includes(genre)}
-                  onChange={() => toggleGenre(genre)}
-                />
-                {genre}
-              </label>
-            ))}
-          </div>
+          <Select
+            isMulti
+            options={availableCategories.map((genre) => ({
+              value: genre,
+              label: genre,
+            }))}
+            value={formData.categories.map((genre) => ({
+              value: genre,
+              label: genre,
+            }))}
+            onChange={(selectedOptions) => {
+              const genres = selectedOptions.map((option) => option.value);
+              setFormData((prev) => ({ ...prev, categories: genres }));
+            }}
+            className="react-select-container"
+            classNamePrefix="react-select"
+          />
         </div>
 
         {submitError && <p className="error-message">{submitError}</p>}
