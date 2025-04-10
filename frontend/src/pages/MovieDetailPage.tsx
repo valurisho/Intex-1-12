@@ -6,6 +6,8 @@ import { motion } from 'framer-motion';
 import StarRating from '../components/StarRating';
 import defaultPoster from '../assets/Intexfun.png';
 import Cookies from 'js-cookie';
+import Logout from '../components/Logout';
+import { AuthorizedUser } from '../components/AuthorizeView';
 
 const MovieDetailPage = () => {
   const { id } = useParams();
@@ -33,6 +35,13 @@ const MovieDetailPage = () => {
 
     fetchMovie();
   }, [id]);
+
+  useEffect(() => {
+    if (movie?.show_id) {
+      const lastWatched = Cookies.get('continueWatching');
+      setIsContinueWatching(lastWatched === movie.show_id.toString());
+    }
+  }, [movie]);
 
   useEffect(() => {
     const fetchSimilarMovies = async () => {
@@ -82,7 +91,8 @@ const MovieDetailPage = () => {
           `https://localhost:5000/collaborativerecommendations/${movie.show_id}`,
           { credentials: 'include' }
         );
-        if (!response.ok) throw new Error('Failed to fetch collaborative recs.');
+        if (!response.ok)
+          throw new Error('Failed to fetch collaborative recs.');
         const data = await response.json();
 
         const ids = [
@@ -114,21 +124,12 @@ const MovieDetailPage = () => {
     fetchCollaborativeRecommendations();
   }, [movie]);
 
-  useEffect(() => {
-  if (movie?.show_id) {
-    const lastWatched = Cookies.get('continueWatching');
-    if (lastWatched === movie.show_id.toString()) {
-      setIsContinueWatching(true);
-    } else {
-      setIsContinueWatching(false); // <-- ADD THIS to reset it!
-    }
-  }
-}, [movie]);
-
-  if (!movie) return <p>Loading...</p>; // ✅ Hooks above this line
+  if (!movie) return <p>Loading...</p>;
 
   const formatBlobUrl = (title: string): string =>
-    `https://inteximages.blob.core.windows.net/movie-posters-2/${title.replace(/[^\w\s]/gi, '').trim()}.jpg`;
+    `https://inteximages.blob.core.windows.net/movie-posters-2/${title
+      .replace(/[^\w\s]/gi, '')
+      .trim()}.jpg`;
 
   return (
     <motion.div
@@ -143,12 +144,10 @@ const MovieDetailPage = () => {
             <img src="/logo.png" alt="CineNiche Logo" />
           </Link>
         </div>
+
         <div className="main-nav">
           <Link to="/privacy-policy" className="main-link">
             Privacy
-          </Link>
-          <Link to="/logout" className="main-link">
-            Logout
           </Link>
         </div>
       </div>
@@ -179,24 +178,52 @@ const MovieDetailPage = () => {
               e.currentTarget.src = defaultPoster;
             }}
           />
+
           <div className="movie-details">
             <h2>{movie.title}</h2>
-            {movie.director && <p><strong>Director:</strong> {movie.director}</p>}
-            {movie.cast && <p><strong>Cast:</strong> {movie.cast}</p>}
-            {movie.type && <p><strong>Type:</strong> {movie.type}</p>}
-            {movie.country && <p><strong>Country:</strong> {movie.country}</p>}
-            <p><strong>Release Year:</strong> {movie.release_year ?? 'Unknown'}</p>
-            <p><strong>Duration:</strong> {movie.duration ?? 'Unknown'}</p>
+            {movie.director && (
+              <p>
+                <strong>Director:</strong> {movie.director}
+              </p>
+            )}
+            {movie.cast && (
+              <p>
+                <strong>Cast:</strong> {movie.cast}
+              </p>
+            )}
+            {movie.type && (
+              <p>
+                <strong>Type:</strong> {movie.type}
+              </p>
+            )}
+            {movie.country && (
+              <p>
+                <strong>Country:</strong> {movie.country}
+              </p>
+            )}
+            <p>
+              <strong>Release Year:</strong> {movie.release_year ?? 'Unknown'}
+            </p>
+            <p>
+              <strong>Duration:</strong> {movie.duration ?? 'Unknown'}
+            </p>
             {movie.rating !== null && movie.rating !== undefined && (
-              <p><strong>Rating:</strong> {movie.rating}</p>
+              <p>
+                <strong>Rating:</strong> {movie.rating}
+              </p>
             )}
             {movie.categories && (
-              <p><strong>Genres:</strong> {movie.categories.join(', ')}</p>
+              <p>
+                <strong>Genres:</strong> {movie.categories.join(', ')}
+              </p>
             )}
+
             <button
               className="watch-now-button"
               onClick={() => {
-                Cookies.set('continueWatching', movie.show_id.toString(), { expires: 7 });
+                Cookies.set('continueWatching', movie.show_id.toString(), {
+                  expires: 7,
+                });
                 setIsContinueWatching(true);
                 alert('🎬 Watch feature coming soon!');
               }}
@@ -208,12 +235,15 @@ const MovieDetailPage = () => {
 
         {movie.description && (
           <div className="movie-description">
-            <p><strong>Description:</strong> {movie.description}</p>
+            <p>
+              <strong>Description:</strong> {movie.description}
+            </p>
           </div>
         )}
 
         {movie && <StarRating showId={movie.show_id} userId={1} />}
 
+        {/* === SIMILAR MOVIES SECTION === */}
         <div className="recommendation-section">
           <h3>Similar Movies</h3>
           <div className="recommendation-row">
@@ -249,13 +279,12 @@ const MovieDetailPage = () => {
           </div>
         </div>
 
-        <div className="recommendation-section">
-          <h3>Users Also Watched</h3>
-          <div className="recommendation-row">
-            {collaborativeMovies.length === 0 ? (
-              <p>Loading collaborative picks...</p>
-            ) : (
-              collaborativeMovies.map((m) => (
+        {/* === USERS ALSO WATCHED SECTION === */}
+        {collaborativeMovies.length > 0 && (
+          <div className="recommendation-section">
+            <h3>Users Also Watched</h3>
+            <div className="recommendation-row">
+              {collaborativeMovies.map((m) => (
                 <div
                   key={m.show_id}
                   onClick={() => navigate(`/movie/${m.show_id}`)}
@@ -282,10 +311,10 @@ const MovieDetailPage = () => {
                     }}
                   />
                 </div>
-              ))
-            )}
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </motion.div>
   );
