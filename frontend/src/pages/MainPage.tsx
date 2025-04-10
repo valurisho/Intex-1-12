@@ -10,6 +10,7 @@ import { useUserRecommendations } from '../components/useUserRecommendations';
 import { FaSearch } from 'react-icons/fa';
 import defaultPoster from '../assets/Intexfun.png';
 import HamburgerSidebar from '../components/HamburgerSideBar';
+import { API_URL } from '../api/MovieAPI';
 
 interface User {
   email: string;
@@ -35,25 +36,44 @@ const MainPageContent = ({ user }: MainPageContentProps) => {
 
   const userId = (() => {
     switch (user?.email) {
-      case 'rileywells@gmail.com': return '1';
-      case 'test@test.com': return '2';
-      case 'admin@test.com': return '3';
-      case 'jbeals@gmail.com': return '4';
-      case 'intex@test.com': return '5';
-      default: return '0';
+      case 'rileywells@gmail.com':
+        return '1';
+      case 'test@test.com':
+        return '2';
+      case 'admin@test.com':
+        return '3';
+      case 'jbeals@gmail.com':
+        return '4';
+      case 'intex@test.com':
+        return '5';
+      default:
+        return '0';
     }
   })();
-
-  const API_URL = 'https://intex-group1-12-backend-bdb9gqd9ecfvhtc8.westus3-01.azurewebsites.net/Movie';
 
   console.log('Logged in user:', user?.email);
   console.log('Computed userId:', userId);
 
-  const { recommendedMovies: comedyMovies } = useGenreRecommendations('comedy', userId);
-  const { recommendedMovies: dramaMovies } = useGenreRecommendations('dramas', userId);
-  const { recommendedMovies: horrorMovies } = useGenreRecommendations('horrorthrillers', userId);
-  const { recommendedMovies: familyMovies } = useGenreRecommendations('family', userId);
-  const { recommendedMovies: adventureMovies } = useGenreRecommendations('adventure', userId);
+  const { recommendedMovies: comedyMovies } = useGenreRecommendations(
+    'comedy',
+    userId
+  );
+  const { recommendedMovies: dramaMovies } = useGenreRecommendations(
+    'dramas',
+    userId
+  );
+  const { recommendedMovies: horrorMovies } = useGenreRecommendations(
+    'horrorthrillers',
+    userId
+  );
+  const { recommendedMovies: familyMovies } = useGenreRecommendations(
+    'family',
+    userId
+  );
+  const { recommendedMovies: adventureMovies } = useGenreRecommendations(
+    'adventure',
+    userId
+  );
   const { recommendedMovies: userMovies } = useUserRecommendations(userId);
 
   // useEffect(() => {
@@ -65,12 +85,16 @@ const MainPageContent = ({ user }: MainPageContentProps) => {
   useEffect(() => {
     const fetchMoviesAndGenres = async () => {
       try {
-        const movieRes = await fetch(`${API_URL}/GetAllMovies`, { credentials: 'include' });
+        const movieRes = await fetch(`${API_URL}/Movie/GetAllMovies`, {
+          credentials: 'include',
+        });
         if (!movieRes.ok) throw new Error('Error fetching movies');
         const movieData = await movieRes.json();
         setMovies(movieData);
 
-        const genreRes = await fetch(`${API_URL}/GetCategories`, { credentials: 'include' });
+        const genreRes = await fetch(`${API_URL}/Movie/GetCategories`, {
+          credentials: 'include',
+        });
         if (!genreRes.ok) throw new Error('Error fetching genres');
         const genreData = await genreRes.json();
         setGenres(genreData);
@@ -84,7 +108,10 @@ const MainPageContent = ({ user }: MainPageContentProps) => {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (sidebarRef.current && !sidebarRef.current.contains(event.target as Node)) {
+      if (
+        sidebarRef.current &&
+        !sidebarRef.current.contains(event.target as Node)
+      ) {
         setIsSidebarOpen(false);
       }
     };
@@ -149,7 +176,9 @@ const MainPageContent = ({ user }: MainPageContentProps) => {
                   const newState = !prev;
                   if (!prev && allMoviesRef.current) {
                     setTimeout(() => {
-                      allMoviesRef.current?.scrollIntoView({ behavior: 'smooth' });
+                      allMoviesRef.current?.scrollIntoView({
+                        behavior: 'smooth',
+                      });
                     }, 0);
                   }
                   return newState;
@@ -172,7 +201,10 @@ const MainPageContent = ({ user }: MainPageContentProps) => {
         </div>
       </div>
 
-      <button className="hamburger-btn" onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
+      <button
+        className="hamburger-btn"
+        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+      >
         ☰
       </button>
 
@@ -228,7 +260,9 @@ const MainPageContent = ({ user }: MainPageContentProps) => {
 };
 
 const MainPage = () => {
-  return <AuthorizeView>{(user) => <MainPageContent user={user} />}</AuthorizeView>;
+  return (
+    <AuthorizeView>{(user) => <MainPageContent user={user} />}</AuthorizeView>
+  );
 };
 
 export default MainPage;

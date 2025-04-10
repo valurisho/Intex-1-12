@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './RegisterPage.css';
 import { motion } from 'framer-motion';
+import { API_URL } from '../api/MovieAPI';
 
 const RegisterPage = () => {
   const [email, setEmail] = useState('');
@@ -18,16 +19,17 @@ const RegisterPage = () => {
     if (!/[A-Z]/.test(password)) errors.push('At least one uppercase letter');
     if (!/[a-z]/.test(password)) errors.push('At least one lowercase letter');
     if (!/[0-9]/.test(password)) errors.push('At least one number');
-    if (!/[^A-Za-z0-9]/.test(password)) errors.push('At least one special character');
-    if ((new Set(password)).size < 4) errors.push('At least 4 unique characters');
-    if (confirmPassword && password !== confirmPassword) passwordErrors.push('Passwords do not match');
+    if (!/[^A-Za-z0-9]/.test(password))
+      errors.push('At least one special character');
+    if (new Set(password).size < 4) errors.push('At least 4 unique characters');
+    if (confirmPassword && password !== confirmPassword)
+      passwordErrors.push('Passwords do not match');
     return errors;
   }
 
   const handleLoginClick = () => {
     navigate('/login');
   };
-  
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -35,7 +37,7 @@ const RegisterPage = () => {
     if (name === 'password') {
       setPassword(value);
       setPasswordErrors(validatePassword(value)); // validate as they type
-    };
+    }
     if (name === 'confirmPassword') setConfirmPassword(value);
   };
 
@@ -50,7 +52,7 @@ const RegisterPage = () => {
       setError('Passwords do not match.');
     } else {
       setError('');
-      fetch('https://localhost:5000/register', {
+      fetch(`${API_URL}/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
@@ -110,7 +112,9 @@ const RegisterPage = () => {
           {password.length > 0 && passwordErrors.length > 0 && (
             <div className="password-rules">
               {passwordErrors.map((err, idx) => (
-                <div key={idx} className="password-rule">{err}</div>
+                <div key={idx} className="password-rule">
+                  {err}
+                </div>
               ))}
             </div>
           )}
@@ -124,7 +128,9 @@ const RegisterPage = () => {
           />
 
           {confirmPassword && password && confirmPassword !== password && (
-            <div className='password-rules'><p className="password-rule">Passwords do not match</p></div>
+            <div className="password-rules">
+              <p className="password-rule">Passwords do not match</p>
+            </div>
           )}
 
           <button type="submit" className="register-submit-btn">

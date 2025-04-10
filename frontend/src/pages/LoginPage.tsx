@@ -6,6 +6,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import './LoginPage.css';
 import { motion } from 'framer-motion';
 import { Eye, EyeOff } from 'lucide-react';
+import { API_URL } from '../api/MovieAPI';
 
 const LoginPage = () => {
   // 🔐 Login form state
@@ -35,8 +36,8 @@ const LoginPage = () => {
     }
 
     const loginUrl = rememberme
-      ? 'https://intex-group1-12-backend-bdb9gqd9ecfvhtc8.westus3-01.azurewebsites.netlogin?useCookies=true'
-      : 'https://intex-group1-12-backend-bdb9gqd9ecfvhtc8.westus3-01.azurewebsites.net/login?useSessionCookies=true';
+      ? `${API_URL}/login?useCookies=true`
+      : `${API_URL}/login?useSessionCookies=true`;
 
     try {
       const response = await fetch(loginUrl, {

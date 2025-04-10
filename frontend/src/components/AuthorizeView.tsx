@@ -1,5 +1,6 @@
 import React, { useState, useEffect, createContext } from 'react';
 import { Navigate } from 'react-router-dom';
+import { API_URL } from '../api/MovieAPI';
 
 export const UserContext = createContext<User | null>(null);
 
@@ -21,13 +22,10 @@ function AuthorizeView({ children, requiredRole }: AuthorizeViewProps) {
   useEffect(() => {
     async function fetchUser() {
       try {
-        const response = await fetch(
-          'https://intex-group1-12-backend-bdb9gqd9ecfvhtc8.westus3-01.azurewebsites.net/pingauth',
-          {
-            method: 'GET',
-            credentials: 'include',
-          }
-        );
+        const response = await fetch(`${API_URL}/pingauth`, {
+          method: 'GET',
+          credentials: 'include',
+        });
 
         const contentType = response.headers.get('content-type');
         if (!contentType || !contentType.includes('application/json')) {
