@@ -7,7 +7,6 @@ import StarRating from '../components/StarRating';
 import defaultPoster from '../assets/Intexfun.png';
 import Cookies from 'js-cookie';
 
-
 const MovieDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -42,7 +41,6 @@ const MovieDetailPage = () => {
       setIsContinueWatching(parsed.includes(movie.show_id));
     }
   }, [movie]);
-  
 
   useEffect(() => {
     const fetchSimilarMovies = async () => {
@@ -219,22 +217,21 @@ const MovieDetailPage = () => {
               </p>
             )}
 
-          <button
-            className="watch-now-button"
-            onClick={() => {
-              const current = Cookies.get('continueWatchingList');
-              const parsed = current ? JSON.parse(current) : [];
-              const updated = Array.from(new Set([movie.show_id, ...parsed]));
-              Cookies.set('continueWatchingList', JSON.stringify(updated), {
-                expires: 7,
-              });
-              setIsContinueWatching(true);
-              alert('🎬 Watch feature coming soon!');
-            }}
-          >
-            {isContinueWatching ? '⏯ Continue Watching' : '▶ Watch Now'}
-          </button>
-
+            <button
+              className="watch-now-button"
+              onClick={() => {
+                const current = Cookies.get('continueWatchingList');
+                const parsed = current ? JSON.parse(current) : [];
+                const updated = Array.from(new Set([movie.show_id, ...parsed]));
+                Cookies.set('continueWatchingList', JSON.stringify(updated), {
+                  expires: 7,
+                });
+                setIsContinueWatching(true);
+                alert('🎬 Watch feature coming soon!');
+              }}
+            >
+              {isContinueWatching ? '⏯ Continue Watching' : '▶ Watch Now'}
+            </button>
           </div>
         </div>
 
