@@ -9,7 +9,7 @@ const HeroSection = () => {
       {/* Everything else is layered on top */}
       <header className="hero-header">
         <div className="logo">
-          <img src="/logo.png" alt="CineNiche Logo" />
+          <img src="/logo-letters.png" alt="CineNiche Logo" />
         </div>
         <nav className="nav">
           <a href="/login">Login</a>

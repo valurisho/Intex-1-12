@@ -68,7 +68,7 @@
   position: relative;
 }
 
-.password-wrapper .eye {
+.eye {
   position: absolute;
   right: 1rem;
   top: 50%;
@@ -78,7 +78,7 @@
 }
 
 .sign-in-btn {
-  background-color: #d6c6a8;
+  background-color: #d6b881;
   color: white;
   border: none;
   padding: 0.75rem;
@@ -130,4 +130,34 @@
 
 .sign-up-btn:hover {
   background-color: #f18b35;
+}
+
+.form-input {
+  width: 100%;
+  max-width: 300px;
+  padding: 0.75rem 1rem;
+  padding-right: 2.5rem; /* space for the icon */
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 1rem;
+  background-color: #f9fafb;
+  box-sizing: border-box;
+}
+
+/* Wrapper for positioning the icon */
+.input-with-icon {
+  position: relative;
+  width: 100%;
+  max-width: 300px;
+  margin-bottom: 1rem;
+}
+
+/* The eye icon positioned inside */
+.eye-icon {
+  position: absolute;
+  top: 50%;
+  right: 1rem;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #9ca3af;
 }
