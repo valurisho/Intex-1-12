@@ -2,8 +2,10 @@
 // We made the second one, and the third one is from Dr. Well's videos.
 
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './LoginPage.css';
+import { motion } from 'framer-motion';
+import { Eye, EyeOff } from 'lucide-react';
 
 const LoginPage = () => {
   // 🔐 Login form state
@@ -12,6 +14,7 @@ const LoginPage = () => {
   const [rememberme, setRememberme] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
 
   // ✏️ Handle form input changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -65,7 +68,13 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="login-container">
+    <motion.div
+      className="login-container"
+      initial={{ opacity: 0, x: -100 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: 100 }}
+      transition={{ duration: 0.5 }}
+    >
       {/* Left: Login form */}
       <div className="login-left">
         <div className="logo">
@@ -80,27 +89,24 @@ const LoginPage = () => {
             placeholder="Email"
             value={email}
             onChange={handleChange}
+            className="form-input"
           />
-          <div className="password-wrapper">
+
+          <div className="input-with-icon">
             <input
-              type="password"
+              type={showPassword ? 'text' : 'password'}
               name="password"
               placeholder="Password"
               value={password}
               onChange={handleChange}
+              className="form-input"
             />
-            <span className="eye">👁️</span>
-          </div>
-
-          <div className="remember-me">
-            <input
-              type="checkbox"
-              id="rememberme"
-              name="rememberme"
-              checked={rememberme}
-              onChange={handleChange}
-            />
-            <label htmlFor="rememberme">Remember me</label>
+            <span
+              className="eye-icon"
+              onClick={() => setShowPassword((prev) => !prev)}
+            >
+              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+            </span>
           </div>
 
           <button type="submit" className="sign-in-btn">
@@ -114,9 +120,11 @@ const LoginPage = () => {
       <div className="login-right">
         <h2>New to CineNiche?</h2>
         <p>Explore rare films and hidden gems you won’t find anywhere else.</p>
-        <button className="sign-up-btn">Sign Up</button>
+        <Link to="/register">
+          <button className="sign-up-btn">Sign Up</button>
+        </Link>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
