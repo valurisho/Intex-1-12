@@ -16,18 +16,21 @@ const StarRating: React.FC<StarRatingProps> = ({
     setMessage('');
 
     try {
-      const response = await fetch('https://localhost:5000/Movie/AddRating', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify({
-          userId,
-          showId,
-          rating: selectedRating,
-        }),
-      });
+      const response = await fetch(
+        'https://intex-group1-12-backend-bdb9gqd9ecfvhtc8.westus3-01.azurewebsites.net/Movie/AddRating',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+          body: JSON.stringify({
+            userId,
+            showId,
+            rating: selectedRating,
+          }),
+        }
+      );
 
       const text = await response.text();
       console.log('📡 Response status:', response.status);

@@ -10,7 +10,7 @@ export const useUserRecommendations = (userId: string) => {
     const fetchUserRecs = async () => {
       try {
         const response = await fetch(
-          `https://localhost:5000/api/UserRecommendation/${userId}`,
+          `https://intex-group1-12-backend-bdb9gqd9ecfvhtc8.westus3-01.azurewebsites.net/api/UserRecommendation/${userId}`,
           {
             credentials: 'include',
           }
@@ -36,7 +36,7 @@ export const useUserRecommendations = (userId: string) => {
         ];
 
         const allMoviesRes = await fetch(
-          `https://localhost:5000/Movie/GetAllMovies`,
+          `https://intex-group1-12-backend-bdb9gqd9ecfvhtc8.westus3-01.azurewebsites.net/Movie/GetAllMovies`,
           {
             credentials: 'include',
           }

@@ -1,9 +1,9 @@
 import { Movie } from '../types/Movie';
 
-interface FetchMoviesResponse {
-  movies: Movie[];
-  totalNumberOfMovies: number;
-}
+// interface FetchMoviesResponse {
+//   movies: Movie[];
+//   totalNumberOfMovies: number;
+// }
 
 const API_URL = 'https://localhost:5000/Movie';
 

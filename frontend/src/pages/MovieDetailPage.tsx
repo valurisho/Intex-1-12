@@ -20,7 +20,7 @@ const MovieDetailPage = () => {
     const fetchMovie = async () => {
       try {
         const response = await fetch(
-          `https://localhost:5000/Movie/GetMovieById/${id}`,
+          `https://intex-group1-12-backend-bdb9gqd9ecfvhtc8.westus3-01.azurewebsites.net/Movie/GetMovieById/${id}`,
           { credentials: 'include' }
         );
         if (!response.ok) throw new Error('Failed to fetch movie.');
@@ -47,7 +47,7 @@ const MovieDetailPage = () => {
       if (!movie) return;
       try {
         const response = await fetch(
-          `https://localhost:5000/contentrecommendations/${movie.show_id}`,
+          `https://intex-group1-12-backend-bdb9gqd9ecfvhtc8.westus3-01.azurewebsites.net/contentrecommendations/${movie.show_id}`,
           { credentials: 'include' }
         );
         if (!response.ok) throw new Error('Failed to fetch similar IDs.');
@@ -65,7 +65,7 @@ const MovieDetailPage = () => {
         const movies: Movie[] = await Promise.all(
           ids.map(async (recId) => {
             const res = await fetch(
-              `https://localhost:5000/Movie/GetMovieById/${recId}`,
+              `https://intex-group1-12-backend-bdb9gqd9ecfvhtc8.westus3-01.azurewebsites.net/Movie/GetMovieById/${recId}`,
               { credentials: 'include' }
             );
             if (!res.ok) return null;
@@ -87,7 +87,7 @@ const MovieDetailPage = () => {
       if (!movie) return;
       try {
         const response = await fetch(
-          `https://localhost:5000/collaborativerecommendations/${movie.show_id}`,
+          `https://intex-group1-12-backend-bdb9gqd9ecfvhtc8.westus3-01.azurewebsites.net/collaborativerecommendations/${movie.show_id}`,
           { credentials: 'include' }
         );
         if (!response.ok)
@@ -106,7 +106,7 @@ const MovieDetailPage = () => {
         const movies: Movie[] = await Promise.all(
           ids.map(async (recId: string) => {
             const res = await fetch(
-              `https://localhost:5000/Movie/GetMovieById/${recId}`,
+              `https://intex-group1-12-backend-bdb9gqd9ecfvhtc8.westus3-01.azurewebsites.net/Movie/GetMovieById/${recId}`,
               { credentials: 'include' }
             );
             if (!res.ok) return null;

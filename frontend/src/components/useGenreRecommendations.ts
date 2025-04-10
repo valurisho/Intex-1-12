@@ -9,7 +9,7 @@ export const useGenreRecommendations = (genre: string, userId: string) => {
     const fetchRecommendations = async () => {
       try {
         const response = await fetch(
-          `https://localhost:5000/api/GenreRecommendation/${genre}/${userId}`,
+          `https://intex-group1-12-backend-bdb9gqd9ecfvhtc8.westus3-01.azurewebsites.net/api/GenreRecommendation/${genre}/${userId}`,
           {
             credentials: 'include',
           }
@@ -24,7 +24,7 @@ export const useGenreRecommendations = (genre: string, userId: string) => {
         const recommendedIds: string[] = JSON.parse(raw);
 
         const allMoviesRes = await fetch(
-          `https://localhost:5000/Movie/GetAllMovies`,
+          `https://intex-group1-12-backend-bdb9gqd9ecfvhtc8.westus3-01.azurewebsites.net/Movie/GetAllMovies`,
           {
             credentials: 'include',
           }

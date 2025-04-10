@@ -9,6 +9,7 @@ import { useGenreRecommendations } from '../components/useGenreRecommendations';
 import { useUserRecommendations } from '../components/useUserRecommendations';
 import { FaSearch } from 'react-icons/fa';
 import defaultPoster from '../assets/Intexfun.png';
+import HamburgerSidebar from '../components/HamburgerSideBar';
 
 interface User {
   email: string;
@@ -20,42 +21,34 @@ interface MainPageContentProps {
 }
 
 const MainPageContent = ({ user }: MainPageContentProps) => {
-  // All hooks in this component are now safe (they’re at top level)
   const [movies, setMovies] = useState<Movie[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
   const [genres, setGenres] = useState<string[]>([]);
   const [showSearch, setShowSearch] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
+  // const [isScrolled, setIsScrolled] = useState(false);
 
   const allMoviesRef = useRef<HTMLDivElement>(null);
-  const sidebarRef = useRef<HTMLDivElement>(null);
+  const sidebarRef = useRef<HTMLDivElement | null>(null);
   const navigate = useNavigate();
-  const API_URL = 'https://localhost:5000/Movie';
-
 
   const userId = (() => {
     switch (user?.email) {
-      case 'rileywells@gmail.com':
-        return '1';
-      case 'test@test.com':
-        return '2';
-      case 'admin@test.com':
-        return '3';
-      case 'jbeals@gmail.com':
-        return '4';
-      case 'intex@test.com':
-        return '5';
-      default:
-        return '0';
+      case 'rileywells@gmail.com': return '1';
+      case 'test@test.com': return '2';
+      case 'admin@test.com': return '3';
+      case 'jbeals@gmail.com': return '4';
+      case 'intex@test.com': return '5';
+      default: return '0';
     }
   })();
+
+  const API_URL = 'https://intex-group1-12-backend-bdb9gqd9ecfvhtc8.westus3-01.azurewebsites.net/Movie';
 
   console.log('Logged in user:', user?.email);
   console.log('Computed userId:', userId);
 
-  // Use recommendation hooks that now rely on the computed userId.
   const { recommendedMovies: comedyMovies } = useGenreRecommendations('comedy', userId);
   const { recommendedMovies: dramaMovies } = useGenreRecommendations('dramas', userId);
   const { recommendedMovies: horrorMovies } = useGenreRecommendations('horrorthrillers', userId);
@@ -63,14 +56,12 @@ const MainPageContent = ({ user }: MainPageContentProps) => {
   const { recommendedMovies: adventureMovies } = useGenreRecommendations('adventure', userId);
   const { recommendedMovies: userMovies } = useUserRecommendations(userId);
 
-  // Setup scroll listener.
-  useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 50);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  // useEffect(() => {
+  //   const handleScroll = () => setIsScrolled(window.scrollY > 50);
+  //   window.addEventListener('scroll', handleScroll);
+  //   return () => window.removeEventListener('scroll', handleScroll);
+  // }, []);
 
-  // Fetch movies and genres.
   useEffect(() => {
     const fetchMoviesAndGenres = async () => {
       try {
@@ -91,7 +82,6 @@ const MainPageContent = ({ user }: MainPageContentProps) => {
     fetchMoviesAndGenres();
   }, [navigate]);
 
-  // Handle clicks outside the sidebar.
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (sidebarRef.current && !sidebarRef.current.contains(event.target as Node)) {
@@ -135,7 +125,6 @@ const MainPageContent = ({ user }: MainPageContentProps) => {
 
   return (
     <div className={`page-container ${isSidebarOpen ? 'sidebar-open' : ''}`}>
-      {/* Fixed Top Header */}
       <div className="main-header">
         <div className="main-logo">
           <img src="/logo.png" alt="CineNiche Logo" />
@@ -182,33 +171,26 @@ const MainPageContent = ({ user }: MainPageContentProps) => {
           </div>
         </div>
       </div>
-      {/* Hamburger */}
+
       <button className="hamburger-btn" onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
         ☰
       </button>
-      <div className={`sidebar ${isSidebarOpen ? 'open' : ''}`} ref={sidebarRef}>
-        <h3>Filter by Genre</h3>
-        <div className="genre-scroll-area">
-          {genres.length === 0 ? (
-            <p>Loading genres...</p>
-          ) : (
-            genres.map((genre) => (
-              <label key={genre} className="genre-item">
-                <input
-                  type="checkbox"
-                  checked={selectedGenres.includes(genre)}
-                  onChange={() => toggleGenre(genre)}
-                />
-                {genre}
-              </label>
-            ))
-          )}
-        </div>
-        <button className="clear-filters-btn" onClick={() => setSelectedGenres([])}>
-          Clear Filters
-        </button>
-      </div>
-      {/* Page Content */}
+
+      {/* Commented out in favor of new component-based sidebar */}
+      {/* <div className={`sidebar ${isSidebarOpen ? 'open' : ''}`} ref={sidebarRef}> */}
+      {/*   ... */}
+      {/* </div> */}
+
+      <HamburgerSidebar
+        isSidebarOpen={isSidebarOpen}
+        setIsSidebarOpen={setIsSidebarOpen}
+        genres={genres}
+        selectedGenres={selectedGenres}
+        toggleGenre={toggleGenre}
+        clearFilters={() => setSelectedGenres([])}
+        sidebarRef={sidebarRef}
+      />
+
       <div className="content-wrap">
         <Recommender movies={userMovies} title="Your Personalized Picks" />
         <Recommender movies={comedyMovies} title="Comedy Picks for You" />
@@ -246,11 +228,7 @@ const MainPageContent = ({ user }: MainPageContentProps) => {
 };
 
 const MainPage = () => {
-  return (
-    <AuthorizeView>
-      {(user) => <MainPageContent user={user} />}
-    </AuthorizeView>
-  );
+  return <AuthorizeView>{(user) => <MainPageContent user={user} />}</AuthorizeView>;
 };
 
 export default MainPage;
