@@ -24,18 +24,26 @@ body {
   left: 0;
   right: 0;
   height: 70px;
-  background-color: #121212;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 2rem;
   z-index: 3000;
-  border-bottom: 1px solid #333;
+  background-color: transparent;
+  transition:
+    background-color 0.4s ease,
+    box-shadow 0.3s ease;
+  backdrop-filter: blur(4px); /* Optional: subtle blur */
+  border-bottom: none;
 }
-
+.page-container .main-header.scrolled {
+  background-color: #000 !important; /* Or #1c1c1c if you prefer */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+}
 .main-logo img {
   height: 70px;
   object-fit: contain;
+  transition: filter 0.3s ease;
 }
 
 .main-nav {
