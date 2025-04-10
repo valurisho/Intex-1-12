@@ -276,6 +276,14 @@ namespace INTEX.API.Controllers
 
             return Ok(new { message = "Rating saved successfully!" });
         }
+
+        [HttpGet("GetUsers")]
+        [Authorize]
+        public IActionResult GetUsers()
+        {
+            var users = _movieContext.Users.ToList();
+            return Ok(users);
+        }
             
             
         }
