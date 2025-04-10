@@ -23,7 +23,6 @@ const RegisterPage = () => {
     if (confirmPassword && password !== confirmPassword) passwordErrors.push('Passwords do not match');
     return errors;
   }
-  
 
   const handleLoginClick = () => {
     navigate('/login');
@@ -107,6 +106,7 @@ const RegisterPage = () => {
             value={password}
             onChange={handleChange}
           />
+
           {password.length > 0 && passwordErrors.length > 0 && (
             <div className="password-rules">
               {passwordErrors.map((err, idx) => (
@@ -114,6 +114,7 @@ const RegisterPage = () => {
               ))}
             </div>
           )}
+
           <input
             type="password"
             name="confirmPassword"
@@ -121,9 +122,11 @@ const RegisterPage = () => {
             value={confirmPassword}
             onChange={handleChange}
           />
+
           {confirmPassword && password && confirmPassword !== password && (
             <div className='password-rules'><p className="password-rule">Passwords do not match</p></div>
           )}
+
           <button type="submit" className="register-submit-btn">
             SIGN UP
           </button>
