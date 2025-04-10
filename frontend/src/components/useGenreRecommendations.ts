@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Movie } from '../types/Movie';
+import { API_URL } from '../api/MovieAPI';
 
 export const useGenreRecommendations = (genre: string, userId: string) => {
   const [recommendedMovies, setRecommendedMovies] = useState<Movie[]>([]);
@@ -9,7 +10,7 @@ export const useGenreRecommendations = (genre: string, userId: string) => {
     const fetchRecommendations = async () => {
       try {
         const response = await fetch(
-          `https://intex-group1-12-backend-bdb9gqd9ecfvhtc8.westus3-01.azurewebsites.net/api/GenreRecommendation/${genre}/${userId}`,
+          `${API_URL}/api/GenreRecommendation/${genre}/${userId}`,
           {
             credentials: 'include',
           }
@@ -23,12 +24,9 @@ export const useGenreRecommendations = (genre: string, userId: string) => {
 
         const recommendedIds: string[] = JSON.parse(raw);
 
-        const allMoviesRes = await fetch(
-          `https://intex-group1-12-backend-bdb9gqd9ecfvhtc8.westus3-01.azurewebsites.net/Movie/GetAllMovies`,
-          {
-            credentials: 'include',
-          }
-        ); // Adjust this if needed
+        const allMoviesRes = await fetch(`${API_URL}/Movie/GetAllMovies`, {
+          credentials: 'include',
+        }); // Adjust this if needed
         const allMovies: Movie[] = await allMoviesRes.json();
 
         const matched = allMovies.filter((m) =>

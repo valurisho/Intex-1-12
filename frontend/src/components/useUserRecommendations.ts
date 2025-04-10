@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { UserRecommendation } from '../types/UserRecommendation';
 import { Movie } from '../types/Movie';
+import { API_URL } from '../api/MovieAPI';
 
 export const useUserRecommendations = (userId: string) => {
   const [recommendedMovies, setRecommendedMovies] = useState<Movie[]>([]);
@@ -10,7 +11,7 @@ export const useUserRecommendations = (userId: string) => {
     const fetchUserRecs = async () => {
       try {
         const response = await fetch(
-          `https://intex-group1-12-backend-bdb9gqd9ecfvhtc8.westus3-01.azurewebsites.net/api/UserRecommendation/${userId}`,
+          `${API_URL}/api/UserRecommendation/${userId}`,
           {
             credentials: 'include',
           }
@@ -35,12 +36,9 @@ export const useUserRecommendations = (userId: string) => {
           userRec.rec_10,
         ];
 
-        const allMoviesRes = await fetch(
-          `https://intex-group1-12-backend-bdb9gqd9ecfvhtc8.westus3-01.azurewebsites.net/Movie/GetAllMovies`,
-          {
-            credentials: 'include',
-          }
-        );
+        const allMoviesRes = await fetch(`${API_URL}/Movie/GetAllMovies`, {
+          credentials: 'include',
+        });
         const allMovies: Movie[] = await allMoviesRes.json();
 
         const matched = allMovies.filter((m) => recIds.includes(m.show_id));

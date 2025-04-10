@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import StarRating from '../components/StarRating';
 import defaultPoster from '../assets/Intexfun.png';
 import Cookies from 'js-cookie';
+import { API_URL } from '../api/MovieAPI';
 
 const MovieDetailPage = () => {
   const { id } = useParams();
@@ -19,10 +20,9 @@ const MovieDetailPage = () => {
   useEffect(() => {
     const fetchMovie = async () => {
       try {
-        const response = await fetch(
-          `https://intex-group1-12-backend-bdb9gqd9ecfvhtc8.westus3-01.azurewebsites.net/Movie/GetMovieById/${id}`,
-          { credentials: 'include' }
-        );
+        const response = await fetch(`${API_URL}/Movie/GetMovieById/${id}`, {
+          credentials: 'include',
+        });
         if (!response.ok) throw new Error('Failed to fetch movie.');
         const data = await response.json();
         setMovie(data);
@@ -47,7 +47,7 @@ const MovieDetailPage = () => {
       if (!movie) return;
       try {
         const response = await fetch(
-          `https://intex-group1-12-backend-bdb9gqd9ecfvhtc8.westus3-01.azurewebsites.net/contentrecommendations/${movie.show_id}`,
+          `${API_URL}/contentrecommendations/${movie.show_id}`,
           { credentials: 'include' }
         );
         if (!response.ok) throw new Error('Failed to fetch similar IDs.');
@@ -64,10 +64,9 @@ const MovieDetailPage = () => {
 
         const movies: Movie[] = await Promise.all(
           ids.map(async (recId) => {
-            const res = await fetch(
-              `https://intex-group1-12-backend-bdb9gqd9ecfvhtc8.westus3-01.azurewebsites.net/Movie/GetMovieById/${recId}`,
-              { credentials: 'include' }
-            );
+            const res = await fetch(`${API_URL}/Movie/GetMovieById/${recId}`, {
+              credentials: 'include',
+            });
             if (!res.ok) return null;
             return await res.json();
           })
@@ -87,7 +86,7 @@ const MovieDetailPage = () => {
       if (!movie) return;
       try {
         const response = await fetch(
-          `https://intex-group1-12-backend-bdb9gqd9ecfvhtc8.westus3-01.azurewebsites.net/collaborativerecommendations/${movie.show_id}`,
+          `${API_URL}/collaborativerecommendations/${movie.show_id}`,
           { credentials: 'include' }
         );
         if (!response.ok)
@@ -105,10 +104,9 @@ const MovieDetailPage = () => {
 
         const movies: Movie[] = await Promise.all(
           ids.map(async (recId: string) => {
-            const res = await fetch(
-              `https://intex-group1-12-backend-bdb9gqd9ecfvhtc8.westus3-01.azurewebsites.net/Movie/GetMovieById/${recId}`,
-              { credentials: 'include' }
-            );
+            const res = await fetch(`${API_URL}/Movie/GetMovieById/${recId}`, {
+              credentials: 'include',
+            });
             if (!res.ok) return null;
             return await res.json();
           })

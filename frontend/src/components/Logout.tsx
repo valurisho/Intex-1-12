@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import './Logout.css';
+import { API_URL } from '../api/MovieAPI';
 
 function Logout(props: { children: React.ReactNode }) {
   const navigate = useNavigate();
@@ -8,16 +9,13 @@ function Logout(props: { children: React.ReactNode }) {
     e.preventDefault();
 
     try {
-      const response = await fetch(
-        'https://intex-group1-12-backend-bdb9gqd9ecfvhtc8.westus3-01.azurewebsites.net/logout',
-        {
-          method: 'POST',
-          credentials: 'include', // Ensure cookies are sent
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      );
+      const response = await fetch(`${API_URL}/logout`, {
+        method: 'POST',
+        credentials: 'include', // Ensure cookies are sent
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
 
       if (response.ok) {
         navigate('/login');

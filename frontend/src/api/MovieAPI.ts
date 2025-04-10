@@ -5,11 +5,11 @@ import { Movie } from '../types/Movie';
 //   totalNumberOfMovies: number;
 // }
 
-const API_URL = 'https://localhost:5000/Movie';
+export const API_URL = 'https://localhost:5000';
 
 export const addMovie = async (newMovie: Movie): Promise<Movie> => {
   try {
-    const response = await fetch(`${API_URL}/AddMovie?`, {
+    const response = await fetch(`${API_URL}/Movie/AddMovie?`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -30,7 +30,7 @@ export const updateMovie = async (
   updatedMovie: Movie
 ): Promise<Movie> => {
   try {
-    const response = await fetch(`${API_URL}/UpdateMovie/${show_id}?`, {
+    const response = await fetch(`${API_URL}/Movie/UpdateMovie/${show_id}?`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -49,7 +49,7 @@ export const updateMovie = async (
 
 export const deleteMovie = async (show_id: string): Promise<void> => {
   try {
-    const response = await fetch(`${API_URL}/deleteMovie/${show_id}?`, {
+    const response = await fetch(`${API_URL}/Movie/deleteMovie/${show_id}?`, {
       method: 'DELETE',
       credentials: 'include',
     });

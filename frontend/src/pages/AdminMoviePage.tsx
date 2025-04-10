@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Movie } from '../types/Movie';
-import { deleteMovie } from '../api/MovieAPI';
+import { API_URL, deleteMovie } from '../api/MovieAPI';
 import Pagination from '../components/pagination';
 import AuthorizeView, { AuthorizedUser } from '../components/AuthorizeView';
 import Logout from '../components/Logout';
@@ -16,13 +16,10 @@ const AdminMoviePage = () => {
   const [pageSize, setPageSize] = useState(20);
   const [totalPages, setTotalPages] = useState(0);
 
-  const API_URL =
-    'https://intex-group1-12-backend-bdb9gqd9ecfvhtc8.westus3-01.azurewebsites.net/Movie';
-
   useEffect(() => {
     const fetchMovies = async () => {
       try {
-        const response = await fetch(`${API_URL}/GetAllMovies`, {
+        const response = await fetch(`${API_URL}/Movie/GetAllMovies`, {
           credentials: 'include',
         });
         if (!response.ok)

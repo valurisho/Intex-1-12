@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import './AddMoviePage.css';
 import Select from 'react-select';
 import AuthorizeView from '../components/AuthorizeView';
+import { API_URL } from '../api/MovieAPI';
 
 const AddMoviePage = () => {
   const navigate = useNavigate();
@@ -28,12 +29,9 @@ const AddMoviePage = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch(
-          'https://intex-group1-12-backend-bdb9gqd9ecfvhtc8.westus3-01.azurewebsites.net/Movie/GetCategories',
-          {
-            credentials: 'include',
-          }
-        );
+        const response = await fetch(`${API_URL}/Movie/GetCategories`, {
+          credentials: 'include',
+        });
         if (!response.ok) throw new Error('Failed to fetch categories');
         const data: string[] = await response.json();
         setAvailableCategories(data);
@@ -91,15 +89,12 @@ const AddMoviePage = () => {
     console.log('Payload categories:', payload.categories);
 
     try {
-      const response = await fetch(
-        'https://intex-group1-12-backend-bdb9gqd9ecfvhtc8.westus3-01.azurewebsites.net/Movie/AddMovie',
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          credentials: 'include',
-          body: JSON.stringify(payload),
-        }
-      );
+      const response = await fetch(`${API_URL}/Movie/AddMovie`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify(payload),
+      });
 
       if (!response.ok) {
         const errorText = await response.text();

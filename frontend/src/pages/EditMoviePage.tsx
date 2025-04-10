@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import AuthorizeView from '../components/AuthorizeView';
 import Select from 'react-select';
 import './EditMoviePage.css';
+import { API_URL } from '../api/MovieAPI';
 
 const EditMoviePage = () => {
   const navigate = useNavigate();
@@ -30,18 +31,12 @@ const EditMoviePage = () => {
     const fetchData = async () => {
       try {
         const [movieRes, categoriesRes] = await Promise.all([
-          fetch(
-            `https://intex-group1-12-backend-bdb9gqd9ecfvhtc8.westus3-01.azurewebsites.net/Movie/GetMovieById/${show_id}`,
-            {
-              credentials: 'include',
-            }
-          ),
-          fetch(
-            'https://intex-group1-12-backend-bdb9gqd9ecfvhtc8.westus3-01.azurewebsites.net/Movie/GetCategories',
-            {
-              credentials: 'include',
-            }
-          ),
+          fetch(`${API_URL}/Movie/GetMovieById/${show_id}`, {
+            credentials: 'include',
+          }),
+          fetch(`${API_URL}/Movie/GetCategories`, {
+            credentials: 'include',
+          }),
         ]);
 
         if (!movieRes.ok || !categoriesRes.ok) throw new Error('Fetch failed.');
@@ -99,15 +94,12 @@ const EditMoviePage = () => {
     };
 
     try {
-      const response = await fetch(
-        `https://intex-group1-12-backend-bdb9gqd9ecfvhtc8.westus3-01.azurewebsites.net/Movie/updateMovie/${show_id}`,
-        {
-          credentials: 'include',
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-        }
-      );
+      const response = await fetch(`${API_URL}/Movie/updateMovie/${show_id}`, {
+        credentials: 'include',
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
 
       if (!response.ok) {
         const errText = await response.text();
