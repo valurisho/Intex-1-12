@@ -6,8 +6,7 @@ import { motion } from 'framer-motion';
 import StarRating from '../components/StarRating';
 import defaultPoster from '../assets/Intexfun.png';
 import Cookies from 'js-cookie';
-import Logout from '../components/Logout';
-import { AuthorizedUser } from '../components/AuthorizeView';
+
 
 const MovieDetailPage = () => {
   const { id } = useParams();
@@ -38,10 +37,12 @@ const MovieDetailPage = () => {
 
   useEffect(() => {
     if (movie?.show_id) {
-      const lastWatched = Cookies.get('continueWatching');
-      setIsContinueWatching(lastWatched === movie.show_id.toString());
+      const list = Cookies.get('continueWatchingList');
+      const parsed = list ? JSON.parse(list) : [];
+      setIsContinueWatching(parsed.includes(movie.show_id));
     }
   }, [movie]);
+  
 
   useEffect(() => {
     const fetchSimilarMovies = async () => {
@@ -218,18 +219,22 @@ const MovieDetailPage = () => {
               </p>
             )}
 
-            <button
-              className="watch-now-button"
-              onClick={() => {
-                Cookies.set('continueWatching', movie.show_id.toString(), {
-                  expires: 7,
-                });
-                setIsContinueWatching(true);
-                alert('🎬 Watch feature coming soon!');
-              }}
-            >
-              {isContinueWatching ? '⏯ Continue Watching' : '▶ Watch Now'}
-            </button>
+          <button
+            className="watch-now-button"
+            onClick={() => {
+              const current = Cookies.get('continueWatchingList');
+              const parsed = current ? JSON.parse(current) : [];
+              const updated = Array.from(new Set([movie.show_id, ...parsed]));
+              Cookies.set('continueWatchingList', JSON.stringify(updated), {
+                expires: 7,
+              });
+              setIsContinueWatching(true);
+              alert('🎬 Watch feature coming soon!');
+            }}
+          >
+            {isContinueWatching ? '⏯ Continue Watching' : '▶ Watch Now'}
+          </button>
+
           </div>
         </div>
 
