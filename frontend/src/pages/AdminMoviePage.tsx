@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Movie } from '../types/Movie';
 import { deleteMovie } from '../api/MovieAPI';
 import Pagination from '../components/pagination';
-import AuthorizeView from '../components/AuthorizeView';
+import AuthorizeView, { AuthorizedUser } from '../components/AuthorizeView';
 import Logout from '../components/Logout';
 import defaultPoster from '../assets/Intexfun.png';
 import './AdminMoviePage.css';
@@ -80,9 +80,9 @@ const AdminMoviePage = () => {
           <Link to="/privacy-policy" className="admin-link">
             Privacy Policy
           </Link>
-          <Link to="/logout" className="admin-link">
-            Logout:
-          </Link>
+          <Logout>
+                Logout: <AuthorizedUser value="email" />
+          </Logout>
 
         </div>
         </div>
