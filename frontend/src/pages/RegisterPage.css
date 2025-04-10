@@ -50,7 +50,8 @@
 
 .sign-in2-btn:hover {
   background-color: white;
-  color: #34aa8a;
+  color: #f97316;
+  border: #f97316;
 }
 
 /* RIGHT PANEL — Create account form */
@@ -88,7 +89,7 @@
 }
 
 .register-submit-btn {
-  background-color: #3cbf9c;
+  background-color: #f97316;
   color: white;
   border: none;
   padding: 0.75rem;
@@ -100,7 +101,7 @@
 }
 
 .register-submit-btn:hover {
-  background-color: #34aa8a;
+  background-color: #d4792f;
 }
 
 .register-error {
