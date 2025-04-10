@@ -109,3 +109,24 @@
   font-size: 0.9rem;
   margin-top: 0.5rem;
 }
+
+.password-rules {
+  margin-top: 0.5rem;
+  padding-left: 0.5rem;
+  text-align: left;
+}
+
+.password-rule {
+  color: red;
+  font-size: 0.85rem;
+  margin-bottom: 0.3rem;
+  padding-left: 1rem;
+  position: relative;
+}
+
+.password-rule::before {
+  color: red;
+  position: absolute;
+  left: 0;
+}
+

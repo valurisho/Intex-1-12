@@ -1,5 +1,5 @@
 import './MainPage.css';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useContext } from 'react';
 import { Movie } from '../types/Movie';
 import { Link, useNavigate } from 'react-router-dom';
 import AuthorizeView, { AuthorizedUser } from '../components/AuthorizeView';
@@ -9,6 +9,7 @@ import { useGenreRecommendations } from '../components/useGenreRecommendations';
 import { useUserRecommendations } from '../components/useUserRecommendations';
 import { FaSearch } from 'react-icons/fa';
 import defaultPoster from '../assets/Intexfun.png';
+import { UserContext } from '../components/AuthorizeView';
 
 const MainPage = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
@@ -18,8 +19,15 @@ const MainPage = () => {
   const [genres, setGenres] = useState<string[]>([]);
   const [showSearch, setShowSearch] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [userId, setUserId] = useState<string>('');
 
-  const userId = '2';
+  //access the user data from the identities database
+  const currentUser = useContext(UserContext);
+  // const userEmail = currentUser?.email || '';
+  const userEmail = 'jbeals@gmail.com';
+  console.log('🔐 Logged-in user email:', userEmail);
+
+  // const userId = '2'; // Replace this with your actual user context or auth later
   const allMoviesRef = useRef<HTMLDivElement>(null);
   const sidebarRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
@@ -88,6 +96,49 @@ const MainPage = () => {
 
     fetchMoviesAndGenres();
   }, [navigate]);
+
+  //Added userEffect to match user email from login to users database
+  const [emailMatchFound, setEmailMatchFound] = useState(false);
+
+  useEffect(() => {
+    if (!userEmail) return;
+
+    const checkEmailMatch = async () => {
+      try {
+        const res = await fetch('https://localhost:5000/Movie/GetUsers', {
+          credentials: 'include',
+        });
+        if (!res.ok) throw new Error('Failed to fetch users');
+
+        const users = await res.json();
+        console.log('Fetched users:', users); // ✅ Check all users
+
+        const matchingUser = users.find(
+          (u: { email: string }) =>
+            u.email?.toLowerCase() === userEmail.toLowerCase()
+        );
+
+        if (matchingUser) {
+          console.log('✅ Match found:', matchingUser);
+          setEmailMatchFound(true);
+          setUserId(String(matchingUser.userId)); // ✅ Set the userId
+        } else {
+          console.warn('⚠️ No match found for email:', userEmail);
+          setEmailMatchFound(false);
+        }
+      } catch (err) {
+        console.error('Error comparing user emails:', err);
+      }
+    };
+
+    checkEmailMatch();
+  }, [userEmail]);
+
+  useEffect(() => {
+    if (userId) {
+      console.log('🎯 Final userId set for recommendations:', userId);
+    }
+  }, [userId]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
