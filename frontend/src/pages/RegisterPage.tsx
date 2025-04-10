@@ -10,14 +10,32 @@ const RegisterPage = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
+  const [passwordErrors, setPasswordErrors] = useState<string[]>([]);
+
+  function validatePassword(password: string): string[] {
+    const errors = [];
+    if (password.length < 12) errors.push('At least 12 characters');
+    if (!/[A-Z]/.test(password)) errors.push('At least one uppercase letter');
+    if (!/[a-z]/.test(password)) errors.push('At least one lowercase letter');
+    if (!/[0-9]/.test(password)) errors.push('At least one number');
+    if (!/[^A-Za-z0-9]/.test(password)) errors.push('At least one special character');
+    if ((new Set(password)).size < 4) errors.push('At least 4 unique characters');
+    if (confirmPassword && password !== confirmPassword) passwordErrors.push('Passwords do not match');
+    return errors;
+  }
+
   const handleLoginClick = () => {
     navigate('/login');
   };
+  
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     if (name === 'email') setEmail(value);
-    if (name === 'password') setPassword(value);
+    if (name === 'password') {
+      setPassword(value);
+      setPasswordErrors(validatePassword(value)); // validate as they type
+    };
     if (name === 'confirmPassword') setConfirmPassword(value);
   };
 
@@ -88,6 +106,15 @@ const RegisterPage = () => {
             value={password}
             onChange={handleChange}
           />
+
+          {password.length > 0 && passwordErrors.length > 0 && (
+            <div className="password-rules">
+              {passwordErrors.map((err, idx) => (
+                <div key={idx} className="password-rule">{err}</div>
+              ))}
+            </div>
+          )}
+
           <input
             type="password"
             name="confirmPassword"
@@ -95,6 +122,11 @@ const RegisterPage = () => {
             value={confirmPassword}
             onChange={handleChange}
           />
+
+          {confirmPassword && password && confirmPassword !== password && (
+            <div className='password-rules'><p className="password-rule">Passwords do not match</p></div>
+          )}
+
           <button type="submit" className="register-submit-btn">
             SIGN UP
           </button>
