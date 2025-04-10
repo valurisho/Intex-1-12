@@ -67,119 +67,97 @@ const AdminMoviePage = () => {
       .replace(/[^\w\s]/gi, '')
       .trim()}.jpg`;
 
-  return (
-
-<AuthorizeView requiredRole='Administrator'>
-    <div className="admin-page">
-      {/* Top Header */}
-      <div className="admin-header">
-        <div className="admin-logo">
-          <img src="/logo.png" alt="CineNiche Logo" />
-        </div>
-        <div className="admin-nav">
-          <Link to="/privacy-policy" className="admin-link">
-            Privacy Policy
-          </Link>
-          <Logout>
-                Logout: <AuthorizedUser value="email" />
-          </Logout>
-
-        </div>
-        </div>
-
-        {/* Search Bar */}
-        <div className="admin-search-bar-wrap">
-          <input
-            type="text"
-            placeholder="Search for a Title"
-            value={searchQuery}
-            onChange={(e) => {
-              setSearchQuery(e.target.value);
-              setPageNum(1); // reset page on new search
-            }}
-            className="admin-search-bar"
-          />
-        </div>
-
-        {/* Header + Add Button
-      <div className="admin-header-row">
-        <h2>All Movies</h2>
-        <Link to="/addMovie" className="add-movie-btn">
-          Add New Movie
-        </Link>
-      </div>
-
-      {/* Movie Cards */}
-        {/* <div className="admin-movie-grid">
-        {movies.map((m) => (
-          <div key={m.show_id} className="admin-movie-card">
-            <img
-              src={`https://inteximages.blob.core.windows.net/movie-posters-2/${encodeURIComponent(m.title)}.jpg`}
-              alt={m.title}
-              className="movie-poster"
-            />
-          </div>
-          <div className="admin-right">
-            <Link to="/privacy-policy" className="admin-link">
-              Privacy Policy
-            </Link>
-            <Logout>
-              <span className="admin-link">Logout</span>
-            </Logout>
-          </div>
-        </div> */}
-
-        {/* Header + Add Button */}
-        <div className="admin-header-row">
-          <h2>All Movies</h2>
-          <Link to="/addMovie" className="add-movie-btn">
-            Add New Movie
-          </Link>
-        </div>
-
-        {/* Movie Cards */}
-        <div className="admin-movie-grid">
-          {movies.map((m) => (
-            <div key={m.show_id} className="admin-movie-card">
-              <img
-            className="recommended-img"
-            src={formatBlobUrl(m.title)}
-            alt={m.title}
-            onError={(e) => {
-              e.currentTarget.onerror = null; // prevent infinite loop
-              e.currentTarget.src = defaultPoster;
-            }}
-          />
-              <p className="movie-title">{m.title}</p>
-              <div className="movie-actions">
-                <Link to={`/editMovie/${m.show_id}`} className="action-icon">
-                  ✏️
-                </Link>
-                <button
-                  onClick={() => handleDelete(m.show_id)}
-                  className="action-icon"
-                >
-                  🗑️
-                </button>
+      return (
+        <AuthorizeView requiredRole="Administrator">
+          {(user) => (
+            <div className="admin-page">
+              {/* Top Header */}
+              <div className="admin-header">
+                <div className="admin-logo">
+                  <img src="/logo.png" alt="CineNiche Logo" />
+                </div>
+                <div className="admin-nav">
+                  {user?.role === 'Administrator' && (
+                    <Link to="/mainPage" className="admin-link">
+                      Home
+                    </Link>
+                  )}
+                  <Link to="/privacy-policy" className="admin-link">
+                    Privacy Policy
+                  </Link>
+                  <Logout>
+                    Logout: <AuthorizedUser value="email" />
+                  </Logout>
+                </div>
               </div>
+      
+              {/* Search Bar */}
+              <div className="admin-search-bar-wrap">
+                <input
+                  type="text"
+                  placeholder="Search for a Title"
+                  value={searchQuery}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    setPageNum(1);
+                  }}
+                  className="admin-search-bar"
+                />
+              </div>
+      
+              {/* Header + Add Button */}
+              <div className="admin-header-row">
+                <h2>All Movies</h2>
+                <Link to="/addMovie" className="add-movie-btn">
+                  Add New Movie
+                </Link>
+              </div>
+      
+              {/* Movie Cards */}
+              <div className="admin-movie-grid">
+                {movies.map((m) => (
+                  <div key={m.show_id} className="admin-movie-card">
+                    <img
+                      className="recommended-img"
+                      src={formatBlobUrl(m.title)}
+                      alt={m.title}
+                      onError={(e) => {
+                        e.currentTarget.onerror = null;
+                        e.currentTarget.src = defaultPoster;
+                      }}
+                    />
+                    <p className="movie-title">{m.title}</p>
+                    <div className="movie-actions">
+                      <Link to={`/editMovie/${m.show_id}`} className="action-icon">
+                        ✏️
+                      </Link>
+                      <button
+                        onClick={() => handleDelete(m.show_id)}
+                        className="action-icon"
+                      >
+                        🗑️
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+      
+              {/* Pagination */}
+              <Pagination
+                currentPage={pageNum}
+                totalPages={totalPages}
+                pageSize={pageSize}
+                onPageChange={setPageNum}
+                onPageSizeChange={(newSize) => {
+                  setPageSize(newSize);
+                  setPageNum(1);
+                }}
+              />
             </div>
-          ))}
-        </div>
-
-        {/* Pagination */}
-        <Pagination
-          currentPage={pageNum}
-          totalPages={totalPages}
-          pageSize={pageSize}
-          onPageChange={setPageNum}
-          onPageSizeChange={(newSize) => {
-            setPageSize(newSize);
-            setPageNum(1);
-          }}
-        />
-      </div>
-    </AuthorizeView>
-  );
+          )}
+        </AuthorizeView>
+      );
+      
 };
 
 export default AdminMoviePage;
