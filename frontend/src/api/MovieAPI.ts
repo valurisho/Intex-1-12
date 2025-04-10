@@ -5,7 +5,8 @@ import { Movie } from '../types/Movie';
 //   totalNumberOfMovies: number;
 // }
 
-export const API_URL = 'https://intex-group1-12-backend-bdb9gqd9ecfvhtc8.westus3-01.azurewebsites.net';
+export const API_URL =
+  'https://backend-cineniche-bzc6erf7a0gtezeu.eastus-01.azurewebsites.net';
 
 export const addMovie = async (newMovie: Movie): Promise<Movie> => {
   try {
