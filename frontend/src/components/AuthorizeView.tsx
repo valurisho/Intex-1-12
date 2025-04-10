@@ -1,7 +1,7 @@
 import React, { useState, useEffect, createContext } from 'react';
 import { Navigate } from 'react-router-dom';
 
-const UserContext = createContext<User | null>(null);
+export const UserContext = createContext<User | null>(null);
 
 interface User {
   email: string;
@@ -62,9 +62,7 @@ function AuthorizeView({ children, requiredRole }: AuthorizeViewProps) {
   }
 
   if (authorized) {
-    return (
-      <UserContext.Provider value={user}>{children}</UserContext.Provider>
-    );
+    return <UserContext.Provider value={user}>{children}</UserContext.Provider>;
   }
 
   return <Navigate to="/login" />;
