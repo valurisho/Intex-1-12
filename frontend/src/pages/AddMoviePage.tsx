@@ -29,7 +29,7 @@ const AddMoviePage = () => {
     const fetchCategories = async () => {
       try {
         const response = await fetch(
-          'https://localhost:5000/Movie/GetCategories',
+          'https://intex-group1-12-backend-bdb9gqd9ecfvhtc8.westus3-01.azurewebsites.net/Movie/GetCategories',
           {
             credentials: 'include',
           }
@@ -91,12 +91,15 @@ const AddMoviePage = () => {
     console.log('Payload categories:', payload.categories);
 
     try {
-      const response = await fetch('https://localhost:5000/Movie/AddMovie', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify(payload),
-      });
+      const response = await fetch(
+        'https://intex-group1-12-backend-bdb9gqd9ecfvhtc8.westus3-01.azurewebsites.net/Movie/AddMovie',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify(payload),
+        }
+      );
 
       if (!response.ok) {
         const errorText = await response.text();

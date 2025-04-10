@@ -19,19 +19,24 @@ const CookieConsent = () => {
   if (!visible) return null;
 
   return (
-    <div style={{ 
-      position: 'fixed',
-      bottom: 0,
-      left: 0,
-      width: '100%',
-      padding: '1rem',
-      backgroundColor: '#222',
-      color: 'white',
-      textAlign: 'center',
-      zIndex: 1000
-    }}>
+    <div
+      style={{
+        position: 'fixed',
+        bottom: 0,
+        left: 0,
+        width: '100%',
+        padding: '1rem',
+        backgroundColor: '#222',
+        color: 'white',
+        textAlign: 'center',
+        zIndex: 1000,
+      }}
+    >
       This site uses cookies for authentication and functionality.{' '}
-      <button onClick={handleAccept} style={{ marginLeft: '1rem', padding: '0.5rem' }}>
+      <button
+        onClick={handleAccept}
+        style={{ marginLeft: '1rem', padding: '0.5rem' }}
+      >
         Accept
       </button>
     </div>

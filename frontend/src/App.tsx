@@ -1,10 +1,5 @@
 import './App.css';
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import AdminMoviePage from './pages/AdminMoviePage';
 import HomePage from './pages/HomePage'; // Add this import
 import PrivacyPolicy from './pages/PrivacyPolicy'; // Adjust the path if necessary

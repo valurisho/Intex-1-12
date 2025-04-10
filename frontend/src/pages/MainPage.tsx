@@ -1,5 +1,5 @@
 import './MainPage.css';
-import { useEffect, useState, useRef, useContext } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Movie } from '../types/Movie';
 import { Link, useNavigate } from 'react-router-dom';
 import AuthorizeView, { AuthorizedUser } from '../components/AuthorizeView';
@@ -9,6 +9,7 @@ import { useGenreRecommendations } from '../components/useGenreRecommendations';
 import { useUserRecommendations } from '../components/useUserRecommendations';
 import { FaSearch } from 'react-icons/fa';
 import defaultPoster from '../assets/Intexfun.png';
+import HamburgerSidebar from '../components/HamburgerSideBar'; // or wherever it lives
 
 const MainPage = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
@@ -17,7 +18,7 @@ const MainPage = () => {
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
   const [genres, setGenres] = useState<string[]>([]);
   const [showSearch, setShowSearch] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
+  // const [isScrolled, setIsScrolled] = useState(false);
   // const [userId, setUserId] = useState<string>('');
 
   const allMoviesRef = useRef<HTMLDivElement>(null);
@@ -54,17 +55,18 @@ const MainPage = () => {
     );
   };
 
-  const API_URL = 'https://localhost:5000/Movie';
+  const API_URL =
+    'https://intex-group1-12-backend-bdb9gqd9ecfvhtc8.westus3-01.azurewebsites.net/Movie';
 
-  useEffect(() => {
-    console.log('👀 Setting up scroll listener');
-    const handleScroll = () => {
-      console.log('📜 Scroll detected');
-      setIsScrolled(window.scrollY > 50);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  // useEffect(() => {
+  //   console.log('👀 Setting up scroll listener');
+  //   const handleScroll = () => {
+  //     console.log('📜 Scroll detected');
+  //     setIsScrolled(window.scrollY > 50);
+  //   };
+  //   window.addEventListener('scroll', handleScroll);
+  //   return () => window.removeEventListener('scroll', handleScroll);
+  // }, []);
 
   useEffect(() => {
     const fetchMoviesAndGenres = async () => {
@@ -188,7 +190,7 @@ const MainPage = () => {
               </div>
             </div>
 
-            {/* Hamburger */}
+            {/* Hamburger Button */}
             <button
               className="hamburger-btn"
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
@@ -196,34 +198,15 @@ const MainPage = () => {
               ☰
             </button>
 
-            <div
-              className={`sidebar ${isSidebarOpen ? 'open' : ''}`}
-              ref={sidebarRef}
-            >
-              <h3>Filter by Genre</h3>
-              <div className="genre-scroll-area">
-                {genres.length === 0 ? (
-                  <p>Loading genres...</p>
-                ) : (
-                  genres.map((genre) => (
-                    <label key={genre} className="genre-item">
-                      <input
-                        type="checkbox"
-                        checked={selectedGenres.includes(genre)}
-                        onChange={() => toggleGenre(genre)}
-                      />
-                      {genre}
-                    </label>
-                  ))
-                )}
-              </div>
-              <button
-                className="clear-filters-btn"
-                onClick={() => setSelectedGenres([])}
-              >
-                Clear Filters
-              </button>
-            </div>
+            <HamburgerSidebar
+              isSidebarOpen={isSidebarOpen}
+              setIsSidebarOpen={setIsSidebarOpen}
+              genres={genres}
+              selectedGenres={selectedGenres}
+              toggleGenre={toggleGenre}
+              clearFilters={() => setSelectedGenres([])}
+              sidebarRef={sidebarRef}
+            />
 
             {/* Page Content */}
             <div className="content-wrap">

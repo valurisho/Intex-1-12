@@ -30,12 +30,18 @@ const EditMoviePage = () => {
     const fetchData = async () => {
       try {
         const [movieRes, categoriesRes] = await Promise.all([
-          fetch(`https://localhost:5000/Movie/GetMovieById/${show_id}`, {
-            credentials: 'include',
-          }),
-          fetch('https://localhost:5000/Movie/GetCategories', {
-            credentials: 'include',
-          }),
+          fetch(
+            `https://intex-group1-12-backend-bdb9gqd9ecfvhtc8.westus3-01.azurewebsites.net/Movie/GetMovieById/${show_id}`,
+            {
+              credentials: 'include',
+            }
+          ),
+          fetch(
+            'https://intex-group1-12-backend-bdb9gqd9ecfvhtc8.westus3-01.azurewebsites.net/Movie/GetCategories',
+            {
+              credentials: 'include',
+            }
+          ),
         ]);
 
         if (!movieRes.ok || !categoriesRes.ok) throw new Error('Fetch failed.');
@@ -94,7 +100,7 @@ const EditMoviePage = () => {
 
     try {
       const response = await fetch(
-        `https://localhost:5000/Movie/updateMovie/${show_id}`,
+        `https://intex-group1-12-backend-bdb9gqd9ecfvhtc8.westus3-01.azurewebsites.net/Movie/updateMovie/${show_id}`,
         {
           credentials: 'include',
           method: 'PUT',

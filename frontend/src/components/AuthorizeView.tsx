@@ -21,10 +21,13 @@ function AuthorizeView({ children, requiredRole }: AuthorizeViewProps) {
   useEffect(() => {
     async function fetchUser() {
       try {
-        const response = await fetch('https://localhost:5000/pingauth', {
-          method: 'GET',
-          credentials: 'include',
-        });
+        const response = await fetch(
+          'https://intex-group1-12-backend-bdb9gqd9ecfvhtc8.westus3-01.azurewebsites.net/pingauth',
+          {
+            method: 'GET',
+            credentials: 'include',
+          }
+        );
 
         const contentType = response.headers.get('content-type');
         if (!contentType || !contentType.includes('application/json')) {
