@@ -1,3 +1,5 @@
+import { AuthorizedUser } from '../components/AuthorizeView';
+import Logout from '../components/Logout';
 import './PrivacyPolicy.css';
 import { Link } from 'react-router-dom';
 
@@ -11,9 +13,9 @@ const PrivacyPolicy = () => {
           </Link>
         </div>
         <div className="privacy-header-nav">
-          <Link to="/logout" className="privacy-header-link">
-            Logout
-          </Link>
+          <Logout>
+            Logout <AuthorizedUser value="email" />
+          </Logout>
         </div>
       </div>
 
