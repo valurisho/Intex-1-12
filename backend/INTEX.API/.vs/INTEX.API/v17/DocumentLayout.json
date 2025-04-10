@@ -26,60 +26,8 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 5,
           "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "RoleController.cs",
-              "DocumentMoniker": "C:\\Users\\jonat\\source\\repos\\Intex-1-12\\Intex-1-12\\backend\\INTEX.API\\Controllers\\RoleController.cs",
-              "RelativeDocumentMoniker": "Controllers\\RoleController.cs",
-              "ToolTip": "C:\\Users\\jonat\\source\\repos\\Intex-1-12\\Intex-1-12\\backend\\INTEX.API\\Controllers\\RoleController.cs",
-              "RelativeToolTip": "Controllers\\RoleController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-09T17:58:01.975Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "CustomUserClaimsPrincipalFactory.cs",
-              "DocumentMoniker": "C:\\Users\\jonat\\source\\repos\\Intex-1-12\\Intex-1-12\\backend\\INTEX.API\\Services\\CustomUserClaimsPrincipalFactory.cs",
-              "RelativeDocumentMoniker": "Services\\CustomUserClaimsPrincipalFactory.cs",
-              "ToolTip": "C:\\Users\\jonat\\source\\repos\\Intex-1-12\\Intex-1-12\\backend\\INTEX.API\\Services\\CustomUserClaimsPrincipalFactory.cs",
-              "RelativeToolTip": "Services\\CustomUserClaimsPrincipalFactory.cs",
-              "ViewState": "AgIAAA0AAAAAAAAAAAAuwB0AAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-09T17:31:20.68Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\jonat\\source\\repos\\Intex-1-12\\Intex-1-12\\backend\\INTEX.API\\Program.cs",
-              "RelativeDocumentMoniker": "Program.cs",
-              "ToolTip": "C:\\Users\\jonat\\source\\repos\\Intex-1-12\\Intex-1-12\\backend\\INTEX.API\\Program.cs",
-              "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAAGQAAAAAAAAAAAAAAJcAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-09T17:29:33.626Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "MovieController.cs",
-              "DocumentMoniker": "C:\\Users\\jonat\\source\\repos\\Intex-1-12\\Intex-1-12\\backend\\INTEX.API\\Controllers\\MovieController.cs",
-              "RelativeDocumentMoniker": "Controllers\\MovieController.cs",
-              "ToolTip": "C:\\Users\\jonat\\source\\repos\\Intex-1-12\\Intex-1-12\\backend\\INTEX.API\\Controllers\\MovieController.cs",
-              "RelativeToolTip": "Controllers\\MovieController.cs",
-              "ViewState": "AgIAAK4AAAAAAAAAAAAmwMYAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-09T17:20:54.858Z",
-              "EditorCaption": ""
-            },
             {
               "$type": "Bookmark",
               "Name": "ST:128:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
@@ -99,6 +47,56 @@
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{131369f2-062d-44a2-8671-91ff31efb4f4}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "RoleController.cs",
+              "DocumentMoniker": "C:\\Users\\jonat\\source\\repos\\Intex-1-12\\Intex-1-12\\backend\\INTEX.API\\Controllers\\RoleController.cs",
+              "RelativeDocumentMoniker": "Controllers\\RoleController.cs",
+              "ToolTip": "C:\\Users\\jonat\\source\\repos\\Intex-1-12\\Intex-1-12\\backend\\INTEX.API\\Controllers\\RoleController.cs",
+              "RelativeToolTip": "Controllers\\RoleController.cs",
+              "ViewState": "AgIAAD4AAAAAAAAAAAAgwEcAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-09T17:58:01.975Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\jonat\\source\\repos\\Intex-1-12\\Intex-1-12\\backend\\INTEX.API\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "C:\\Users\\jonat\\source\\repos\\Intex-1-12\\Intex-1-12\\backend\\INTEX.API\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AgIAAIAAAAAAAAAAAADwv5gAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-09T17:29:33.626Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "CustomUserClaimsPrincipalFactory.cs",
+              "DocumentMoniker": "C:\\Users\\jonat\\source\\repos\\Intex-1-12\\Intex-1-12\\backend\\INTEX.API\\Services\\CustomUserClaimsPrincipalFactory.cs",
+              "RelativeDocumentMoniker": "Services\\CustomUserClaimsPrincipalFactory.cs",
+              "ToolTip": "C:\\Users\\jonat\\source\\repos\\Intex-1-12\\Intex-1-12\\backend\\INTEX.API\\Services\\CustomUserClaimsPrincipalFactory.cs",
+              "RelativeToolTip": "Services\\CustomUserClaimsPrincipalFactory.cs",
+              "ViewState": "AgIAAA0AAAAAAAAAAAAuwB0AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-09T17:31:20.68Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "MovieController.cs",
+              "DocumentMoniker": "C:\\Users\\jonat\\source\\repos\\Intex-1-12\\Intex-1-12\\backend\\INTEX.API\\Controllers\\MovieController.cs",
+              "RelativeDocumentMoniker": "Controllers\\MovieController.cs",
+              "ToolTip": "C:\\Users\\jonat\\source\\repos\\Intex-1-12\\Intex-1-12\\backend\\INTEX.API\\Controllers\\MovieController.cs",
+              "RelativeToolTip": "Controllers\\MovieController.cs",
+              "ViewState": "AgIAAK4AAAAAAAAAAAAmwMYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-09T17:20:54.858Z"
             }
           ]
         }
