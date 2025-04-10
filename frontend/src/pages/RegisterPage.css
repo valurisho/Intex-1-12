@@ -1,0 +1,132 @@
+.register-container {
+  display: flex;
+  height: 100vh;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* LEFT PANEL — Welcome back */
+.register-left {
+  flex: 1;
+  background: linear-gradient(to bottom right, black);
+  color: white;
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.register-logo {
+  height: 160px;
+  margin-bottom: 1rem;
+}
+
+.register-left h2 {
+  font-size: 2.25rem;
+  margin-bottom: 1rem;
+  font-weight: bold;
+}
+
+.register-left p {
+  font-size: 1rem;
+  margin-bottom: 2rem;
+  max-width: 300px;
+}
+
+.sign-in2-btn {
+  background-color: transparent;
+  border: 2px solid white;
+  color: white;
+  padding: 0.75rem 2rem;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
+}
+
+.sign-in2-btn:hover {
+  background-color: white;
+  color: #f97316;
+  border: #f97316;
+}
+
+/* RIGHT PANEL — Create account form */
+.register-right {
+  flex: 1;
+  padding: 3rem;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #1f2937;
+  text-align: center;
+}
+
+.register-right h2 {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  max-width: 300px;
+}
+
+.register-form input {
+  padding: 0.75rem 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 1rem;
+  background-color: #f9fafb;
+}
+
+.register-submit-btn {
+  background-color: #f97316;
+  color: white;
+  border: none;
+  padding: 0.75rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.register-submit-btn:hover {
+  background-color: #d4792f;
+}
+
+.register-error {
+  color: crimson;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+.password-rules {
+  margin-top: 0.5rem;
+  padding-left: 0.5rem;
+  text-align: left;
+}
+
+.password-rule {
+  color: red;
+  font-size: 0.85rem;
+  margin-bottom: 0.3rem;
+  padding-left: 1rem;
+  position: relative;
+}
+
+.password-rule::before {
+  color: red;
+  position: absolute;
+  left: 0;
+}
+

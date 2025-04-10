@@ -21,6 +21,7 @@ const StarRating: React.FC<StarRatingProps> = ({
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify({
           userId,
           showId,

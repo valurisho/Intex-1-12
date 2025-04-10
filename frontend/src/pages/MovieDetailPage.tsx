@@ -5,19 +5,24 @@ import { Movie } from '../types/Movie';
 import { motion } from 'framer-motion';
 import StarRating from '../components/StarRating';
 import defaultPoster from '../assets/Intexfun.png';
+import Cookies from 'js-cookie';
+
 
 const MovieDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+
   const [movie, setMovie] = useState<Movie | null>(null);
   const [similarMovies, setSimilarMovies] = useState<Movie[]>([]);
   const [collaborativeMovies, setCollaborativeMovies] = useState<Movie[]>([]);
+  const [isContinueWatching, setIsContinueWatching] = useState(false);
 
   useEffect(() => {
     const fetchMovie = async () => {
       try {
         const response = await fetch(
-          `https://localhost:5000/Movie/GetMovieById/${id}`
+          `https://localhost:5000/Movie/GetMovieById/${id}`,
+          { credentials: 'include' }
         );
         if (!response.ok) throw new Error('Failed to fetch movie.');
         const data = await response.json();
@@ -31,11 +36,21 @@ const MovieDetailPage = () => {
   }, [id]);
 
   useEffect(() => {
+    if (movie?.show_id) {
+      const list = Cookies.get('continueWatchingList');
+      const parsed = list ? JSON.parse(list) : [];
+      setIsContinueWatching(parsed.includes(movie.show_id));
+    }
+  }, [movie]);
+  
+
+  useEffect(() => {
     const fetchSimilarMovies = async () => {
       if (!movie) return;
       try {
         const response = await fetch(
-          `https://localhost:5000/contentrecommendations/${movie.show_id}`
+          `https://localhost:5000/contentrecommendations/${movie.show_id}`,
+          { credentials: 'include' }
         );
         if (!response.ok) throw new Error('Failed to fetch similar IDs.');
         const recData = await response.json();
@@ -52,14 +67,14 @@ const MovieDetailPage = () => {
         const movies: Movie[] = await Promise.all(
           ids.map(async (recId) => {
             const res = await fetch(
-              `https://localhost:5000/Movie/GetMovieById/${recId}`
+              `https://localhost:5000/Movie/GetMovieById/${recId}`,
+              { credentials: 'include' }
             );
             if (!res.ok) return null;
             return await res.json();
           })
         );
 
-        // Filter out any nulls (in case a movie ID wasn't found)
         setSimilarMovies(movies.filter((m): m is Movie => m !== null));
       } catch (error) {
         console.error('Error fetching similar movies:', error);
@@ -74,7 +89,8 @@ const MovieDetailPage = () => {
       if (!movie) return;
       try {
         const response = await fetch(
-          `https://localhost:5000/collaborativerecommendations/${movie.show_id}`
+          `https://localhost:5000/collaborativerecommendations/${movie.show_id}`,
+          { credentials: 'include' }
         );
         if (!response.ok)
           throw new Error('Failed to fetch collaborative recs.');
@@ -92,7 +108,8 @@ const MovieDetailPage = () => {
         const movies: Movie[] = await Promise.all(
           ids.map(async (recId: string) => {
             const res = await fetch(
-              `https://localhost:5000/Movie/GetMovieById/${recId}`
+              `https://localhost:5000/Movie/GetMovieById/${recId}`,
+              { credentials: 'include' }
             );
             if (!res.ok) return null;
             return await res.json();
@@ -133,15 +150,8 @@ const MovieDetailPage = () => {
           <Link to="/privacy-policy" className="main-link">
             Privacy
           </Link>
-          <Link to="/logout" className="main-link">
-            Logout
-          </Link>
         </div>
       </div>
-      {/* Back Button */}
-      {/* <button onClick={() => navigate(-1)} className="back-button">
-        ← Back
-      </button> */}
 
       <div className="movie-card">
         <button
@@ -165,10 +175,11 @@ const MovieDetailPage = () => {
               boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
             }}
             onError={(e) => {
-              e.currentTarget.onerror = null; // prevent infinite loop
+              e.currentTarget.onerror = null;
               e.currentTarget.src = defaultPoster;
             }}
           />
+
           <div className="movie-details">
             <h2>{movie.title}</h2>
             {movie.director && (
@@ -207,12 +218,23 @@ const MovieDetailPage = () => {
                 <strong>Genres:</strong> {movie.categories.join(', ')}
               </p>
             )}
-            <button
-              className="watch-now-button"
-              onClick={() => alert('🎬 Watch feature coming soon!')}
-            >
-              ▶ Watch Now
-            </button>
+
+          <button
+            className="watch-now-button"
+            onClick={() => {
+              const current = Cookies.get('continueWatchingList');
+              const parsed = current ? JSON.parse(current) : [];
+              const updated = Array.from(new Set([movie.show_id, ...parsed]));
+              Cookies.set('continueWatchingList', JSON.stringify(updated), {
+                expires: 7,
+              });
+              setIsContinueWatching(true);
+              alert('🎬 Watch feature coming soon!');
+            }}
+          >
+            {isContinueWatching ? '⏯ Continue Watching' : '▶ Watch Now'}
+          </button>
+
           </div>
         </div>
 
@@ -233,7 +255,6 @@ const MovieDetailPage = () => {
             {similarMovies.map((sim) => (
               <div
                 key={sim.show_id}
-                className=""
                 onClick={() => navigate(`/movie/${sim.show_id}`)}
                 style={{
                   width: '140px',
@@ -241,7 +262,6 @@ const MovieDetailPage = () => {
                   borderRadius: '8px',
                   overflow: 'hidden',
                   cursor: 'pointer',
-                  position: 'relative',
                   boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
                 }}
               >
@@ -252,11 +272,10 @@ const MovieDetailPage = () => {
                     width: '100%',
                     height: '100%',
                     objectFit: 'cover',
-                    display: 'block',
                     borderRadius: '12px',
                   }}
                   onError={(e) => {
-                    e.currentTarget.onerror = null; // prevent infinite loop
+                    e.currentTarget.onerror = null;
                     e.currentTarget.src = defaultPoster;
                   }}
                 />
@@ -264,17 +283,15 @@ const MovieDetailPage = () => {
             ))}
           </div>
         </div>
-        {/* === COLLABORATIVE RECOMMENDATIONS SECTION === */}
-        <div className="recommendation-section">
-          <h3>Users Also Watched</h3>
-          <div className="recommendation-row">
-            {collaborativeMovies.length === 0 ? (
-              <p>Loading collaborative picks...</p>
-            ) : (
-              collaborativeMovies.map((m) => (
+
+        {/* === USERS ALSO WATCHED SECTION === */}
+        {collaborativeMovies.length > 0 && (
+          <div className="recommendation-section">
+            <h3>Users Also Watched</h3>
+            <div className="recommendation-row">
+              {collaborativeMovies.map((m) => (
                 <div
                   key={m.show_id}
-                  className=""
                   onClick={() => navigate(`/movie/${m.show_id}`)}
                   style={{
                     cursor: 'pointer',
@@ -282,7 +299,6 @@ const MovieDetailPage = () => {
                     height: '210px',
                     borderRadius: '10px',
                     overflow: 'hidden',
-                    position: 'relative',
                     boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
                   }}
                 >
@@ -295,15 +311,15 @@ const MovieDetailPage = () => {
                       objectFit: 'cover',
                     }}
                     onError={(e) => {
-                      e.currentTarget.onerror = null; // prevent infinite loop
+                      e.currentTarget.onerror = null;
                       e.currentTarget.src = defaultPoster;
                     }}
                   />
                 </div>
-              ))
-            )}
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </motion.div>
   );
