@@ -29,3 +29,4 @@ backend/INTEX.API/obj/
 
 #Project-specific ignores
 wwwroot/posters/
+Identity.sqlite
