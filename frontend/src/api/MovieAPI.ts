@@ -6,7 +6,7 @@ import { Movie } from '../types/Movie';
 // }
 
 export const API_URL =
-  'https://backend-cineniche-bzc6erf7a0gtezeu.eastus-01.azurewebsites.net';
+  'https://personalazure-backend-c2agfqgsaug2fybp.westus2-01.azurewebsites.net';
 
 export const addMovie = async (newMovie: Movie): Promise<Movie> => {
   try {
