@@ -287,8 +287,8 @@ footer {
 .genre-item input {
   accent-color: #f97316;
   cursor: pointer;
-  width: 20px; /* Bigger checkbox */
-  height: 20px;
+  width: 15px; /* Bigger checkbox */
+  height: 15px;
 }
 
 /* CSS FOR MOVIE POSTER */

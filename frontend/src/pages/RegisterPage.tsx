@@ -83,8 +83,10 @@ const RegisterPage = () => {
           alt="CineNiche Logo"
           className="register-logo"
         />
-        <h2>Welcome Back!</h2>
-        <p>To keep connected with us please login with your personal info</p>
+        <h2>Experience Cinema Differently</h2>
+        <p>
+          Create your account to explore curated content beyond the mainstream
+        </p>
         <button className="sign-in2-btn" onClick={handleLoginClick}>
           SIGN IN
         </button>

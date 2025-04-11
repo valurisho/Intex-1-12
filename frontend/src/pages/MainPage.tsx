@@ -54,6 +54,10 @@ const MainPageContent = ({ user }: MainPageContentProps) => {
         return '8';
       case 'intex5@test.com':
         return '9';
+      case 'intex6@test.com':
+        return '10';
+      case 'intex7@test.com':
+        return '11';
       default:
         return '0';
     }
